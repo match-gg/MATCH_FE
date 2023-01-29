@@ -1,13 +1,16 @@
-import logo from "./logo.svg";
-import "./App.css";
-import LandingPage from "./pages/Landing/LandingPage";
+import { Fragment } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
-function App() {
-    return (
-        <div className="App">
-            <LandingPage />
-        </div>
-    );
+import LandingPage from './pages/Landing/LandingPage';
+import LoginPage from './pages/Login/LoginPage';
+
+export default function App() {
+  return (
+    <Fragment>
+      <Routes>
+        <Route path='/' element={<LandingPage />} />
+        <Route path='/login' element={<LoginPage />} />
+      </Routes>
+    </Fragment>
+  );
 }
-
-export default App;
