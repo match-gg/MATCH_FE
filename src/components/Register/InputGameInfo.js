@@ -9,9 +9,8 @@ const InputGameInfo = (props) => {
     <Box
       component='div'
       sx={{
-        width: '100%',
-        height: '13vh',
-        paddingY: 'auto',
+        width: '70%',
+        height: 100,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -19,14 +18,13 @@ const InputGameInfo = (props) => {
       }}
     >
       <GameIcon gameIcon={gameIcon} altMessage={altMessage} />
-
       <Box
         component='div'
         sx={{
-          width: '100%',
+          width:"100%",
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'start',
+          alignItems: 'center',
         }}
       >
         <TextField fullWidth id='outlined-basic' label={nickname} variant='outlined' />

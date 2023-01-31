@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Box, Container, Typography, Button } from '@mui/material';
 
 const LandingSection = () => {
   return (
-    <>
+    <Fragment>
       <Box
         sx={{
           height: '100vh',
@@ -12,7 +12,7 @@ const LandingSection = () => {
         <Container
           maxWidth='lg'
           sx={{
-            height: '95vh',
+            height: '100vh',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -113,7 +113,7 @@ const LandingSection = () => {
           backgroundColor: '#e8e8e8',
         }}
       ></Box>
-    </>
+    </Fragment>
   );
 };
 

@@ -1,13 +1,7 @@
 import React from 'react';
 
-import {
-  AppBar,
-  Stack,
-  Toolbar,
-  Typography,
-  Button,
-  Container,
-} from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { AppBar, Stack, Toolbar, Typography, Button, Container } from '@mui/material';
 
 const Navbar = () => {
   return (
@@ -36,20 +30,8 @@ const Navbar = () => {
           </Typography>
           <Stack direction='row' spacing={2}>
             <Button
-              variant='text'
-              color='inherit'
-              sx={{
-                marginRight: '1rem',
-                '&:hover': {
-                  borderRadius: '0',
-                  color: 'black',
-                  borderBottom: '3px solid black',
-                },
-              }}
-            >
-              About US
-            </Button>
-            <Button
+              component={RouterLink}
+              to='/login'
               variant='text'
               color='inherit'
               sx={{
