@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Box, Container, Typography, Button } from '@mui/material';
 
 const LandingSection = () => {

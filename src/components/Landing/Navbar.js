@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Link as RouterLink } from 'react-router-dom';
 import { AppBar, Stack, Toolbar, Typography, Button, Container } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 const Navbar = () => {
   return (
@@ -9,26 +9,44 @@ const Navbar = () => {
       component='nav'
       position='fixed'
       sx={{
-        background: 'transparent',
-        backgroundColor: 'e8e8e8',
+        backgroundColor: 'white',
         color: '#000000',
         height: '5rem',
         justifyContent: 'center',
-        // boxShadow: 'none',
       }}
     >
       <Container maxWidth='lg'>
         <Toolbar>
           <Typography
+            component={RouterLink}
+            to='/'
             variant='h4'
-            component='div'
             sx={{
               flexGrow: 1,
+              textDecoration: 'none',
+              color:'black',
             }}
           >
-            Match.gg
+            Match.GG
           </Typography>
           <Stack direction='row' spacing={2}>
+            {/* <Button
+              component={RouterLink}
+              to='/aboutus'
+              variant='text'
+              color='inherit'
+              sx={{
+                marginRight: '1rem',
+                '&:hover': {
+                  borderRadius: '0',
+                  color: 'black',
+                  backgroundColor:'white',
+                  borderBottom: '3px solid black',
+                },
+              }}
+            >
+              About US
+            </Button> */}
             <Button
               component={RouterLink}
               to='/login'
@@ -38,6 +56,7 @@ const Navbar = () => {
                 '&:hover': {
                   borderRadius: '0',
                   color: 'black',
+                  backgroundColor:'white',
                   borderBottom: '3px solid black',
                 },
               }}
