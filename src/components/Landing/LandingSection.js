@@ -12,7 +12,7 @@ const LandingSection = () => {
         <Container
           maxWidth='lg'
           sx={{
-            height: '95vh',
+            height: '100vh',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',

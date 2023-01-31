@@ -8,7 +8,7 @@ function Copyright(props) {
         Match.GG
       </Link>
       {' - '}
-      {'SangMyung Univ. Capstone Project'}
+      {'SangMyung Univ.'}
     </Typography>
   );
 }
