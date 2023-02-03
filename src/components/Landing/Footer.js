@@ -26,7 +26,7 @@ const Footer = () => {
                     justifyItems="center"
                     backgroundColor="5c5c5c"
                 >
-                    <Grid item xs={3} direction="column" margin="auto 0">
+                    <Grid item xs={3} margin="auto 0">
                         <Typography variant="h3">MATCH.GG</Typography>
                     </Grid>
                     <Grid item xs={9}>
@@ -92,7 +92,7 @@ const Footer = () => {
                                     underline="hover"
                                     color="white"
                                 >
-                                    OVERWATCH
+                                    LOSTARK
                                 </Link>
                             </Grid>
                             <Grid item xs={4} paddingTop="5px">
