@@ -4,6 +4,7 @@ import ShowSupportGameList from './ShowSupportGameList';
 import ShowFindingParty from './ShowFindingParty';
 import ShowChatting from './ShowChatting';
 import ShowAlarmService from './ShowAlarmService';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const LandingSection = () => {
   const scrollRef = useRef(null);
@@ -15,7 +16,7 @@ const LandingSection = () => {
     <Fragment>
       <Box
         sx={{
-          height: '100vh',
+          height: '95vh',
         }}
       >
         <Container
@@ -81,7 +82,9 @@ const LandingSection = () => {
           alignItems: 'center',
         }}
       >
-        <Button onClick={onScrollRefClick}>더 알아보기</Button>
+        <Button onClick={onScrollRefClick}>
+          <KeyboardArrowDownIcon />더 알아보기
+        </Button>
       </Box>
       <Box
         sx={{
@@ -111,9 +114,19 @@ const LandingSection = () => {
         </Container>
       </Box>
       <ShowSupportGameList ref={scrollRef} />
-      <ShowFindingParty />
-      <ShowChatting />
-      <ShowAlarmService />
+      <Box
+        sx={{
+          width: '100%',
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <ShowFindingParty />
+        <ShowChatting />
+        <ShowAlarmService />
+      </Box>
     </Fragment>
   );
 };

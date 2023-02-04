@@ -5,7 +5,7 @@ const Footer = () => {
     <Box
       sx={{
         width: '100%',
-        height: '30vh',
+        // height: '30vh',
         backgroundColor: '#202124',
       }}
     >
@@ -29,7 +29,16 @@ const Footer = () => {
           <Grid item xs={3} margin='auto 0'>
             <Typography variant='h3'>MATCH.GG</Typography>
           </Grid>
-          <Grid item xs={9}>
+          <Grid
+            item
+            xs={9}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             <Typography variant='h6'>
               2023 Sangmyung Univ Capstone Project
             </Typography>
