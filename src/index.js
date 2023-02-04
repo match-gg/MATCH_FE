@@ -8,10 +8,10 @@ import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <Fragment>
-    <BrowserRouter>
-      <CssBaseline />
-      <App />
-    </BrowserRouter>
-  </Fragment>
+    <Fragment>
+        <BrowserRouter>
+            <CssBaseline />
+            <App />
+        </BrowserRouter>
+    </Fragment>
 );
