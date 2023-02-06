@@ -13,7 +13,7 @@ const RegisterGames = () => {
   return (
     <RegisterLayout
       title={'플레이하는 게임과 닉네임을 알려주세요.'}
-      description={'(이후에 마이페이지에서 수정이 가능합니다.'}
+      description={'(이후에 마이페이지에서 수정이 가능합니다.)'}
       prevLink={'/register/terms'}
       nextLink={'/register/favgame'}
       phase={2}

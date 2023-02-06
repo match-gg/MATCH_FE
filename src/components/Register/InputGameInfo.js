@@ -21,13 +21,18 @@ const InputGameInfo = (props) => {
       <Box
         component='div'
         sx={{
-          width:"100%",
+          width: '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
       >
-        <TextField fullWidth id='outlined-basic' label={nickname} variant='outlined' />
+        <TextField
+          fullWidth
+          id='outlined-basic'
+          label={nickname}
+          variant='outlined'
+        />
       </Box>
     </Box>
   );

@@ -47,31 +47,63 @@ const RegisterLayout = (props) => {
           {phase && (
             <Fragment>
               {phase === 1 ? (
-                <CircleIcon sx={{ color: 'grey', fontSize: { xs: 'medium', sm: 'large' } }} />
+                <CircleIcon
+                  sx={{
+                    color: 'grey',
+                    fontSize: { xs: 'medium', sm: 'large' },
+                  }}
+                />
               ) : (
                 <CircleOutlinedIcon
-                  sx={{ color: 'grey', fontSize: { xs: 'medium', sm: 'large' } }}
+                  sx={{
+                    color: 'grey',
+                    fontSize: { xs: 'medium', sm: 'large' },
+                  }}
                 />
               )}
               {phase === 2 ? (
-                <CircleIcon sx={{ color: 'grey', fontSize: { xs: 'medium', sm: 'large' } }} />
+                <CircleIcon
+                  sx={{
+                    color: 'grey',
+                    fontSize: { xs: 'medium', sm: 'large' },
+                  }}
+                />
               ) : (
                 <CircleOutlinedIcon
-                  sx={{ color: 'grey', fontSize: { xs: 'medium', sm: 'large' } }}
+                  sx={{
+                    color: 'grey',
+                    fontSize: { xs: 'medium', sm: 'large' },
+                  }}
                 />
               )}
               {phase === 3 ? (
-                <CircleIcon sx={{ color: 'grey', fontSize: { xs: 'medium', sm: 'large' } }} />
+                <CircleIcon
+                  sx={{
+                    color: 'grey',
+                    fontSize: { xs: 'medium', sm: 'large' },
+                  }}
+                />
               ) : (
                 <CircleOutlinedIcon
-                  sx={{ color: 'grey', fontSize: { xs: 'medium', sm: 'large' } }}
+                  sx={{
+                    color: 'grey',
+                    fontSize: { xs: 'medium', sm: 'large' },
+                  }}
                 />
               )}
               {phase === 4 ? (
-                <CircleIcon sx={{ color: 'grey', fontSize: { xs: 'medium', sm: 'large' } }} />
+                <CircleIcon
+                  sx={{
+                    color: 'grey',
+                    fontSize: { xs: 'medium', sm: 'large' },
+                  }}
+                />
               ) : (
                 <CircleOutlinedIcon
-                  sx={{ color: 'grey', fontSize: { xs: 'medium', sm: 'large' } }}
+                  sx={{
+                    color: 'grey',
+                    fontSize: { xs: 'medium', sm: 'large' },
+                  }}
                 />
               )}
             </Fragment>
@@ -105,7 +137,10 @@ const RegisterLayout = (props) => {
           sx={{
             width: '100%',
             display: 'flex',
-            height: { xs: 'calc(100% - 250px)', sm: 'calc(100% - 305px)' },
+            height: {
+              xs: 'calc(100% - 250px)',
+              sm: 'calc(100% - 305px)',
+            },
             flexDirection: 'column',
             alignItems: 'center',
             overflow: 'auto',
@@ -178,7 +213,12 @@ const RegisterLayout = (props) => {
             </Button>
           )}
           <Copyright
-            sx={{ position: 'absolute', bottom: 0, fontSize: { xs: 13, sm: 15 }, width: 500 }}
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              fontSize: { xs: 13, sm: 15 },
+              width: 500,
+            }}
           />
         </Box>
       </Box>

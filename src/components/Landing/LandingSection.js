@@ -1,12 +1,22 @@
-import { Fragment } from 'react';
+import { Fragment, useRef } from 'react';
 import { Box, Container, Typography, Button } from '@mui/material';
+import ShowSupportGameList from './ShowSupportGameList';
+import ShowFindingParty from './ShowFindingParty';
+import ShowChatting from './ShowChatting';
+import ShowAlarmService from './ShowAlarmService';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const LandingSection = () => {
+  const scrollRef = useRef(null);
+  const onScrollRefClick = () => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <Fragment>
       <Box
         sx={{
-          height: '100vh',
+          height: '95vh',
         }}
       >
         <Container
@@ -59,7 +69,7 @@ const LandingSection = () => {
               borderRadius: '15px',
             }}
           >
-            함께할 플레이어 찾기
+            함께할 플레이어 찾으러가기
           </Button>
         </Container>
       </Box>
@@ -72,11 +82,13 @@ const LandingSection = () => {
           alignItems: 'center',
         }}
       >
-        <Typography>Test</Typography>
+        <Button onClick={onScrollRefClick}>
+          <KeyboardArrowDownIcon />더 알아보기
+        </Button>
       </Box>
       <Box
         sx={{
-          height: '50vh',
+          height: '35vh',
           backgroundColor: '#e8e8e8',
         }}
       >
@@ -90,29 +102,31 @@ const LandingSection = () => {
             alignItems: 'center',
           }}
         >
-          <Typography variant='h4'>
+          <Typography variant='h4' marginBottom='5px'>
             리그오브레전드, 배틀그라운, 로스트아크, 메이플스토리, 오버워치
           </Typography>
-          <Typography variant='h4'>각각 파티원 구하려면 힘드셨죠?</Typography>
-          <Typography variant='h4'>
-            저희가 여러분의 실력, 스펙에 맞춰
+          <Typography variant='h4' marginBottom='5px'>
+            각각 파티원 구하려 힘드셨죠?
           </Typography>
-          <Typography variant='h4'>
-            최고의 플레이어를 연결해 드립니다.
+          <Typography variant='h4' marginBottom='5px'>
+            Match.GG에서 조건에 맞춰 원하시는 동료를 찾아보세요.
           </Typography>
         </Container>
       </Box>
+      <ShowSupportGameList ref={scrollRef} />
       <Box
         sx={{
-          height: '150vh',
+          width: '100%',
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
-      ></Box>
-      <Box
-        sx={{
-          height: '50vh',
-          backgroundColor: '#e8e8e8',
-        }}
-      ></Box>
+      >
+        <ShowFindingParty />
+        <ShowChatting />
+        <ShowAlarmService />
+      </Box>
     </Fragment>
   );
 };

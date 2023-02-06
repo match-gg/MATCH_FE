@@ -1,9 +1,29 @@
 import { Box } from '@mui/material';
 
 const GameIcon = (props) => {
-  const { gameIcon, altMessage } = props;
-
-  return (
+  const { gameIcon, altMessage, w, h, p } = props;
+  return w && h && p ? (
+    <Box
+      component='div'
+      sx={{
+        width: w,
+        height: h,
+        padding: p,
+        marginX: 2,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContents: 'center',
+      }}
+    >
+      <Box
+        component='img'
+        src={gameIcon}
+        alt={altMessage}
+        sx={{ width: '100%', padding: 'auto', filter: 'none' }}
+      />
+    </Box>
+  ) : (
     <Box
       component='div'
       sx={{

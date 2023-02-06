@@ -1,6 +1,13 @@
 import React from 'react';
 
-import { AppBar, Stack, Toolbar, Typography, Button, Container } from '@mui/material';
+import {
+  AppBar,
+  Stack,
+  Toolbar,
+  Typography,
+  Button,
+  Container,
+} from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 const Navbar = () => {
@@ -24,7 +31,7 @@ const Navbar = () => {
             sx={{
               flexGrow: 1,
               textDecoration: 'none',
-              color:'black',
+              color: 'black',
             }}
           >
             Match.GG
@@ -56,7 +63,7 @@ const Navbar = () => {
                 '&:hover': {
                   borderRadius: '0',
                   color: 'black',
-                  backgroundColor:'white',
+                  backgroundColor: 'white',
                   borderBottom: '3px solid black',
                 },
               }}

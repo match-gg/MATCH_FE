@@ -32,10 +32,13 @@ const RegisterFavGame = (props) => {
         }}
       >
         <GameIcon gameIcon={lolIcon} altMessage={'리그오브레전드_아이콘'} />
-        <GameIcon gameIcon={pubgIcon} altMessage={'리그오브레전드_아이콘'} />
-        <GameIcon gameIcon={overwatchIcon} altMessage={'리그오브레전드_아이콘'} />
-        <GameIcon gameIcon={lostarkIcon} altMessage={'리그오브레전드_아이콘'} />
-        <GameIcon gameIcon={maplestoryIcon} altMessage={'리그오브레전드_아이콘'} />
+        <GameIcon gameIcon={pubgIcon} altMessage={'배틀그라운드_아이콘'} />
+        <GameIcon gameIcon={overwatchIcon} altMessage={'오버워치2_아이콘'} />
+        <GameIcon gameIcon={lostarkIcon} altMessage={'로스트아크_아이콘'} />
+        <GameIcon
+          gameIcon={maplestoryIcon}
+          altMessage={'메이플스토리_아이콘'}
+        />
       </Box>
     </RegisterLayout>
   );
