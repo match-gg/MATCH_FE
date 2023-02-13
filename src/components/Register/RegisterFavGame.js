@@ -15,7 +15,7 @@ const RegisterFavGame = (props) => {
   return (
     <RegisterLayout
       title={'대표게임을 설정해 주세요.'}
-      description={'(이후에 마이페이지에서 수정이 가능합니다.'}
+      description={'(이후에 마이페이지에서 수정이 가능합니다.)'}
       prevLink={'/register/games'}
       nextLink={'/register/notification'}
       phase={3}
