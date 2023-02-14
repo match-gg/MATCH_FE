@@ -1,17 +1,19 @@
-import { Fragment } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { CookiesProvider } from 'react-cookie';
 
 import { CssBaseline } from '@mui/material';
 
 import App from './App';
+import store from './store/index';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <Fragment>
-    <BrowserRouter>
+  <CookiesProvider>
+    <Provider store={store}>
       <CssBaseline />
       <App />
-    </BrowserRouter>
-  </Fragment>
+    </Provider>
+  </CookiesProvider>
 );
