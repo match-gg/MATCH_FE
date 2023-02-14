@@ -1,22 +1,14 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { Container, Box, Typography, Button, Checkbox } from '@mui/material';
+import { Container, Box, Typography, Button } from '@mui/material';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
 
 import Copyright from '../../components/ui/Copyright';
-import TermSection from './TermSection';
 
 const RegisterLayout = (props) => {
   const { title, description, prevLink, nextLink, phase } = props;
-  const [isAgree, setAgree] = useState(true);
-  const activateNextButton = () => {
-    setAgree(false);
-  };
-  const deactivateNextButton = () => {
-    setAgree(true);
-  };
 
   return (
     <Container component='main' maxWidth='md'>
@@ -140,52 +132,25 @@ const RegisterLayout = (props) => {
         >
           {description}
         </Typography>
-        {phase !== 1 && (
-          <Box
-            component='div'
-            sx={{
-              margin: '10px',
-              width: '100%',
-              display: 'flex',
-              height: {
-                xs: 'calc(100% - 250px)',
-                sm: 'calc(100% - 305px)',
-              },
-              flexDirection: 'column',
-              alignItems: 'center',
-              overflow: 'auto',
-              gap: 2,
-            }}
-          >
-            {' '}
-            {/* 페이지별 작성할 사안 */}
-            {props.children}
-          </Box>
-        )}
-        {phase === 1 && (
-          <Box>
-            <TermSection title={'MATCH.GG 이용 약관'} contents={props.term1} />
-            <TermSection
-              title={'개인정보 수집 동의 약관'}
-              contents={props.term2}
-            />
-            <Container
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              {'위의 약관을 읽었으며, 이에 동의하시겠습니까?'}
-              <Box>
-                <Checkbox checked={!isAgree} onClick={activateNextButton} />
-                {'동의합니다'}
-                <Checkbox checked={isAgree} onClick={deactivateNextButton} />
-                {'동의하지 않습니다.'}
-              </Box>
-            </Container>
-          </Box>
-        )}
+        <Box
+          component='div'
+          sx={{
+            margin: '10px',
+            width: '100%',
+            display: 'flex',
+            height: {
+              xs: 'calc(100% - 250px)',
+              sm: 'calc(100% - 305px)',
+            },
+            flexDirection: 'column',
+            alignItems: 'center',
+            overflow: 'auto',
+            gap: 2,
+          }}
+        >
+          {/* 페이지별 작성할 사안 */}
+          {props.children}
+        </Box>
         <Box
           component='div'
           sx={{
@@ -226,7 +191,14 @@ const RegisterLayout = (props) => {
           )}
           {nextLink && (
             <Button
-              disabled={phase === 1 && isAgree}
+              disabled={
+                phase === 1
+                  ? !(
+                      props.children[0].props.agree &&
+                      props.children[1].props.agree
+                    )
+                  : false
+              }
               component={RouterLink}
               to={nextLink}
               variant='contained'
