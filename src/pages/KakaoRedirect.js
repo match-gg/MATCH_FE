@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { tokenActions } from '../store/token-slice';
 import { userActions } from '../store/user-slice';
+import { api } from '../api/api';
 
 import { CircularProgress, Box, Typography } from '@mui/material';
 
@@ -25,7 +25,7 @@ const KakaoRedirect = () => {
       try {
         const {
           data: { access_token: kakaoAccessToken },
-        } = await axios('https://kauth.kakao.com/oauth/token', {
+        } = await api('https://kauth.kakao.com/oauth/token', {
           params: {
             grant_type: 'authorization_code',
             client_id: process.env.REACT_APP_REST_API_KEY,
@@ -35,7 +35,7 @@ const KakaoRedirect = () => {
         });
 
         // 3. 토큰을 서버로 전송해 가입 여부 확인하기
-        const response = await axios.post(`${process.env}/api/user/signup`, {
+        const response = await api.post(`${process.env.REACT_APP_SERVER_BASE_URL}/api/user/signup`, {
           oauth2AccessToken : kakaoAccessToken,
         })
 
