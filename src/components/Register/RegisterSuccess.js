@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+
+import { useNavigate } from 'react-router-dom';
 
 import { Typography, Button, Card, CardContent } from '@mui/material';
 
-import RegisterLayout from './RegisterLayout';
+const RegisterSuccess = () => {
+  const navigate = useNavigate();
 
-const RegisterSuccess = (props) => {
   return (
-    <RegisterLayout title={'회원가입이 완료되었습니다.'} description={''}>
+    <Fragment>
       <Card
         sx={{
           marginTop: 20,
           width: '100%',
-          height: '50%',
+          height: '30vh',
           backgroundColor: '##edebeb',
           border: '1px solid black',
           borderRadius: '1.5rem',
@@ -54,12 +56,13 @@ const RegisterSuccess = (props) => {
                 backgroundColor: '#939393',
               },
             }}
+            onClick={() => navigate('/')}
           >
             시작하기
           </Button>
         </CardContent>
       </Card>
-    </RegisterLayout>
+    </Fragment>
   );
 };
 

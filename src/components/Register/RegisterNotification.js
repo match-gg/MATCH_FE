@@ -1,19 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
-import { Box, Typography, Button, TextField } from '@mui/material';
-import RegisterLayout from './RegisterLayout';
+import { Box, Typography, Button, TextField, Container } from '@mui/material';
 
 const RegisterNotification = (props) => {
   const remainTime = '3:00';
 
   return (
-    <RegisterLayout
-      title={'알림으로 더 빠르게 듀오를 찾아보세요.'}
-      description={'전화번호 인증/등록으로 알림을 받아볼 수 있습니다.'}
-      prevLink={'/register/favgame'}
-      nextLink={'/register/success'}
-      phase={4}
-    >
+    <Fragment>
       <Box
         component='div'
         sx={{
@@ -102,7 +95,7 @@ const RegisterNotification = (props) => {
           </Button>
         </Box>
       </Box>
-    </RegisterLayout>
+    </Fragment>
   );
 };
 

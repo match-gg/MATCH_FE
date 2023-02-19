@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import { Box } from '@mui/material';
 
-import RegisterLayout from './RegisterLayout';
 import GameIcon from './GameIcon';
 
 import lolIcon from './logo_images/LoL_Icon_Flat_BLACK.png';
@@ -11,15 +10,9 @@ import overwatchIcon from './logo_images/overwatch_logo.png';
 import lostarkIcon from './logo_images/lost_Ark_Logo.png';
 import maplestoryIcon from './logo_images/maplestory_logo.png';
 
-const RegisterFavGame = (props) => {
+const RegisterFavGame = () => {
   return (
-    <RegisterLayout
-      title={'대표게임을 설정해 주세요.'}
-      description={'(이후에 마이페이지에서 수정이 가능합니다.)'}
-      prevLink={'/register/games'}
-      nextLink={'/register/notification'}
-      phase={3}
-    >
+    <Fragment>
       <Box
         component='div'
         sx={{
@@ -40,7 +33,7 @@ const RegisterFavGame = (props) => {
           altMessage={'메이플스토리_아이콘'}
         />
       </Box>
-    </RegisterLayout>
+    </Fragment>
   );
 };
 

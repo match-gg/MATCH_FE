@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import InputGameInfo from './InputGameInfo';
 
@@ -7,17 +7,10 @@ import pubgIcon from './logo_images/Pubg_Logo.png';
 import overwatchIcon from './logo_images/overwatch_logo.png';
 import lostarkIcon from './logo_images/lost_Ark_Logo.png';
 import maplestoryIcon from './logo_images/maplestory_logo.png';
-import RegisterLayout from './RegisterLayout';
 
 const RegisterGames = () => {
   return (
-    <RegisterLayout
-      title={'플레이하는 게임과 닉네임을 알려주세요.'}
-      description={'(이후에 마이페이지에서 수정이 가능합니다.)'}
-      prevLink={'/register/terms'}
-      nextLink={'/register/favgame'}
-      phase={2}
-    >
+    <Fragment>
       <InputGameInfo
         gameIcon={lolIcon}
         nickname={'소환사명을 입력하세요.'}
@@ -43,7 +36,7 @@ const RegisterGames = () => {
         nickname={'캐릭터명을 입력하세요.'}
         altMessage={'메이플스토리_아이콘'}
       />
-    </RegisterLayout>
+    </Fragment>
   );
 };
 
