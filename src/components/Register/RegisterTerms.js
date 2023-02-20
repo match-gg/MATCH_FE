@@ -3,7 +3,7 @@ import { Container, Typography, Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 const RegisterTerm = (props) => {
-  const { AllChecked } = props;
+  const { activateNextBtn, deactivateNextBtn } = props;
   const [term1, setTerm1] = useState(false);
   const [term2, setTerm2] = useState(false);
 
@@ -21,7 +21,9 @@ const RegisterTerm = (props) => {
   };
   useEffect(() => {
     if (term1 && term2) {
-      AllChecked();
+      activateNextBtn();
+    } else {
+      deactivateNextBtn();
     }
   }, [term1, term2]);
 

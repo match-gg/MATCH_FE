@@ -1,8 +1,13 @@
 import React, { Fragment } from 'react';
 
-import { Box, Typography, Button, TextField, Container } from '@mui/material';
+import { Box, Typography, Button, TextField } from '@mui/material';
 
 const RegisterNotification = (props) => {
+  const { setPhoneNumber } = props;
+  const handlePhoneNumber = (e) => {
+    setPhoneNumber(e.target.value);
+  };
+
   const remainTime = '3:00';
 
   return (
@@ -39,6 +44,7 @@ const RegisterNotification = (props) => {
               height: '5vh',
               paddingRight: '5%',
             }}
+            onChange={handlePhoneNumber}
           />
           <Button
             variant='outlined'
@@ -46,6 +52,7 @@ const RegisterNotification = (props) => {
               width: '25%',
               height: '5vh',
               fontSize: '1.2rem',
+              padding: 0,
             }}
           >
             인증번호 받기
@@ -89,6 +96,7 @@ const RegisterNotification = (props) => {
               width: '25%',
               height: '5vh',
               fontSize: '1.2rem',
+              padding: 0,
             }}
           >
             인증하기

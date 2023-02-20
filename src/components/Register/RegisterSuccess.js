@@ -47,7 +47,7 @@ const RegisterSuccess = () => {
               fontSize: '1.4rem',
               fontWeight: '500',
               backgroundColor: '#939393',
-              color: 'black',
+              color: 'white',
               border: '1.5px solid white',
               borderRadius: '1rem',
               boxShadow: 'none',

@@ -1,9 +1,14 @@
+import React from 'react';
+
 import { Box, TextField } from '@mui/material';
 
 import GameIcon from './GameIcon';
 
 const InputGameInfo = (props) => {
-  const { gameIcon, nickname, altMessage } = props;
+  const { gameIcon, nickname, altMessage, handleNickName } = props;
+  const changeNickName = (e) => {
+    handleNickName(e.target.value);
+  };
 
   return (
     <Box
@@ -32,6 +37,7 @@ const InputGameInfo = (props) => {
           id='outlined-basic'
           label={nickname}
           variant='outlined'
+          onChange={changeNickName}
         />
       </Box>
     </Box>

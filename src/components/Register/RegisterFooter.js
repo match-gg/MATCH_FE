@@ -5,7 +5,8 @@ import { Box, Button } from '@mui/material';
 import Copyright from '../ui/Copyright';
 
 const RegisterFooter = (props) => {
-  const { increasePhase, decreasePhase, termAllChecked } = props;
+  const { phase, increasePhase, decreasePhase, termAllChecked, handleNextBtn } =
+    props;
 
   return (
     <Box
@@ -45,7 +46,10 @@ const RegisterFooter = (props) => {
       </Button>
       <Button
         disabled={!termAllChecked}
-        onClick={increasePhase}
+        onClick={() => {
+          increasePhase();
+          handleNextBtn();
+        }}
         variant='contained'
         sx={{
           marginTop: { xs: 1, sm: 3 },
@@ -63,7 +67,7 @@ const RegisterFooter = (props) => {
           },
         }}
       >
-        다음으로
+        {phase !== 4 ? '다음으로' : '시작하기'}
       </Button>
       <Copyright
         sx={{

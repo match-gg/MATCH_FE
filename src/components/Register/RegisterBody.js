@@ -1,3 +1,5 @@
+import React from 'react';
+
 import RegisterGames from './RegisterGames';
 import RegisterFavGame from './RegisterFavGame';
 import RegisterNotification from './RegisterNotification';
