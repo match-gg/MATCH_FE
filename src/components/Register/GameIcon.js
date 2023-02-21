@@ -31,10 +31,10 @@ const GameIcon = (props) => {
         alignItems: 'center',
         justifyContents: 'center',
         '&:hover': {
-          // borderBottom: '5px solid black',
           boxShadow: 2,
+          borderRadius: '5px',
         },
-        borderBottom: isSelected ? '5px solid black' : 0,
+        borderBottom: isSelected ? '7px solid black' : 0,
       }}
       onClick={handleFavGame}
     >

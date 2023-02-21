@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import { Box, Checkbox, Typography, Container } from '@mui/material';
-import { Fragment } from 'react';
 
 const TermSection = (props) => {
   const { term, agreeTerm, disagreeTerm, title, termContents } = props;

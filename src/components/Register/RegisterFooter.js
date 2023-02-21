@@ -34,7 +34,7 @@ const RegisterFooter = (props) => {
           fontWeight: '500',
           backgroundColor: '#939393',
           border: '1.5px solid white',
-          borderRadius: '1rem',
+          borderRadius: '10px',
           boxShadow: 'none',
           '&:hover': {
             boxShadow: '2',
@@ -59,7 +59,7 @@ const RegisterFooter = (props) => {
           fontWeight: '500',
           backgroundColor: '#939393',
           border: '1.5px solid white',
-          borderRadius: '1rem',
+          borderRadius: '10px',
           boxShadow: 'none',
           '&:hover': {
             boxShadow: '2',

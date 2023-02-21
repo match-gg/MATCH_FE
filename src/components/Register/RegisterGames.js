@@ -11,54 +11,68 @@ import maplestoryIcon from './logo_images/maplestory_logo.png';
 const RegisterGames = (props) => {
   const { games, setGames } = props;
 
-  const handleLOLName = (text) => {
-    setGames({ ...games, lol: text });
+  const handleLOLName = (name) => {
+    setGames({ ...games, lol: name });
   };
-  const handlePUBGName = (text) => {
-    setGames({ ...games, pubg: text });
+  const handlePUBGName = (name) => {
+    setGames({ ...games, pubg: name });
   };
-  const handlOVERWATCHName = (text) => {
-    setGames({ ...games, overwatch: text });
+  const handleOVERWATCHName = (name) => {
+    setGames({ ...games, overwatch: name });
   };
-  const handleLOSTARKName = (text) => {
-    setGames({ ...games, lostark: text });
+  const handleLOSTARKName = (name) => {
+    setGames({ ...games, lostark: name });
   };
-  const handleMAPLESTORYName = (text) => {
-    setGames({ ...games, maplestory: text });
+  const handleMAPLESTORYName = (name) => {
+    setGames({ ...games, maplestory: name });
   };
+
+  const GameInfos = [
+    {
+      gameIcon: lolIcon,
+      nickname: '소환사명을 입력하세요.',
+      altMessage: '리그오브레전드_아이콘',
+      handleNickName: handleLOLName,
+    },
+    {
+      gameIcon: pubgIcon,
+      nickname: '캐릭터명을 입력하세요.',
+      altMessage: '배틀그라운드_아이콘',
+      handleNickName: handlePUBGName,
+    },
+    {
+      gameIcon: overwatchIcon,
+      nickname: '플레이어 이름 또는 배틀태그#1234 입력하세요.',
+      altMessage: '오버워치_아이콘',
+      handleNickName: handleOVERWATCHName,
+    },
+    {
+      gameIcon: lostarkIcon,
+      nickname: '캐릭터명을 입력하세요',
+      altMessage: '로스트아크_아이콘',
+      handleNickName: handleLOSTARKName,
+    },
+    {
+      gameIcon: maplestoryIcon,
+      nickname: '캐릭터명을 입력하세요',
+      altMessage: '메이플스토리_아이콘',
+      handleNickName: handleMAPLESTORYName,
+    },
+  ];
 
   return (
     <Fragment>
-      <InputGameInfo
-        gameIcon={lolIcon}
-        nickname={'소환사명을 입력하세요.'}
-        altMessage={'리그오브레전드_아이콘'}
-        handleNickName={handleLOLName}
-      />
-      <InputGameInfo
-        gameIcon={pubgIcon}
-        nickname={'캐릭터명을 입력하세요.'}
-        altMessage={'배틀그라운드_아이콘'}
-        handleNickName={handlePUBGName}
-      />
-      <InputGameInfo
-        gameIcon={overwatchIcon}
-        nickname={'플레이어 이름 또는 배틀태그#1234 입력하세요.'}
-        altMessage={'오버워치_아이콘'}
-        handleNickName={handlOVERWATCHName}
-      />
-      <InputGameInfo
-        gameIcon={lostarkIcon}
-        nickname={'캐릭터명을 입력하세요.'}
-        altMessage={'로스트아크_아이콘'}
-        handleNickName={handleLOSTARKName}
-      />
-      <InputGameInfo
-        gameIcon={maplestoryIcon}
-        nickname={'캐릭터명을 입력하세요.'}
-        altMessage={'메이플스토리_아이콘'}
-        handleNickName={handleMAPLESTORYName}
-      />
+      {GameInfos.map((content, idx) => {
+        return (
+          <InputGameInfo
+            key={idx}
+            gameIcon={content.gameIcon}
+            nickname={content.nickname}
+            altMessage={content.altMessage}
+            handleNickName={content.handleNickName}
+          />
+        );
+      })}
     </Fragment>
   );
 };

@@ -2,9 +2,10 @@ import { useState } from 'react';
 import RegisterWrapper from '../components/Register/RegisterWrapper';
 
 const RegisterPage = () => {
-  const [registerInfo, setRegisterInfo] = useState({});
-  console.log(registerInfo);
+  //회원가입 시나리오 최상위 컴포넌트
+  //registerInfo에 회원가입 시나리오 진행에서 입력받은 정보들이 저장되어있음
 
+  const [registerInfo, setRegisterInfo] = useState({});
   return (
     <RegisterWrapper
       registerInfo={registerInfo}

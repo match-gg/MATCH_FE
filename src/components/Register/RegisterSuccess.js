@@ -49,7 +49,7 @@ const RegisterSuccess = () => {
               backgroundColor: '#939393',
               color: 'white',
               border: '1.5px solid white',
-              borderRadius: '1rem',
+              borderRadius: '10px',
               boxShadow: 'none',
               '&:hover': {
                 boxShadow: '2',
