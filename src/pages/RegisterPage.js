@@ -13,6 +13,7 @@ const RegisterPage = () => {
     // phoneNumber: 0,
   });
   console.log(registerInfo);
+
   return (
     <RegisterWrapper
       registerInfo={registerInfo}

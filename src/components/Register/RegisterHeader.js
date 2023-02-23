@@ -5,8 +5,11 @@ import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
 
 import RegisterBody from './RegisterBody';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterHeader = (props) => {
+  const navigate = useNavigate();
+
   const { phase } = props;
 
   return (
@@ -20,6 +23,7 @@ const RegisterHeader = (props) => {
           fontSize: { xs: 35, sm: 45 },
           fontWeight: '700',
         }}
+        onClick={() => navigate('/')}
       >
         Match.GG
       </Typography>

@@ -34,7 +34,7 @@ const InputGameInfo = (props) => {
       >
         <TextField
           fullWidth
-          id='outlined-basic'
+          // id='outlined-basic'
           label={nickname}
           variant='outlined'
           onChange={changeNickName}
