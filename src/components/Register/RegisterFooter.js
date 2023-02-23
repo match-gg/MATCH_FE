@@ -21,6 +21,7 @@ const RegisterFooter = (props) => {
         justifyContent: 'center',
         backgroundColor: 'white',
         gap: 4,
+        width: '100vw',
       }}
     >
       <Button

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 
 import InputGameInfo from './InputGameInfo';
 
@@ -10,6 +10,10 @@ import maplestoryIcon from './logo_images/maplestory_logo.png';
 
 const RegisterGames = (props) => {
   const { games, setGames } = props;
+
+  useEffect(() => {
+    setGames({});
+  }, []);
 
   const handleLOLName = (name) => {
     setGames({ ...games, lol: name });

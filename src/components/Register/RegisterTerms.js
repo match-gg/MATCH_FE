@@ -153,42 +153,45 @@ const termContents2 = (
 );
 
 const RegisterTerm = (props) => {
-  const { activateNextBtn, deactivateNextBtn } = props;
-  const [term1, setTerm1] = useState(false);
-  const [term2, setTerm2] = useState(false);
+  const { registerInfo, setRegisterInfo, activateNextBtn, deactivateNextBtn } =
+    props;
 
   const agreeTerm1 = () => {
-    setTerm1(true);
+    // setTerm1(true);
+    setRegisterInfo({ ...registerInfo, agreeTerm1: true });
   };
   const disagreeTerm1 = () => {
-    setTerm1(false);
+    // setTerm1(false);
+    setRegisterInfo({ ...registerInfo, agreeTerm1: false });
   };
   const agreeTerm2 = () => {
-    setTerm2(true);
+    // setTerm2(true);
+    setRegisterInfo({ ...registerInfo, agreeTerm2: true });
   };
   const disagreeTerm2 = () => {
-    setTerm2(false);
+    // setTerm2(false);
+    setRegisterInfo({ ...registerInfo, agreeTerm2: false });
   };
   useEffect(() => {
-    if (term1 && term2) {
+    if (registerInfo.agreeTerm1 && registerInfo.agreeTerm2) {
       activateNextBtn();
     } else {
       deactivateNextBtn();
     }
-  }, [term1, term2]);
+  }, [registerInfo.agreeTerm1, registerInfo.agreeTerm2]);
 
   return (
     <Container>
       <TermSection
         title={'MATCH.GG 약관 동의'}
-        term={term1}
+        term={registerInfo.agreeTerm1}
         agreeTerm={agreeTerm1}
         disagreeTerm={disagreeTerm1}
         termContents={termContents1}
       />
       <TermSection
         title={'개인정보 약관 동의'}
-        term={term2}
+        term={registerInfo.agreeTerm2}
         agreeTerm={agreeTerm2}
         disagreeTerm={disagreeTerm2}
         termContents={termContents2}

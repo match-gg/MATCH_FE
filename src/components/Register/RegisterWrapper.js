@@ -9,7 +9,7 @@ import RegisterHeader from './RegisterHeader';
 import RegisterTerm from './RegisterTerms';
 import RegisterGames from './RegisterGames';
 import RegisterFavGame from './RegisterFavGame';
-import RegisterNotification from './RegisterNotification';
+// import RegisterNotification from './RegisterNotification';
 import RegisterSuccess from './RegisterSuccess';
 
 const RegisterWrapper = (props) => {
@@ -21,10 +21,10 @@ const RegisterWrapper = (props) => {
   const [agreeAllTerm, setAgreeAllTerm] = useState(false);
   const [games, setGames] = useState({});
   const [favGame, setFavGame] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState();
+  // const [phoneNumber, setPhoneNumber] = useState();
 
   const increasePhase = () => {
-    phase < 4 ? setPhase(phase + 1) : navigate('/');
+    phase < 3 ? setPhase(phase + 1) : navigate('/');
   };
   const decreasePhase = () => {
     phase > 0 ? setPhase(phase - 1) : navigate('/');
@@ -32,10 +32,10 @@ const RegisterWrapper = (props) => {
 
   const handleNextBtn = () => {
     setRegisterInfo({
-      agreeAllTerm: agreeAllTerm,
+      ...registerInfo,
       games: games,
       favGame: favGame,
-      phoneNumber: phoneNumber,
+      // phoneNumber: phoneNumber,
     });
   };
 
@@ -78,6 +78,8 @@ const RegisterWrapper = (props) => {
           {/* 페이지별 내용 */}
           {phase === 0 && (
             <RegisterTerm
+              registerInfo={registerInfo}
+              setRegisterInfo={setRegisterInfo}
               activateNextBtn={activateNextBtn}
               deactivateNextBtn={deactivateNextBtn}
             />
@@ -85,9 +87,10 @@ const RegisterWrapper = (props) => {
           {phase === 1 && <RegisterGames games={games} setGames={setGames} />}
           {phase === 2 && <RegisterFavGame setFavGame={setFavGame} />}
           {phase === 3 && (
-            <RegisterNotification setPhoneNumber={setPhoneNumber} />
+            // <RegisterNotification setPhoneNumber={setPhoneNumber} />
+            <RegisterSuccess />
           )}
-          {phase === 4 && <RegisterSuccess />}
+          {/* {phase === 4 && <RegisterSuccess />} */}
         </Box>
         <RegisterFooter
           phase={phase}

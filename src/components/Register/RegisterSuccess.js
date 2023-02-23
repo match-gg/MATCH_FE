@@ -2,7 +2,13 @@ import React, { Fragment } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { Typography, Button, Card, CardContent } from '@mui/material';
+import {
+  Typography,
+  Button,
+  Card,
+  CardContent,
+  FormControl,
+} from '@mui/material';
 
 const RegisterSuccess = () => {
   const navigate = useNavigate();
@@ -38,28 +44,30 @@ const RegisterSuccess = () => {
             Match.GG 에서 함께할 플레이어를 찾아보세요. <br />
             저희는 {'kakao_nickname'} 님의 연승을 응원하겠습니다.
           </Typography>
-          <Button
-            variant='contained'
-            sx={{
-              marginTop: '5vh',
-              width: '10rem',
-              height: '4vh',
-              fontSize: '1.4rem',
-              fontWeight: '500',
-              backgroundColor: '#939393',
-              color: 'white',
-              border: '1.5px solid white',
-              borderRadius: '10px',
-              boxShadow: 'none',
-              '&:hover': {
-                boxShadow: '2',
+          <FormControl>
+            <Button
+              variant='contained'
+              sx={{
+                marginTop: '5vh',
+                width: '10rem',
+                height: '4vh',
+                fontSize: '1.4rem',
+                fontWeight: '500',
                 backgroundColor: '#939393',
-              },
-            }}
-            onClick={() => navigate('/')}
-          >
-            시작하기
-          </Button>
+                color: 'white',
+                border: '1.5px solid white',
+                borderRadius: '10px',
+                boxShadow: 'none',
+                '&:hover': {
+                  boxShadow: '2',
+                  backgroundColor: '#939393',
+                },
+              }}
+              onClick={() => navigate('/')}
+            >
+              시작하기
+            </Button>
+          </FormControl>
         </CardContent>
       </Card>
     </Fragment>

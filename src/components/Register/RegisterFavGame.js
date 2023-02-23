@@ -110,6 +110,7 @@ const RegisterFavGame = (props) => {
           return (
             <GameIcon
               key={idx}
+              isFav={true}
               gameIcon={content.gameIcon}
               altMessage={content.altMessage}
               gameName={content.gameName}

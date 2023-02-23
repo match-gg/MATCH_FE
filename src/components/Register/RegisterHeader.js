@@ -35,6 +35,21 @@ const RegisterHeader = (props) => {
       >
         {phase > -1 && (
           <Fragment>
+            {phase === 0 ? (
+              <CircleIcon
+                sx={{
+                  color: 'grey',
+                  fontSize: { xs: 'medium', sm: 'large' },
+                }}
+              />
+            ) : (
+              <CircleOutlinedIcon
+                sx={{
+                  color: 'grey',
+                  fontSize: { xs: 'medium', sm: 'large' },
+                }}
+              />
+            )}
             {phase === 1 ? (
               <CircleIcon
                 sx={{
@@ -80,7 +95,7 @@ const RegisterHeader = (props) => {
                 }}
               />
             )}
-            {phase === 4 ? (
+            {/* {phase === 4 ? (
               <CircleIcon
                 sx={{
                   color: 'grey',
@@ -94,7 +109,7 @@ const RegisterHeader = (props) => {
                   fontSize: { xs: 'medium', sm: 'large' },
                 }}
               />
-            )}
+            )} */}
           </Fragment>
         )}
       </Box>

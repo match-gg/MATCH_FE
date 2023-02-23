@@ -13,10 +13,13 @@ const GameIcon = (props) => {
     setFavGame,
     isSelected,
     setIsSelected,
+    isFav,
   } = props;
   const handleFavGame = (e) => {
-    setFavGame(e.target.id);
-    setIsSelected(e.target.id);
+    if (isFav) {
+      setFavGame(e.target.id);
+      setIsSelected(e.target.id);
+    }
   };
   return (
     <Box
@@ -31,8 +34,8 @@ const GameIcon = (props) => {
         alignItems: 'center',
         justifyContents: 'center',
         '&:hover': {
-          boxShadow: 2,
-          borderRadius: '5px',
+          boxShadow: isFav ? 2 : 0,
+          borderRadius: isFav ? '5px' : 0,
         },
         borderBottom: isSelected ? '7px solid black' : 0,
       }}
