@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,17 +14,18 @@ const KakaoRedirect = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [kakaoAccessToken, setKakaoAccessToken] = useState('');
+
   useEffect(() => {
     const kakaoLogin = async () => {
       // 1. 페이지 URL에서 인가코드 받아오기
       let params = new URL(document.URL).searchParams;
       let code = params.get('code');
 
-
       // 2. 인가코드로 카카오 액세스 토큰 발급받기
       try {
         const {
-          data: { access_token: kakaoAccessToken },
+          data: { access_token: AccessToken },
         } = await api('https://kauth.kakao.com/oauth/token', {
           params: {
             grant_type: 'authorization_code',
@@ -34,20 +35,48 @@ const KakaoRedirect = () => {
           },
         });
 
+        setKakaoAccessToken(AccessToken);
+        console.log(kakaoAccessToken);
+
         // 3. 토큰을 서버로 전송해 가입 여부 확인하기
-        const response = await api.post(`${process.env.REACT_APP_SERVER_BASE_URL}/api/user/signup`, {
-          oauth2AccessToken : kakaoAccessToken,
-        })
+        const response = await api.post(
+          `${process.env.REACT_APP_SERVER_BASE_URL}/api/user/signup`,
+          {
+            oauth2AccessToken: kakaoAccessToken,
+          }
+        );
+
+        // console.log
 
         // 4. reponse 확인해서 로그인 처리 / 회원가입 플로우로 이동
+        if (response.status === 200) {
+          dispatch(tokenActions.SET_TOKEN(response.data['accessToken']));
+          localStorage.setItem('refreshToken', response.data['refresshToken']);
 
+          navigate('/register');
+        }
       } catch (e) {
-        console.log(e);
+        if (e.response.status === 400 && e.reponse.data['status'] === 400) {
+          // 로그인 flow로 이동
+          const response = await api.post(
+            `${process.env.REACT_APP_SERVER_BASE_URL}/api/user/signin`,
+            {
+              oauth2AccessToken: kakaoAccessToken,
+            }
+          );
+
+          const { accessToken, refreshToken } = response.data;
+
+          dispatch(tokenActions.SET_TOKEN(accessToken));
+          localStorage.setItem('refreshToken', refreshToken);
+        } else {
+          console.log(e);
+        }
       }
     };
 
     kakaoLogin();
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate, kakaoAccessToken]);
 
   return (
     <SimpleLayout>
