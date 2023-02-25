@@ -68,7 +68,7 @@ const RegisterFooter = (props) => {
           },
         }}
       >
-        {phase !== 4 ? '다음으로' : '시작하기'}
+        {phase !== 2 ? '다음으로' : '회원가입하기'}
       </Button>
       <Copyright
         sx={{

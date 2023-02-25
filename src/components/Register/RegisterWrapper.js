@@ -92,13 +92,15 @@ const RegisterWrapper = (props) => {
           )}
           {/* {phase === 4 && <RegisterSuccess />} */}
         </Box>
-        <RegisterFooter
-          phase={phase}
-          increasePhase={increasePhase}
-          decreasePhase={decreasePhase}
-          termAllChecked={agreeAllTerm}
-          handleNextBtn={handleNextBtn}
-        />
+        {phase < 3 && (
+          <RegisterFooter
+            phase={phase}
+            increasePhase={increasePhase}
+            decreasePhase={decreasePhase}
+            termAllChecked={agreeAllTerm}
+            handleNextBtn={handleNextBtn}
+          />
+        )}
       </Box>
     </Container>
   );

@@ -12,7 +12,6 @@ const RegisterPage = () => {
     games: {},
     // phoneNumber: 0,
   });
-  console.log(registerInfo);
 
   return (
     <RegisterWrapper
