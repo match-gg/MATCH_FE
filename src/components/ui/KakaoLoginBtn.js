@@ -23,7 +23,7 @@ const KakaoLoginBtn = () => {
       <Box
         component='img'
         sx={{ height: '2rem', position: 'absolute', left: '2rem' }}
-        alt='kakao_login_symbol'
+        alt='kakao'
         src={kakao_login_symbol}
       />
       카카오로 시작하기
