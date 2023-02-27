@@ -5,8 +5,8 @@ const Footer = () => {
     <Box
       sx={{
         width: '100%',
-        // height: '30vh',
         backgroundColor: '#202124',
+        padding: '20px',
       }}
     >
       <Container
