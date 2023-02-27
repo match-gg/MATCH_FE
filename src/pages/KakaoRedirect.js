@@ -18,60 +18,43 @@ const KakaoRedirect = () => {
 
   useEffect(() => {
     const kakaoLogin = async () => {
-      // 1. 페이지 URL에서 인가코드 받아오기
-      let params = new URL(document.URL).searchParams;
-      let code = params.get('code');
+      const kakaoLogin = async () => {
+        // 1. 페이지 URL에서 인가코드 받아오기
+        let params = new URL(document.URL).searchParams;
+        let code = params.get('code');
 
-      // 2. 인가코드로 카카오 액세스 토큰 발급받기
-      try {
-        const {
-          data: { access_token: AccessToken },
-        } = await api('https://kauth.kakao.com/oauth/token', {
-          params: {
-            grant_type: 'authorization_code',
-            client_id: process.env.REACT_APP_REST_API_KEY,
-            redirect_uri: process.env.REACT_APP_REDIRECT_URI,
-            code: code,
-          },
-        });
+        // 2. 토큰을 서버로 전송해 가입 여부 확인하기
+        const response = await api
+          .post(`http://localhost:8080/api/user/signup`, {
+            kakaoAuthCode: code,
+          })
+          .catch(async (error) => {
+            if (error.response.status === 400 && error.response.data['status']) {
+              const response = await api.post(`http://localhost:8080/api/user/signin`, {
+                kakaoAuthCode: code,
+              });
 
-        setKakaoAccessToken(AccessToken);
-        console.log(kakaoAccessToken);
+              const { accessToken, refreshToken } = response.data['jwtToken'];
 
-        // 3. 토큰을 서버로 전송해 가입 여부 확인하기
-        const response = await api.post(
-          `${process.env.REACT_APP_SERVER_BASE_URL}/api/user/signup`,
-          {
-            oauth2AccessToken: kakaoAccessToken,
-          }
-        );
-
-        // console.log
-
-        // 4. reponse 확인해서 로그인 처리 / 회원가입 플로우로 이동
-        
-      } catch (e) {
-        if (e.response.status === 400 && e.reponse.data['status'] === 400) {
-          // 로그인 flow로 이동
-          const response = await api.post(
-            `${process.env.REACT_APP_SERVER_BASE_URL}/api/user/signin`,
-            {
-              oauth2AccessToken: kakaoAccessToken,
+              dispatch(tokenActions.SET_TOKEN(accessToken));
+              localStorage.setItem('matchGG_refreshToken', refreshToken);
+              navigate('/leagueoflegends');
+            } else {
+              alert(`비정상적인 접근입니다.`);
             }
-          );
+          });
 
-          const { accessToken, refreshToken } = response.data;
+        const { accessToken, refreshToken } = response.data['jwtToken'];
 
-          dispatch(tokenActions.SET_TOKEN(accessToken));
-          localStorage.setItem('refreshToken', refreshToken);
-        } else {
-          console.log(e);
-        }
-      }
+        dispatch(tokenActions.SET_TOKEN(accessToken));
+        localStorage.setItem('matchGG_refreshToken', refreshToken);
+
+        navigate('/register');
+      };
     };
-
+    
     kakaoLogin();
-  }, [dispatch, navigate, kakaoAccessToken]);
+  }, [dispatch, navigate]);
 
   return (
     <SimpleLayout>
