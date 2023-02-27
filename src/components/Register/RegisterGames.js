@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 
 import InputGameInfo from './InputGameInfo';
 
@@ -9,11 +9,7 @@ import lostarkIcon from './logo_images/lost_Ark_Logo.png';
 import maplestoryIcon from './logo_images/maplestory_logo.png';
 
 const RegisterGames = (props) => {
-  const { games, setGames } = props;
-
-  useEffect(() => {
-    setGames({});
-  }, []);
+  const { games, setGames, registerInfo } = props;
 
   const handleLOLName = (name) => {
     setGames({ ...games, lol: name });
@@ -33,32 +29,37 @@ const RegisterGames = (props) => {
 
   const GameInfos = [
     {
+      gameName: 'lol',
       gameIcon: lolIcon,
-      nickname: '소환사명을 입력하세요.',
+      labelText: '소환사명을 입력하세요',
       altMessage: '리그오브레전드_아이콘',
       handleNickName: handleLOLName,
     },
     {
+      gameName: 'pubg',
       gameIcon: pubgIcon,
-      nickname: '캐릭터명을 입력하세요.',
+      labelText: '캐릭터명을 입력하세요.',
       altMessage: '배틀그라운드_아이콘',
       handleNickName: handlePUBGName,
     },
     {
+      gameName: 'overwatch',
       gameIcon: overwatchIcon,
-      nickname: '플레이어 이름 또는 배틀태그#1234 입력하세요.',
+      labelText: '플레이어 이름 또는 배틀태그#1234 입력하세요.',
       altMessage: '오버워치_아이콘',
       handleNickName: handleOVERWATCHName,
     },
     {
+      gameName: 'lostark',
       gameIcon: lostarkIcon,
-      nickname: '캐릭터명을 입력하세요',
+      labelText: '캐릭터명을 입력하세요',
       altMessage: '로스트아크_아이콘',
       handleNickName: handleLOSTARKName,
     },
     {
+      gameName: 'maplestory',
       gameIcon: maplestoryIcon,
-      nickname: '캐릭터명을 입력하세요',
+      labelText: '캐릭터명을 입력하세요',
       altMessage: '메이플스토리_아이콘',
       handleNickName: handleMAPLESTORYName,
     },
@@ -71,9 +72,11 @@ const RegisterGames = (props) => {
           <InputGameInfo
             key={idx}
             gameIcon={content.gameIcon}
-            nickname={content.nickname}
+            labelText={content.labelText}
             altMessage={content.altMessage}
             handleNickName={content.handleNickName}
+            registerInfo={registerInfo}
+            gameName={content.gameName}
           />
         );
       })}
