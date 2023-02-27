@@ -15,12 +15,14 @@ const GameIcon = (props) => {
     setIsSelected,
     isFav,
   } = props;
+
   const handleFavGame = (e) => {
     if (isFav) {
       setFavGame(e.target.id);
       setIsSelected(e.target.id);
     }
   };
+
   return (
     <Box
       component='div'

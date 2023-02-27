@@ -5,7 +5,15 @@ import { Box, TextField } from '@mui/material';
 import GameIcon from './GameIcon';
 
 const InputGameInfo = (props) => {
-  const { gameIcon, nickname, altMessage, handleNickName } = props;
+  const {
+    gameIcon,
+    labelText,
+    altMessage,
+    handleNickName,
+    registerInfo,
+    gameName,
+  } = props;
+
   const changeNickName = (e) => {
     handleNickName(e.target.value);
   };
@@ -34,10 +42,10 @@ const InputGameInfo = (props) => {
       >
         <TextField
           fullWidth
-          // id='outlined-basic'
-          label={nickname}
+          label={labelText}
           variant='outlined'
           onChange={changeNickName}
+          defaultValue={registerInfo.games[gameName]}
         />
       </Box>
     </Box>

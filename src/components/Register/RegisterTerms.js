@@ -1,6 +1,6 @@
 import TermSection from './TermSection';
 import { Container, Typography, Box } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 const termContents1 = (
   <Box>
@@ -157,19 +157,15 @@ const RegisterTerm = (props) => {
     props;
 
   const agreeTerm1 = () => {
-    // setTerm1(true);
     setRegisterInfo({ ...registerInfo, agreeTerm1: true });
   };
   const disagreeTerm1 = () => {
-    // setTerm1(false);
     setRegisterInfo({ ...registerInfo, agreeTerm1: false });
   };
   const agreeTerm2 = () => {
-    // setTerm2(true);
     setRegisterInfo({ ...registerInfo, agreeTerm2: true });
   };
   const disagreeTerm2 = () => {
-    // setTerm2(false);
     setRegisterInfo({ ...registerInfo, agreeTerm2: false });
   };
   useEffect(() => {
