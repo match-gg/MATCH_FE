@@ -1,21 +1,23 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-
-import RegisterTerm from '../components/Register/RegisterTerms';
-import RegisterGames from '../components/Register/RegisterGames';
-import RegisterFavGame from '../components/Register/RegisterFavGame';
-import RegisterNotification from '../components/Register/RegisterNotification';
-import RegisterSuccess from '../components/Register/RegisterSuccess';
+import { useState } from 'react';
+import RegisterWrapper from '../components/Register/RegisterWrapper';
 
 const RegisterPage = () => {
+  //회원가입 시나리오 최상위 컴포넌트
+  //registerInfo에 회원가입 시나리오 진행에서 입력받은 정보들이 저장되어있음
+
+  const [registerInfo, setRegisterInfo] = useState({
+    agreeTerm1: false,
+    agreeTerm2: false,
+    favGame: '',
+    games: {},
+    // phoneNumber: 0,
+  });
+
   return (
-    <Routes>
-      <Route path='*' element={<Navigate to='terms' />} />
-      <Route path='terms' element={<RegisterTerm />} />
-      <Route path='games' element={<RegisterGames />} />
-      <Route path='favGame' element={<RegisterFavGame />} />
-      <Route path='notification' element={<RegisterNotification />} />
-      <Route path='success' element={<RegisterSuccess />} />
-    </Routes>
+    <RegisterWrapper
+      registerInfo={registerInfo}
+      setRegisterInfo={setRegisterInfo}
+    />
   );
 };
 

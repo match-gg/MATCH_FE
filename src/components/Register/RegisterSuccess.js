@@ -1,17 +1,25 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
-import { Typography, Button, Card, CardContent } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-import RegisterLayout from './RegisterLayout';
+import {
+  Typography,
+  Button,
+  Card,
+  CardContent,
+  FormControl,
+} from '@mui/material';
 
-const RegisterSuccess = (props) => {
+const RegisterSuccess = () => {
+  const navigate = useNavigate();
+
   return (
-    <RegisterLayout title={'회원가입이 완료되었습니다.'} description={''}>
+    <Fragment>
       <Card
         sx={{
           marginTop: 20,
           width: '100%',
-          height: '50%',
+          height: '30vh',
           backgroundColor: '##edebeb',
           border: '1px solid black',
           borderRadius: '1.5rem',
@@ -36,30 +44,33 @@ const RegisterSuccess = (props) => {
             Match.GG 에서 함께할 플레이어를 찾아보세요. <br />
             저희는 {'kakao_nickname'} 님의 연승을 응원하겠습니다.
           </Typography>
-          <Button
-            variant='contained'
-            sx={{
-              marginTop: '5vh',
-              width: '10rem',
-              height: '4vh',
-              fontSize: '1.4rem',
-              fontWeight: '500',
-              backgroundColor: '#939393',
-              color: 'black',
-              border: '1.5px solid white',
-              borderRadius: '1rem',
-              boxShadow: 'none',
-              '&:hover': {
-                boxShadow: '2',
+          <FormControl>
+            <Button
+              variant='contained'
+              sx={{
+                marginTop: '5vh',
+                width: '10rem',
+                height: '4vh',
+                fontSize: '1.4rem',
+                fontWeight: '500',
                 backgroundColor: '#939393',
-              },
-            }}
-          >
-            시작하기
-          </Button>
+                color: 'white',
+                border: '1.5px solid white',
+                borderRadius: '10px',
+                boxShadow: 'none',
+                '&:hover': {
+                  boxShadow: '2',
+                  backgroundColor: '#939393',
+                },
+              }}
+              onClick={() => navigate('/')}
+            >
+              시작하기
+            </Button>
+          </FormControl>
         </CardContent>
       </Card>
-    </RegisterLayout>
+    </Fragment>
   );
 };
 
