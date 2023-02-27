@@ -5,6 +5,7 @@ import KakaoRedirect from './pages/KakaoRedirect';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import MyPage from './pages/MyPage';
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register/*' element={<RegisterPage />} />
         <Route path='/kakao/callback' element={<KakaoRedirect />} />
+        <Route path='/mypage' element={<MyPage />} />
       </Routes>
     </Router>
   );
