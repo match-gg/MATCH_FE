@@ -49,12 +49,7 @@ const KakaoRedirect = () => {
         // console.log
 
         // 4. reponse 확인해서 로그인 처리 / 회원가입 플로우로 이동
-        if (response.status === 200) {
-          dispatch(tokenActions.SET_TOKEN(response.data['accessToken']));
-          localStorage.setItem('refreshToken', response.data['refresshToken']);
-
-          navigate('/register');
-        }
+        
       } catch (e) {
         if (e.response.status === 400 && e.reponse.data['status'] === 400) {
           // 로그인 flow로 이동
