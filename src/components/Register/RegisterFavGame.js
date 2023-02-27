@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 
@@ -11,7 +11,7 @@ import lostarkIcon from './logo_images/lost_Ark_Logo.png';
 import maplestoryIcon from './logo_images/maplestory_logo.png';
 
 const RegisterFavGame = (props) => {
-  const { setFavGame } = props;
+  const { setFavGame, registerInfo } = props;
 
   const [lolSelected, setLolSelected] = useState(false);
   const [pubgSelected, setPubgSelected] = useState(false);
@@ -19,12 +19,27 @@ const RegisterFavGame = (props) => {
   const [lostarkSelected, setLostarkSelected] = useState(false);
   const [maplestorySelected, setMaplestorySelected] = useState(false);
 
+  useEffect(() => {
+    if (registerInfo.favGame === 'lol') {
+      setLolSelected(true);
+    } else if (registerInfo.favGame === 'pubg') {
+      setPubgSelected(true);
+    } else if (registerInfo.favGame === 'overwatch') {
+      setOverwatchSelected(true);
+    } else if (registerInfo.favGame === 'lostark') {
+      setLostarkSelected(true);
+    } else if (registerInfo.favGame === 'maplestory') {
+      setMaplestorySelected(true);
+    }
+  }, []);
+
   const handleLoLSelected = () => {
     setLolSelected(true);
     setPubgSelected(false);
     setOverwatchSelected(false);
     setLostarkSelected(false);
     setMaplestorySelected(false);
+    setFavGame('lol');
   };
   const handlePUBGSelected = () => {
     setLolSelected(false);
@@ -32,6 +47,7 @@ const RegisterFavGame = (props) => {
     setOverwatchSelected(false);
     setLostarkSelected(false);
     setMaplestorySelected(false);
+    setFavGame('pubg');
   };
   const handleOVERWATCHSelected = () => {
     setLolSelected(false);
@@ -39,6 +55,7 @@ const RegisterFavGame = (props) => {
     setOverwatchSelected(true);
     setLostarkSelected(false);
     setMaplestorySelected(false);
+    setFavGame('overwatch');
   };
   const handleLOSTARKSelected = () => {
     setLolSelected(false);
@@ -46,6 +63,7 @@ const RegisterFavGame = (props) => {
     setOverwatchSelected(false);
     setLostarkSelected(true);
     setMaplestorySelected(false);
+    setFavGame('lostark');
   };
   const handleMAPLESTORYSelected = () => {
     setLolSelected(false);
@@ -53,6 +71,7 @@ const RegisterFavGame = (props) => {
     setOverwatchSelected(false);
     setLostarkSelected(false);
     setMaplestorySelected(true);
+    setFavGame('maplestory');
   };
 
   const GameIcons = [

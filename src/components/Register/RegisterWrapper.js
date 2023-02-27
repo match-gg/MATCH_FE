@@ -19,7 +19,6 @@ const RegisterWrapper = (props) => {
   const [phase, setPhase] = useState(0);
   const [agreeAllTerm, setAgreeAllTerm] = useState(false);
   const [games, setGames] = useState({ ...registerInfo.games });
-  const [favGame, setFavGame] = useState('');
 
   const increasePhase = () => {
     phase < 3 ? setPhase(phase + 1) : navigate('/');
@@ -32,8 +31,11 @@ const RegisterWrapper = (props) => {
     setRegisterInfo({
       ...registerInfo,
       games: games,
-      favGame: favGame,
     });
+  };
+
+  const setFavGame = (favGame) => {
+    setRegisterInfo({ ...registerInfo, favGame: favGame });
   };
 
   const activateNextBtn = () => {
@@ -88,7 +90,13 @@ const RegisterWrapper = (props) => {
               registerInfo={registerInfo}
             />
           )}
-          {phase === 2 && <RegisterFavGame setFavGame={setFavGame} />}
+          {phase === 2 && (
+            <RegisterFavGame
+              registerInfo={registerInfo}
+              setRegisterInfo={setRegisterInfo}
+              setFavGame={setFavGame}
+            />
+          )}
           {phase === 3 && <RegisterSuccess />}
         </Box>
         {phase < 3 && (
