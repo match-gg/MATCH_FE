@@ -1,12 +1,11 @@
 import { Button, Box } from '@mui/material';
 
 import kakao_login_symbol from './kakao_login_symbol.png';
-import { KAKAO_AUTH_URL } from '../../OAuth';
 
 const KakaoLoginBtn = () => {
   return (
     <Button
-      href={KAKAO_AUTH_URL}
+      href={`https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`}
       sx={{
         width: '30rem',
         height: '4rem',

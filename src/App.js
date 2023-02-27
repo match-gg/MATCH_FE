@@ -12,8 +12,7 @@ export default function App() {
         <Route path='/' element={<LandingPage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register/*' element={<RegisterPage />} />
-        <Route path='/kakao/*' element={<Navigate to='/register' />} />
-        {/* src/ 에 OAuth.js 있어야 작동... */}
+        <Route path='/kakao/callback' element={<Navigate to='/register' />} />
       </Routes>
     </Fragment>
   );
