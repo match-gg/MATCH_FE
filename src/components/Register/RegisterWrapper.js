@@ -101,6 +101,7 @@ const RegisterWrapper = (props) => {
         </Box>
         {phase < 3 && (
           <RegisterFooter
+            registerInfo={registerInfo}
             phase={phase}
             increasePhase={increasePhase}
             decreasePhase={decreasePhase}

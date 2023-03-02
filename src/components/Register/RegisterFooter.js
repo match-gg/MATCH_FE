@@ -1,12 +1,57 @@
 import React from 'react';
+import { api } from '../../api/api';
 
 import { Box, Button } from '@mui/material';
 
 import Copyright from '../ui/Copyright';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterFooter = (props) => {
-  const { phase, increasePhase, decreasePhase, termAllChecked, handleNextBtn } =
-    props;
+  const navigate = useNavigate();
+
+  const { phase, increasePhase, decreasePhase, termAllChecked, handleNextBtn, registerInfo } = props;
+  const { accessToken } = useSelector((state) => state.token);
+
+  const registerHandler = async () => {
+    const refreshToken = localStorage.getItem('matchGG_refreshToken');
+
+    // setting headers
+    const headers = {
+      // single quote around Authorization is required.
+      'Authorization': accessToken,
+      'Refresh-Token': refreshToken,
+    };
+
+    const {favGame, games} = registerInfo;
+
+    const requestData = {
+      representative: favGame.toUpperCase(),
+      lol: games.lol,
+      overwatch: games.overwatch,
+      pubg: games.pubg,
+      lostark: games.lostark,
+      maplestory: games.maplestory,
+    };
+
+    // console.log('requestHeaders :' + JSON.stringify(headers));
+    // console.log('requestData: ' + JSON.stringify(requestData));
+
+    // send request
+    const response = await api.post(
+      `${process.env.REACT_APP_API_BASE_URL}/api/user/register`,
+      { data: requestData },
+      { headers }
+    ).catch((error)=> {
+      alert('회원가입 중 문제가 발생했습니다.\n다시 시도해 주세요.') // mui dialog 이용해서 바꿀 예정
+      navigate('/login');
+    } )
+
+    // console.log(response);
+    if (response.status === 201) {
+      increasePhase();
+    }
+  };
 
   return (
     <Box
@@ -48,8 +93,12 @@ const RegisterFooter = (props) => {
       <Button
         disabled={!termAllChecked}
         onClick={() => {
-          increasePhase();
-          handleNextBtn();
+          if (phase === 2) {
+            registerHandler();
+          } else {
+            increasePhase();
+            handleNextBtn();
+          }
         }}
         variant='contained'
         sx={{
