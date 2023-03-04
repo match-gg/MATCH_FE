@@ -39,7 +39,7 @@ const RegisterFooter = (props) => {
 
     // send request
     const response = await api.post(
-      `${process.env.REACT_APP_API_BASE_URL}/api/user/register`,
+      `/api/user/register`,
       { data: requestData },
       { headers }
     ).catch((error)=> {
