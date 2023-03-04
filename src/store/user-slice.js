@@ -1,25 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  username: '',
   nickname: '',
-  isLogin: false,
+  thumbnail_url: '',
+  isLoggedIn: false,
+  isAdmin: false,
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    SET_USER :(state, action) => {
-      state.username = action.payload.username;
+    SET_USER: (state, action) => {
       state.nickname = action.payload.nickname;
-      state.isLogin = true;
+      state.thumbnail_url = action.payload.thumbnail_url;
+      state.isLoggedIn = true;
+      state.isAdmin = action.payload.isAdmin;
     },
-    DELETE_USER : (state, action) => {
-      state.username = '';
+    DELETE_USER: (state, _action) => {
       state.nickname = '';
-      state.isLogin = false;
-    }
+      state.thumbnail_url = '';
+      state.isLoggedIn = false;
+      state.isAdmin = false;
+    },
   },
 });
 
