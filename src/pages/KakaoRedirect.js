@@ -38,7 +38,7 @@ const KakaoRedirect = () => {
 
       // 3. 토큰을 서버로 전송해 가입 여부 확인하기
       const response = await api
-        .post(`/api/user/singup`, {
+        .post(`/api/user/signup`, {
           oauth2AccessToken: kakaoAccessToken,
         })
         .catch(async (error) => {
