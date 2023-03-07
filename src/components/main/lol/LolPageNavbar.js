@@ -1,5 +1,7 @@
 import { Fragment, useState } from 'react';
 
+import { api } from '../../../api/api';
+
 import {
   AppBar,
   Container,
@@ -23,13 +25,19 @@ import Card from './Card';
 
 import Logout from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useNavigate } from 'react-router-dom';
 
 const LolPageNavbar = () => {
+  const { accessToken } = localStorage.getItem('matchGG_refreshToken');
+  const refreshToken = localStorage.getItem('matchGG_refreshToken');
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -41,6 +49,26 @@ const LolPageNavbar = () => {
   };
   const handleClose2 = () => {
     setAnchorEl2(null);
+  };
+
+  // logout
+  const logoutHandler = async () => {
+    const headers = {
+      // single quote around Authorization is required.
+      Authorization: accessToken,
+      'Refresh-Token': refreshToken,
+    };
+
+    await api
+      .post(`${process.env.REACT_APP_API_BASE_URL}/api/user/logout`, null, { headers })
+      .then((response) => {
+        navigate('/login');
+      })
+      .catch((error) => {
+        alert('로그아웃 중 문제가 발생했습니다.');
+        console.log(error);
+        // navigate();
+      });
   };
 
   return (
@@ -159,16 +187,6 @@ const LolPageNavbar = () => {
               >
                 기능2
               </Typography>
-              <Typography
-                sx={{
-                  marginLeft: 5,
-                  fontSize: 15,
-                  color: 'white',
-                  fontWeight: 600,
-                }}
-              >
-                기능3
-              </Typography>
             </Stack>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -229,12 +247,23 @@ const LolPageNavbar = () => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <MenuItem onClick={handleClose}>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                navigate('/mypage');
+              }}
+            >
               <Avatar fontSize='medium' />
               마이페이지
             </MenuItem>
             <Divider />
-            <MenuItem onClick={handleClose}>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                // request to /logout endpoint
+                logoutHandler();
+              }}
+            >
               <ListItemIcon>
                 <Logout fontSize='medium' />
               </ListItemIcon>
