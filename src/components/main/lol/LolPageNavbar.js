@@ -1,4 +1,5 @@
 import { Fragment, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { api } from '../../../api/api';
 
@@ -28,9 +29,11 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router-dom';
 
 const LolPageNavbar = () => {
-  const { accessToken } = localStorage.getItem('matchGG_refreshToken');
+  const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
   const navigate = useNavigate();
+
+  const { nickname, imageUrl } = useSelector((state) => state.user);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -206,7 +209,7 @@ const LolPageNavbar = () => {
                     fontWeight: '500',
                   }}
                 >
-                  엽_님{/* 사용자 이름 불러오기 ?  */}
+                  {nickname ? nickname : 'kakaoNickname'}
                 </Typography>
                 <Avatar sx={{ width: 40, height: 40, marginLeft: 1 }} />
               </IconButton>

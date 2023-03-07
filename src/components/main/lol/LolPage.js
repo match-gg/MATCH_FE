@@ -263,7 +263,6 @@ const LolPage = () => {
             </Button>
           </Box>
         </Box>
-
         <Container maxWidth='xl' sx={{ mt: 5 }}>
           <Box
             container
@@ -276,6 +275,9 @@ const LolPage = () => {
               pt: 3,
             }}
           >
+            <Card />
+            <Card />
+            <Card />
             <Card />
             <Card />
             <Card />
