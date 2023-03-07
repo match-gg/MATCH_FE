@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
 
 import { tokenActions } from '../store/token-slice';
+import { userActions } from '../store/user-slice';
 import { api } from '../api/api';
 
 import { CircularProgress, Box, Typography } from '@mui/material';
@@ -44,19 +46,19 @@ const KakaoRedirect = () => {
         .catch(async (error) => {
           if (error.response.status === 400 && error.response.data['status']) {
             // signin flow 로 전환.
-            const response = await api.post(
-              `/api/user/signin`,
-              {
-                oauth2AccessToken: kakaoAccessToken,
-              }
-            );
-
-            const { accessToken, refreshToken } = response.data['jwtToken'];
+            const response = await api.post(`/api/user/signin`, {
+              oauth2AccessToken: kakaoAccessToken,
+            });
+            const { accessToken, refreshToken } = response.data;
 
             dispatch(tokenActions.SET_TOKEN(accessToken));
             localStorage.setItem('matchGG_refreshToken', refreshToken);
+            const jwtPayload = jwt_decode(accessToken);
+            console.log(jwtPayload);
 
-            navigate('/');
+            dispatch(userActions.SET_USER(jwtPayload));
+
+            navigate('/lol');
           } else {
             alert('비정상적인 접근입니다.');
           }
@@ -67,6 +69,10 @@ const KakaoRedirect = () => {
 
       dispatch(tokenActions.SET_TOKEN(accessToken));
       localStorage.setItem('matchGG_refreshToken', refreshToken);
+      const jwtPayload = jwt_decode(accessToken);
+      console.log(jwtPayload);
+
+      dispatch(userActions.SET_USER(jwtPayload));
 
       navigate('/register');
     };
