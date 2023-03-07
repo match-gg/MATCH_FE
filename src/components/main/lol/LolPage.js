@@ -43,7 +43,7 @@ const LolPage = () => {
   // 티어
   const [tier, setTier] = useState('');
   const handleTier = (event) => {
-    setQueueType(event.target.value);
+    setTier(event.target.value);
   };
 
   // 라인
@@ -95,10 +95,10 @@ const LolPage = () => {
         <Box
           size='small'
           sx={{
-            height: 56,
+            height: 64,
             width: { xs: 480, sm: 480, md: 960, xl: 1400 },
             backgroundColor: 'white',
-            border: '1px solid black',
+            border: '1px solid #dddddd',
             borderRadius: 8,
             px: 4,
             display: 'flex',
@@ -122,7 +122,7 @@ const LolPage = () => {
                 labelId='queue-type-select'
                 id='queue-type-select'
                 value={queueType}
-                label={queueType}
+                label={'큐 타입'}
                 onChange={handleQueueType}
                 defaultValue=''
               >
@@ -139,7 +139,7 @@ const LolPage = () => {
                 labelId='tier-select'
                 id='tier-select'
                 value={tier}
-                label={tier}
+                label={'티어'}
                 onChange={handleTier}
                 defaultValue=''
               >
