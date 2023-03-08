@@ -1,17 +1,13 @@
 import React, { Fragment } from 'react';
-
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import {
-  Typography,
-  Button,
-  Card,
-  CardContent,
-  FormControl,
-} from '@mui/material';
+import { Typography, Button, Card, CardContent, FormControl, Avatar } from '@mui/material';
 
 const RegisterSuccess = () => {
   const navigate = useNavigate();
+
+  const { nickname, imageUrl } = useSelector((state) => state.user);
 
   return (
     <Fragment>
@@ -38,11 +34,11 @@ const RegisterSuccess = () => {
           }}
         >
           <Typography component='h2' variant='h3' sx={{ marginBottom: 5 }}>
-            {'kakao_nickname'} 님 환영합니다.
+            {nickname} 님 환영합니다.
           </Typography>
           <Typography component='p' variant='h5'>
             Match.GG 에서 함께할 플레이어를 찾아보세요. <br />
-            저희는 {'kakao_nickname'} 님의 연승을 응원하겠습니다.
+            저희는 {nickname} 님의 연승을 응원하겠습니다.
           </Typography>
           <FormControl>
             <Button

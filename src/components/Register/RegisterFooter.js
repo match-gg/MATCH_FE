@@ -39,8 +39,8 @@ const RegisterFooter = (props) => {
 
     // send request
     const response = await api.post(
-      `${process.env.REACT_APP_API_BASE_URL}/api/user/register`,
-      { data: requestData },
+      `/api/user/register`,
+      { ...requestData },
       { headers }
     ).catch((error)=> {
       alert('회원가입 중 문제가 발생했습니다.\n다시 시도해 주세요.') // mui dialog 이용해서 바꿀 예정
