@@ -24,7 +24,7 @@ const RegisterWrapper = (props) => {
     phase < 3 ? setPhase(phase + 1) : navigate('/');
   };
   const decreasePhase = () => {
-    phase > 0 ? setPhase(phase - 1) : navigate('/');
+    phase > 0 ? setPhase(phase - 1) : navigate('/login');
   };
 
   const handleNextBtn = () => {

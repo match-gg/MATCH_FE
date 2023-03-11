@@ -78,7 +78,7 @@ const LoginPage = () => {
             </Typography>
             <Box sx={{ mt: 4 }}>
               <Button
-                href={'/register'}
+                href={`https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI_REGISTER}&response_type=code`}
                 sx={{
                   width: '30rem',
                   height: '4rem',

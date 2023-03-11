@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import KakaoRedirect from './pages/KakaoRedirect';
 
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
@@ -16,7 +15,7 @@ export default function App() {
         <Route path='/' element={<LandingPage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/kakao/login' element={<KakaoLoginRedirect />} />
-        <Route path='/register' element={<RegisterPage />} />
+        <Route path='/kakao/register' element={<RegisterPage />} />
         <Route path='/mypage' element={<MyPage />} />
         <Route path='/lol' element={<LolPage />} />
       </Routes>
