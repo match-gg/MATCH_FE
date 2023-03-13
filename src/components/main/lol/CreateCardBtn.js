@@ -14,9 +14,8 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import BackspaceIcon from '@mui/icons-material/Backspace';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { api } from '../../../api/api';
-import { useNavigate } from 'react-router';
 
 const ModalText = ({ text }) => {
   return (
@@ -34,7 +33,6 @@ const ModalText = ({ text }) => {
 };
 
 const CreateCardBtn = (props) => {
-  const navigate = useNavigate();
   //작성하기 Modal 창에서 사용자에게 입력받을 정보
   const [userInput, setUserInput] = useState({
     name: props.name ? props.name : '',
@@ -45,6 +43,7 @@ const CreateCardBtn = (props) => {
     expire: 'FIFTEEN_M',
     content: '',
   });
+
   //사용자의 입력을 통해 userInput의 값을 변경하는 함수
   const handleName = (e) => {
     setUserInput({ ...userInput, name: e.target.value });
@@ -79,13 +78,21 @@ const CreateCardBtn = (props) => {
   const openModal = () => setOpen(true);
   const closeModal = () => {
     setOpen(false);
-    setUserInput({});
+    setUserInput({
+      name: props.name ? props.name : '',
+      type: 'DUO_RANK',
+      tier: 'IRON',
+      position: 'NONE',
+      voice: 'n',
+      expire: 'FIFTEEN_M',
+      content: '',
+    });
   };
   const handleBackdropClick = (e) => {
     e.stopPropagation();
   };
   const postModalInfo = async () => {
-    console.log(`userInput : ${userInput}`);
+    console.log(userInput);
     await api.post(`/api/lol/board`, { ...userInput }).catch((error) => {
       alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
       console.log(error);
@@ -116,9 +123,9 @@ const CreateCardBtn = (props) => {
             height: '70%',
             bgcolor: 'white',
             padding: '5px',
-            minHeight: '500px',
+            minHeight: '600px',
             minWidth: '600px',
-            maxHeight: '600px',
+            maxHeight: '650px',
             maxWidth: '800px',
           }}
         >
@@ -270,6 +277,25 @@ const CreateCardBtn = (props) => {
                 <MenuItem value='TWENTY_FOUR_H'>24시간</MenuItem>
               </Select>
             </FormControl>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'start',
+              }}
+            >
+              <Switch defaultChecked={false} onChange={handleVoice} />
+              <Typography
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                }}
+              >
+                음성채팅 사용 여부를 선택해주세요.
+              </Typography>
+            </Box>
           </Grid>
           <Grid item xs={6} sx={{ height: '80%' }}>
             <ModalText text={'카드 내용 작성하기'} />
