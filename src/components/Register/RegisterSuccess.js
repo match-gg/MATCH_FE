@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Typography, Button, Card, CardContent, FormControl, Avatar } from '@mui/material';
+import { Typography, Button, Card, CardContent, FormControl } from '@mui/material';
 
 const RegisterSuccess = () => {
   const navigate = useNavigate();

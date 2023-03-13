@@ -1,26 +1,16 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Box } from '@mui/material';
+import { registerActions } from '../../store/register-slice';
 
-const GameIcon = (props) => {
-  const {
-    gameIcon,
-    altMessage,
-    w,
-    h,
-    p,
-    gameName,
-    setFavGame,
-    isSelected,
-    setIsSelected,
-    isFav,
-  } = props;
+const GameIcon = ({ gameIcon, altMessage, w, h, p, gameName }) => {
+  const dispatch = useDispatch();
 
-  const handleFavGame = (e) => {
-    if (isFav) {
-      setFavGame(e.target.id);
-      setIsSelected(e.target.id);
-    }
+  const { representative } = useSelector((state) => state.register);
+
+  const setRepresentative = (e) => {
+    dispatch(registerActions.SET_REPRESENTATIVE(e.target.id));
   };
 
   return (
@@ -36,12 +26,12 @@ const GameIcon = (props) => {
         alignItems: 'center',
         justifyContents: 'center',
         '&:hover': {
-          boxShadow: isFav ? 2 : 0,
-          borderRadius: isFav ? '5px' : 0,
+          boxShadow: representative === gameName ? 2 : 0,
+          borderRadius: representative === gameName ? '5px' : 0,
         },
-        borderBottom: isSelected ? '7px solid black' : 0,
+        borderBottom: representative === gameName ? '7px solid black' : 0,
       }}
-      onClick={handleFavGame}
+      onClick={setRepresentative}
     >
       <Box
         component='img'

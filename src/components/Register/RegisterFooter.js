@@ -14,8 +14,9 @@ const RegisterFooter = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { phase, increasePhase, decreasePhase, termAllChecked, handleNextBtn, registerInfo } =
-    props;
+  const { phase, increasePhase, decreasePhase } = props;
+
+  const { firstTerm, secondTerm, games, representative } = useSelector((state) => state.register);
 
   const signUpHandler = async () => {
     // 1. 인가코드 가져오기
@@ -40,15 +41,13 @@ const RegisterFooter = (props) => {
       navigate('/login');
     });
 
-    const { favGame, games } = registerInfo;
-
     console.log(kakaoAccessToken);
 
     // send request
     const response = await api
       .post(`/api/user/signup`, {
         oauth2AccessToken: kakaoAccessToken,
-        representative: favGame.toUpperCase(),
+        representative: representative.toUpperCase(),
         lol: games.lol,
         overwatch: games.overwatch,
         pubg: games.pubg,
@@ -109,14 +108,13 @@ const RegisterFooter = (props) => {
         이전으로
       </Button>
       <Button
-        disabled={!termAllChecked}
+        disabled={!firstTerm || !secondTerm}
         onClick={() => {
           if (phase === 2) {
             signUpHandler();
             increasePhase();
           } else {
             increasePhase();
-            handleNextBtn();
           }
         }}
         variant='contained'

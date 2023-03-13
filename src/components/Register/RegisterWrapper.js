@@ -11,38 +11,17 @@ import RegisterGames from './RegisterGames';
 import RegisterFavGame from './RegisterFavGame';
 import RegisterSuccess from './RegisterSuccess';
 
-const RegisterWrapper = (props) => {
-  const { registerInfo, setRegisterInfo } = props;
+const RegisterWrapper = () => {
 
   const navigate = useNavigate();
 
   const [phase, setPhase] = useState(0);
-  const [agreeAllTerm, setAgreeAllTerm] = useState(false);
-  const [games, setGames] = useState({ ...registerInfo.games });
 
   const increasePhase = () => {
     phase < 3 ? setPhase(phase + 1) : navigate('/');
   };
   const decreasePhase = () => {
     phase > 0 ? setPhase(phase - 1) : navigate('/login');
-  };
-
-  const handleNextBtn = () => {
-    setRegisterInfo({
-      ...registerInfo,
-      games: games,
-    });
-  };
-
-  const setFavGame = (favGame) => {
-    setRegisterInfo({ ...registerInfo, favGame: favGame });
-  };
-
-  const activateNextBtn = () => {
-    setAgreeAllTerm(true);
-  };
-  const deactivateNextBtn = () => {
-    setAgreeAllTerm(false);
   };
 
   return (
@@ -75,38 +54,16 @@ const RegisterWrapper = (props) => {
           }}
         >
           {/* 페이지별 내용 */}
-          {phase === 0 && (
-            <RegisterTerm
-              registerInfo={registerInfo}
-              setRegisterInfo={setRegisterInfo}
-              activateNextBtn={activateNextBtn}
-              deactivateNextBtn={deactivateNextBtn}
-            />
-          )}
-          {phase === 1 && (
-            <RegisterGames
-              games={games}
-              setGames={setGames}
-              registerInfo={registerInfo}
-            />
-          )}
-          {phase === 2 && (
-            <RegisterFavGame
-              registerInfo={registerInfo}
-              setRegisterInfo={setRegisterInfo}
-              setFavGame={setFavGame}
-            />
-          )}
+          {phase === 0 && <RegisterTerm />}
+          {phase === 1 && <RegisterGames />}
+          {phase === 2 && <RegisterFavGame />}
           {phase === 3 && <RegisterSuccess />}
         </Box>
         {phase < 3 && (
           <RegisterFooter
-            registerInfo={registerInfo}
             phase={phase}
             increasePhase={increasePhase}
             decreasePhase={decreasePhase}
-            termAllChecked={agreeAllTerm}
-            handleNextBtn={handleNextBtn}
           />
         )}
       </Box>
