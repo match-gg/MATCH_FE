@@ -35,18 +35,18 @@ const RegisterFooter = (props) => {
         redirect_uri: process.env.REACT_APP_REDIRECT_URI,
         code,
       },
-    }).catch(error => {
+    }).catch((error) => {
       alert('카카오 연결 중 문제가 발생했습니다.\n잠시후 다시 시도해 주세요.');
       navigate('/login');
-    })
+    });
 
     const { favGame, games } = registerInfo;
 
-    console.log(kakaoAccessToken)
+    console.log(kakaoAccessToken);
 
     // send request
     const response = await api
-      .post(`/api/user/register`, {
+      .post(`/api/user/signup`, {
         oauth2AccessToken: kakaoAccessToken,
         representative: favGame.toUpperCase(),
         lol: games.lol,
@@ -59,7 +59,7 @@ const RegisterFooter = (props) => {
         alert('회원가입 중 문제가 발생했습니다.\n다시 시도해 주세요.'); // mui dialog 이용해서 바꿀 예정
         navigate('/login');
       });
-    
+
     const { accessToken, refreshToken } = response.data['jwtToken'];
 
     // console.log(response);
@@ -68,8 +68,6 @@ const RegisterFooter = (props) => {
       localStorage.setItem('matchGG_refreshToken', refreshToken);
       const jwtPayload = jwt_decode(accessToken);
       dispatch(userActions.SET_USER(jwtPayload));
-
-      increasePhase();
     }
   };
 
@@ -115,6 +113,7 @@ const RegisterFooter = (props) => {
         onClick={() => {
           if (phase === 2) {
             signUpHandler();
+            increasePhase();
           } else {
             increasePhase();
             handleNextBtn();

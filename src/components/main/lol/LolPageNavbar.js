@@ -56,21 +56,19 @@ const LolPageNavbar = () => {
 
   // logout
   const logoutHandler = async () => {
-    const headers = {
-      // single quote around Authorization is required.
-      Authorization: accessToken,
-      'Refresh-Token': refreshToken,
-    };
-
     await api
-      .post(`${process.env.REACT_APP_API_BASE_URL}/api/user/logout`, null, { headers })
+      .post(`/api/user/logout`, null, {
+        headers: {
+          'Authorization': accessToken,
+          'Refresh-Token': refreshToken,
+        },
+      })
       .then((response) => {
         navigate('/login');
       })
       .catch((error) => {
         alert('로그아웃 중 문제가 발생했습니다.');
         console.log(error);
-        // navigate();
       });
   };
 
