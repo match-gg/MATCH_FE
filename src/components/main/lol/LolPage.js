@@ -29,6 +29,7 @@ import Card from './Card';
 import Logout from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LolPageNavbar from './LolPageNavbar';
+import CreateCardBtn from './CreateCardBtn';
 
 const LolPage = () => {
   const [scrollValue, setScrollValue] = useState(0);
@@ -58,7 +59,9 @@ const LolPage = () => {
 
   useEffect(() => {
     const onScroll = (e) => {
-      setScrollValue((prevState) => (prevState = e.target.documentElement.scrollTop));
+      setScrollValue(
+        (prevState) => (prevState = e.target.documentElement.scrollTop)
+      );
     };
 
     window.addEventListener('scroll', onScroll);
@@ -150,7 +153,9 @@ const LolPage = () => {
                 <MenuItem value={'gold'}>골드+</MenuItem>
                 <MenuItem value={'platinum'}>플래티넘+</MenuItem>
                 <MenuItem value={'diamond'}>다이아몬드+</MenuItem>
-                {!(queueType === 'Solo') && <MenuItem value={'master'}>마스터+</MenuItem>}
+                {!(queueType === 'Solo') && (
+                  <MenuItem value={'master'}>마스터+</MenuItem>
+                )}
               </Select>
             </FormControl>
             <ButtonGroup
@@ -254,9 +259,10 @@ const LolPage = () => {
             }}
           ></Box>
           <Box>
-            <Button variant='outlined' sx={{ height: 40, mr: 1 }}>
+            {/* <Button variant='outlined' sx={{ height: 40, mr: 1 }}>
               글 작성하기
-            </Button>
+            </Button> */}
+            <CreateCardBtn />
             <Button sx={{ height: 40 }}>
               새로고침
               <RefreshIcon />
@@ -288,9 +294,8 @@ const LolPage = () => {
             <Card />
             <Card />
           </Box>
-          
         </Container>
-      <Button sx={{mb:4}}>더 불러오기</Button>
+        <Button sx={{ mb: 4 }}>더 불러오기</Button>
       </Box>
     </Fragment>
   );
