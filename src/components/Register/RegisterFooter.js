@@ -9,6 +9,7 @@ import { Box, Button } from '@mui/material';
 import Copyright from '../ui/Copyright';
 import { userActions } from '../../store/user-slice';
 import { tokenActions } from '../../store/token-slice';
+import { registerActions } from '../../store/register-slice';
 
 const RegisterFooter = (props) => {
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ const RegisterFooter = (props) => {
       localStorage.setItem('matchGG_refreshToken', refreshToken);
       const jwtPayload = jwt_decode(accessToken);
       dispatch(userActions.SET_USER(jwtPayload));
+      dispatch(registerActions.DELETE_REGISTER());
     }
   };
 
