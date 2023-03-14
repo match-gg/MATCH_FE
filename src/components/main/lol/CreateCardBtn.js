@@ -122,11 +122,12 @@ const CreateCardBtn = (props) => {
             width: '70%',
             height: '70%',
             bgcolor: 'white',
-            padding: '5px',
+            padding: '20px',
             minHeight: '600px',
             minWidth: '600px',
             maxHeight: '650px',
             maxWidth: '800px',
+            boxShadow: '5px 10px 10px 1px rgba(0,0,0,.3)',
           }}
         >
           <Grid
