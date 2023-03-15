@@ -11,20 +11,25 @@ import {
   MenuItem,
   FormControl,
   Switch,
+  ToggleButtonGroup,
+  ToggleButton,
+  ButtonGroup,
+  OutlinedInput,
+  InputAdornment,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import { Fragment, useEffect, useState } from 'react';
+import MicIcon from '@mui/icons-material/Mic';
 import { api } from '../../../api/api';
 
 const ModalText = ({ text }) => {
   return (
     <Typography
+      color='primary'
       sx={{
         marginTop: '10px',
-        marginLeft: '10px',
         fontSize: '16px',
-        fontWeight: 'bold',
       }}
     >
       {text}
@@ -38,9 +43,9 @@ const CreateCardBtn = (props) => {
     name: props.name ? props.name : '',
     type: 'DUO_RANK',
     tier: 'IRON',
-    position: 'NONE',
-    voice: 'n',
+    position: 'TOP',
     expire: 'FIFTEEN_M',
+    voice: 'n',
     content: '',
   });
 
@@ -48,34 +53,54 @@ const CreateCardBtn = (props) => {
   const handleName = (e) => {
     setUserInput({ ...userInput, name: e.target.value });
   };
-  const handleType = (e) => {
-    setUserInput({ ...userInput, type: e.target.value });
+  const handleType = (e, newValue) => {
+    setUserInput({ ...userInput, type: newValue });
   };
-  const handleTier = (e) => {
-    setUserInput({ ...userInput, tier: e.target.value });
+  const handleTier = (e, newValue) => {
+    setUserInput({ ...userInput, tier: newValue });
   };
-  const handlePosition = (e) => {
-    setUserInput({ ...userInput, position: e.target.value });
+  const handlePosition = (e, newValue) => {
+    setUserInput({ ...userInput, position: newValue });
+  };
+  const handleExpire = (e, newValue) => {
+    setUserInput({ ...userInput, expire: e.target.value });
   };
   const handleVoice = (e) => {
-    setUserInput({ ...userInput, voice: e.target.checked ? 'y' : 'n' });
-  };
-  const handleExpire = (e) => {
-    setUserInput({ ...userInput, expire: e.target.value });
+    setUserInput({ ...userInput, voice: e.target.checked ? 'Y' : 'N' });
   };
   const handleContent = (e) => {
     setUserInput({ ...userInput, content: e.target.value });
   };
 
   //연결된 아이디 Switch에 사용할 state와 함수
-  const [idConnected, setIdConnected] = useState(props.name ? true : false);
+  const [idConnected, setIdConnected] = useState(
+    userInput.length ? true : false
+  );
   const handleSwitch = (e) => {
     setIdConnected(!idConnected);
+  };
+
+  //아이디 인증에 사용할 state와 함수
+  const [certyfiedId, setCertifiedId] = useState(false);
+  const certifyNickname = () => {
+    //나중에 서버로 nickname 보내서 인증받는 유효성 검사
+    setCertifiedId(true);
   };
 
   //Modal 관련 state와 함수
   const [open, setOpen] = useState(false);
   const openModal = () => setOpen(true);
+  const closeModalConfirm = () => {
+    if (
+      window.confirm(
+        '현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'
+      )
+    ) {
+      closeModal();
+    } else {
+      return;
+    }
+  };
   const closeModal = () => {
     setOpen(false);
     setUserInput({
@@ -99,7 +124,7 @@ const CreateCardBtn = (props) => {
       closeModal();
     });
   };
-
+  console.log(idConnected, certyfiedId);
   return (
     <Fragment>
       <Button variant='outlined' sx={{ height: 40, mr: 1 }} onClick={openModal}>
@@ -119,14 +144,14 @@ const CreateCardBtn = (props) => {
             left: '50%',
             position: 'absolute',
             transform: 'translate(-50%, -50%)',
-            width: '70%',
-            height: '70%',
+            width: '70vw',
+            // height: '70%',
             bgcolor: 'white',
-            padding: '20px',
-            minHeight: '600px',
-            minWidth: '600px',
-            maxHeight: '650px',
-            maxWidth: '800px',
+            padding: '20px 50px 15px 50px',
+            // minHeight: '70vw',
+            // minWidth: '1000px',
+            // maxHeight: '650px',
+            // maxWidth: '800px',
             boxShadow: '5px 10px 10px 1px rgba(0,0,0,.3)',
           }}
         >
@@ -151,6 +176,7 @@ const CreateCardBtn = (props) => {
                 onChange={handleSwitch}
               />
               <Typography
+                color={idConnected ? 'primary' : 'grey'}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
@@ -158,126 +184,153 @@ const CreateCardBtn = (props) => {
                   fontWeight: 'bold',
                 }}
               >
-                연결된 아이디 : {props.name ? props.name : '-'}
+                현재 계정 사용 : {props.name ? props.name : '-'}
               </Typography>
             </Box>
-            <TextField
-              fullWidth
-              label='연결할 아이디를 입력해주세요'
-              placeholder='연결할 아이디를 입력해주세요'
-              disabled={idConnected}
-              onChange={handleName}
-            />
+            <Box
+              sx={{ maxWidth: '350px', display: 'felx', flexDirection: 'row' }}
+            >
+              <OutlinedInput
+                fullWidth
+                placeholder='연결할 아이디를 입력해주세요.'
+                disabled={idConnected}
+                onChange={handleName}
+                endAdornment={
+                  <Button
+                    position='end'
+                    sx={{ whiteSpace: 'nowrap' }}
+                    onClick={certifyNickname}
+                    disabled={idConnected}
+                  >
+                    인증하기
+                  </Button>
+                }
+              />
+            </Box>
             {/* 큐타입 */}
-            <FormControl fullWidth>
-              <ModalText text={'큐 타입을 선택해주세요.'} />
-              {/* <InputLabel>큐 타입을 선택해주세요.</InputLabel> */}
-              <Select
-                defaultValue='DUO_RANK'
+            <ModalText text={'플레이할 큐타입'} />
+            <Box sx={{ overflow: 'auto ' }}>
+              <ToggleButtonGroup
                 value={userInput.type}
-                // label='큐 타입을 선택해주세요.'
+                exclusive={true}
                 onChange={handleType}
+                sx={{
+                  '& .MuiToggleButton-root.Mui-selected': {
+                    // backgroundColor: '#4AD395',
+                    backgroundColor: '#4f90db',
+                    color: 'white',
+                  },
+                }}
               >
-                <MenuItem
-                  disabled
-                  value=''
-                  sx={{
-                    display: 'none',
-                  }}
-                >
-                  <em>-</em>
-                </MenuItem>
-                <MenuItem value='DUO_RANK'>2인 랭크 게임</MenuItem>
-                <MenuItem value='FREE_RANK'>자유 랭크 게임</MenuItem>
-                <MenuItem value='NORMAL'>비공개 선택</MenuItem>
-                <MenuItem value='ARAM'>무작위 총력전</MenuItem>
-              </Select>
-            </FormControl>
+                <ToggleButton value='DUO_RANK' sx={{ whiteSpace: 'nowrap' }}>
+                  듀오 랭크
+                </ToggleButton>
+                <ToggleButton value='FREE_RANK' sx={{ whiteSpace: 'nowrap' }}>
+                  자유 랭크
+                </ToggleButton>
+                <ToggleButton value='NORMAL' sx={{ whiteSpace: 'nowrap' }}>
+                  노말 게임
+                </ToggleButton>
+                <ToggleButton value='ARAM' sx={{ whiteSpace: 'nowrap' }}>
+                  무작위 총력전
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
             {/* 티어 */}
-            <FormControl fullWidth>
-              <ModalText text={'파티원의 티어를 선택해주세요.'} />
-              {/* <InputLabel>파티원의 티어를 선택해주세요.</InputLabel> */}
-              <Select
+            <ModalText text={'원하는 파티원의 티어'} />
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <ToggleButtonGroup
                 value={userInput.tier}
-                defaultValue='IRON'
-                // label='파티원의 티어을 선택해주세요'
+                exclusive={true}
                 onChange={handleTier}
+                sx={{
+                  '& .MuiToggleButton-root.Mui-selected': {
+                    // backgroundColor: '#4AD395',
+                    backgroundColor: '#4f90db',
+                    color: 'white',
+                  },
+                }}
               >
-                <MenuItem
-                  disabled
-                  value=''
-                  sx={{
-                    display: 'none',
-                  }}
-                >
-                  <em>-</em>
-                </MenuItem>
-                <MenuItem value='NONE'>상관없음</MenuItem>
-                <MenuItem value='IRON'>아이언</MenuItem>
-                <MenuItem value='BRONZE'>브론즈</MenuItem>
-                <MenuItem value='SILVER'>실버</MenuItem>
-                <MenuItem value='GOLD'>골드</MenuItem>
-                <MenuItem value='PLATINUM'>플레티넘</MenuItem>
-                <MenuItem value='DIAMOND'>다이아몬드</MenuItem>
-                <MenuItem value='MASTER'>마스터</MenuItem>
-              </Select>
-            </FormControl>
+                <ToggleButton value='IRON'>IRON</ToggleButton>
+                <ToggleButton value='BRONZE'>BRONZE</ToggleButton>
+                <ToggleButton value='SILVER'>SILVER</ToggleButton>
+                <ToggleButton value='GOLD'>GOLD</ToggleButton>
+              </ToggleButtonGroup>
+              <ToggleButtonGroup
+                value={userInput.tier}
+                exclusive={true}
+                onChange={handleTier}
+                sx={{
+                  '& .MuiToggleButton-root.Mui-selected': {
+                    // backgroundColor: '#4AD395',
+                    backgroundColor: '#4f90db',
+                    color: 'white',
+                  },
+                }}
+              >
+                <ToggleButton value='PLATINUM'>PLATINUM</ToggleButton>
+                <ToggleButton value='DIAMOND'>DIAMOND</ToggleButton>
+                <ToggleButton value='MASTER'>MASTER</ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
             {/* 포지션 */}
-            <FormControl fullWidth>
-              <ModalText text={'파티원의 포지션을 선택해주세요.'} />
-              {/* <InputLabel>파티원의 포지션을 선택해주세요.</InputLabel> */}
-              <Select
-                value={userInput.position}
-                defaultValue='NONE'
-                // label='파티원의 포지션을 선택해주세요.'
-                onChange={handlePosition}
-              >
-                <MenuItem
-                  disabled
-                  value=''
-                  sx={{
-                    display: 'none',
-                  }}
-                >
-                  <em>-</em>
-                </MenuItem>
-                <MenuItem value='NONE'>상관없음</MenuItem>
-                <MenuItem value='TOP'>탑</MenuItem>
-                <MenuItem value='JUG'>정글</MenuItem>
-                <MenuItem value='MID'>미드</MenuItem>
-                <MenuItem value='ADC'>원딜</MenuItem>
-                <MenuItem value='SUP'>서포터</MenuItem>
-              </Select>
-            </FormControl>
+            <ModalText text={'원하는 파티원의 포지션'} />
+            <ToggleButtonGroup
+              value={userInput.position}
+              exclusive={true}
+              onChange={handlePosition}
+              sx={{
+                '& .MuiToggleButton-root.Mui-selected': {
+                  // backgroundColor: '#4AD395',
+                  backgroundColor: '#4f90db',
+                  color: 'white',
+                },
+              }}
+            >
+              <ToggleButton value='TOP'>TOP</ToggleButton>
+              <ToggleButton value='JUG'>JUG</ToggleButton>
+              <ToggleButton value='MID'>MID</ToggleButton>
+              <ToggleButton value='ADC'>ADC</ToggleButton>
+              <ToggleButton value='SUP'>SUP</ToggleButton>
+            </ToggleButtonGroup>
             {/* 카드 만료 시간 */}
-            <FormControl fullWidth>
-              <ModalText text={'카드 만료 시간을 선택해주세요.'} />
-              {/* <InputLabel>카드 만료 시간을 선택해주세요.</InputLabel> */}
-              <Select
-                defaultValue='FIFTEEN_M'
+            <ModalText text={'카드 만료 시간'} />
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <ToggleButtonGroup
+                sx={{
+                  '& .MuiToggleButton-root.Mui-selected': {
+                    // backgroundColor: '#4AD395',
+                    backgroundColor: '#4f90db',
+                    color: 'white',
+                  },
+                }}
                 value={userInput.expire}
-                // label='카드 만료 시간을 선택해주세요.'
+                exclusive
                 onChange={handleExpire}
               >
-                <MenuItem
-                  disabled
-                  value=''
-                  sx={{
-                    display: 'none',
-                  }}
-                >
-                  <em>-</em>
-                </MenuItem>
-                <MenuItem value='FIFTEEN_M'>15분</MenuItem>
-                <MenuItem value='THIRTY_M'>30분</MenuItem>
-                <MenuItem value='ONE_H'>1시간</MenuItem>
-                <MenuItem value='TWO_H'>2시간</MenuItem>
-                <MenuItem value='THREE_H'>3시간</MenuItem>
-                <MenuItem value='SIX_H'>6시간</MenuItem>
-                <MenuItem value='TWELVE_H'>12시간</MenuItem>
-                <MenuItem value='TWENTY_FOUR_H'>24시간</MenuItem>
-              </Select>
-            </FormControl>
+                <ToggleButton value='FIFTEEN_M'>15Min</ToggleButton>
+                <ToggleButton value='THIRTY_M'>30Min</ToggleButton>
+                <ToggleButton value='ONE_H'>1Hour</ToggleButton>
+                <ToggleButton value='TWO_H'>2Hour</ToggleButton>
+              </ToggleButtonGroup>
+              <ToggleButtonGroup
+                sx={{
+                  '& .MuiToggleButton-root.Mui-selected': {
+                    // backgroundColor: '#4AD395',
+                    backgroundColor: '#4f90db',
+                    color: 'white',
+                  },
+                }}
+                value={userInput.expire}
+                exclusive
+                onChange={handleExpire}
+              >
+                <ToggleButton value='THREE_H'>3Hour</ToggleButton>
+                <ToggleButton value='SIX_H'>6Hour</ToggleButton>
+                <ToggleButton value='TWELVE_H'>12Hour</ToggleButton>
+                <ToggleButton value='TWENTY_FOUR_H'>24Hour</ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
             <Box
               sx={{
                 display: 'flex',
@@ -285,17 +338,20 @@ const CreateCardBtn = (props) => {
                 justifyContent: 'start',
               }}
             >
-              <Switch defaultChecked={false} onChange={handleVoice} />
-              <Typography
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                }}
-              >
-                음성채팅 사용 여부를 선택해주세요.
-              </Typography>
+              <Box sx={{ display: 'flex', marginTop: '10px' }}>
+                <Switch defaultChecked={false} onChange={handleVoice} />
+                <Typography
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  <MicIcon color={userInput.voice === 'Y' ? 'primary' : ''} />
+                  음성채팅 사용 여부
+                </Typography>
+              </Box>
             </Box>
           </Grid>
           <Grid item xs={6} sx={{ height: '80%' }}>
@@ -304,18 +360,20 @@ const CreateCardBtn = (props) => {
               sx={{ bgcolor: 'white' }}
               onChange={handleContent}
               fullWidth
-              multiline={true}
-              minRows={17} // 이거 어떻게 처리하지...
-              placeholder='카드의 내용을 작성해주세요'
+              multiline
+              minRows={20} // 이거 어떻게 처리하지...
+              maxRows={20}
+              placeholder='카드의 내용은 140자 이내로 작성해주세요.'
+              inputProps={{ maxLength: 10 }}
             />
           </Grid>
           <Grid
             item
             xs={12}
             display='flex'
-            justifyContent='space-around'
+            justifyContent='space-between'
             alignItems='center'
-            sx={{ backgroundColor: 'white' }}
+            sx={{ backgroundColor: 'white', marginTop: '10px' }}
           >
             <Stack
               direction='row'
@@ -324,10 +382,16 @@ const CreateCardBtn = (props) => {
               sx={{ width: '100%' }}
             >
               <Button
-                onClick={closeModal}
+                onClick={closeModalConfirm}
                 startIcon={<BackspaceIcon />}
                 variant='contained'
                 size='large'
+                sx={{
+                  bgcolor: '#808080',
+                  ':hover': {
+                    bgcolor: '#a0a0a0',
+                  },
+                }}
               >
                 뒤로가기
               </Button>
@@ -336,6 +400,7 @@ const CreateCardBtn = (props) => {
                 startIcon={<EditIcon />}
                 variant='contained'
                 size='large'
+                disabled={!(idConnected || certyfiedId)}
               >
                 작성하기
               </Button>
