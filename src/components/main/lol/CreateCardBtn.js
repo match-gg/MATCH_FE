@@ -42,10 +42,10 @@ const CreateCardBtn = (props) => {
   const [userInput, setUserInput] = useState({
     name: props.name ? props.name : '',
     type: 'DUO_RANK',
-    tier: 'IRON',
-    position: 'TOP',
+    tier: ['IRON'],
+    position: ['TOP'],
     expire: 'FIFTEEN_M',
-    voice: 'n',
+    voice: 'N',
     content: '',
   });
 
@@ -54,13 +54,43 @@ const CreateCardBtn = (props) => {
     setUserInput({ ...userInput, name: e.target.value });
   };
   const handleType = (e, newValue) => {
-    setUserInput({ ...userInput, type: newValue });
+    if (newValue === null) {
+      return;
+    } else {
+      if (userInput.type !== 'DUO_RANK' && newValue === 'DUO_RANK') {
+        setUserInput({
+          ...userInput,
+          tier: ['IRON'],
+          position: ['TOP'],
+          type: newValue,
+        });
+      } else {
+        setUserInput({ ...userInput, type: newValue });
+      }
+    }
   };
+
   const handleTier = (e, newValue) => {
-    setUserInput({ ...userInput, tier: newValue });
+    if (newValue.length === 0) {
+      return;
+    } else {
+      if (userInput.type === 'DUO_RANK') {
+        setUserInput({ ...userInput, tier: [newValue] });
+      } else {
+        setUserInput({ ...userInput, tier: newValue });
+      }
+    }
   };
   const handlePosition = (e, newValue) => {
-    setUserInput({ ...userInput, position: newValue });
+    if (newValue.length === 0) {
+      return;
+    } else {
+      if (userInput.type === 'DUO_RANK') {
+        setUserInput({ ...userInput, position: [newValue] });
+      } else {
+        setUserInput({ ...userInput, position: newValue });
+      }
+    }
   };
   const handleExpire = (e, newValue) => {
     setUserInput({ ...userInput, expire: e.target.value });
@@ -106,9 +136,9 @@ const CreateCardBtn = (props) => {
     setUserInput({
       name: props.name ? props.name : '',
       type: 'DUO_RANK',
-      tier: 'IRON',
-      position: 'NONE',
-      voice: 'n',
+      tier: ['IRON'],
+      position: ['TOP'],
+      voice: 'N',
       expire: 'FIFTEEN_M',
       content: '',
     });
@@ -124,7 +154,6 @@ const CreateCardBtn = (props) => {
       closeModal();
     });
   };
-  console.log(idConnected, certyfiedId);
   return (
     <Fragment>
       <Button variant='outlined' sx={{ height: 40, mr: 1 }} onClick={openModal}>
@@ -144,14 +173,14 @@ const CreateCardBtn = (props) => {
             left: '50%',
             position: 'absolute',
             transform: 'translate(-50%, -50%)',
-            width: '70vw',
+            width: '80vw',
             // height: '70%',
             bgcolor: 'white',
             padding: '20px 50px 15px 50px',
             // minHeight: '70vw',
             // minWidth: '1000px',
             // maxHeight: '650px',
-            // maxWidth: '800px',
+            maxWidth: '1200px',
             boxShadow: '5px 10px 10px 1px rgba(0,0,0,.3)',
           }}
         >
@@ -216,7 +245,6 @@ const CreateCardBtn = (props) => {
                 onChange={handleType}
                 sx={{
                   '& .MuiToggleButton-root.Mui-selected': {
-                    // backgroundColor: '#4AD395',
                     backgroundColor: '#4f90db',
                     color: 'white',
                   },
@@ -241,11 +269,10 @@ const CreateCardBtn = (props) => {
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <ToggleButtonGroup
                 value={userInput.tier}
-                exclusive={true}
                 onChange={handleTier}
+                exclusive={userInput.type === 'DUO_RANK' ? true : false}
                 sx={{
                   '& .MuiToggleButton-root.Mui-selected': {
-                    // backgroundColor: '#4AD395',
                     backgroundColor: '#4f90db',
                     color: 'white',
                   },
@@ -258,11 +285,10 @@ const CreateCardBtn = (props) => {
               </ToggleButtonGroup>
               <ToggleButtonGroup
                 value={userInput.tier}
-                exclusive={true}
                 onChange={handleTier}
+                exclusive={userInput.type === 'DUO_RANK' ? true : false}
                 sx={{
                   '& .MuiToggleButton-root.Mui-selected': {
-                    // backgroundColor: '#4AD395',
                     backgroundColor: '#4f90db',
                     color: 'white',
                   },
@@ -277,11 +303,10 @@ const CreateCardBtn = (props) => {
             <ModalText text={'원하는 파티원의 포지션'} />
             <ToggleButtonGroup
               value={userInput.position}
-              exclusive={true}
+              exclusive={userInput.type === 'DUO_RANK' ? true : false}
               onChange={handlePosition}
               sx={{
                 '& .MuiToggleButton-root.Mui-selected': {
-                  // backgroundColor: '#4AD395',
                   backgroundColor: '#4f90db',
                   color: 'white',
                 },
@@ -296,10 +321,10 @@ const CreateCardBtn = (props) => {
             {/* 카드 만료 시간 */}
             <ModalText text={'카드 만료 시간'} />
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <ToggleButtonGroup
+              {/* 만료 시간이 4개인 경우  */}
+              {/* <ToggleButtonGroup
                 sx={{
                   '& .MuiToggleButton-root.Mui-selected': {
-                    // backgroundColor: '#4AD395',
                     backgroundColor: '#4f90db',
                     color: 'white',
                   },
@@ -312,11 +337,10 @@ const CreateCardBtn = (props) => {
                 <ToggleButton value='THIRTY_M'>30Min</ToggleButton>
                 <ToggleButton value='ONE_H'>1Hour</ToggleButton>
                 <ToggleButton value='TWO_H'>2Hour</ToggleButton>
-              </ToggleButtonGroup>
+              </ToggleButtonGroup> */}
               <ToggleButtonGroup
                 sx={{
                   '& .MuiToggleButton-root.Mui-selected': {
-                    // backgroundColor: '#4AD395',
                     backgroundColor: '#4f90db',
                     color: 'white',
                   },
@@ -338,7 +362,7 @@ const CreateCardBtn = (props) => {
                 justifyContent: 'start',
               }}
             >
-              <Box sx={{ display: 'flex', marginTop: '10px' }}>
+              <Box sx={{ display: 'flex', marginTop: '16px' }}>
                 <Switch defaultChecked={false} onChange={handleVoice} />
                 <Typography
                   sx={{
@@ -373,7 +397,7 @@ const CreateCardBtn = (props) => {
             display='flex'
             justifyContent='space-between'
             alignItems='center'
-            sx={{ backgroundColor: 'white', marginTop: '10px' }}
+            sx={{ backgroundColor: 'white', marginTop: '20px' }}
           >
             <Stack
               direction='row'
