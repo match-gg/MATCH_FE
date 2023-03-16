@@ -23,10 +23,10 @@ import { Fragment, useEffect, useState } from 'react';
 import MicIcon from '@mui/icons-material/Mic';
 import { api } from '../../../api/api';
 
-const ModalText = ({ text }) => {
+const ModalText = ({ text, type }) => {
   return (
     <Typography
-      color='primary'
+      color={type === 'ARAM' ? '#c3c3c3' : 'primary'}
       sx={{
         marginTop: '10px',
         fontSize: '16px',
@@ -56,6 +56,8 @@ const CreateCardBtn = (props) => {
   const handleType = (e, newValue) => {
     if (newValue === null) {
       return;
+    } else if (newValue === 'ARAM') {
+      setUserInput({ ...userInput, position: [], type: newValue });
     } else {
       if (userInput.type !== 'DUO_RANK' && newValue === 'DUO_RANK') {
         setUserInput({
@@ -149,11 +151,11 @@ const CreateCardBtn = (props) => {
   };
   const postModalInfo = async () => {
     console.log(userInput);
-    // await api.post(`/api/lol/board`, { ...userInput }).catch((error) => {
-    //   alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
-    //   console.log(error);
-    //   closeModal();
-    // });
+    await api.post(`/api/lol/board`, { ...userInput }).catch((error) => {
+      alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
+      console.log(error);
+      closeModal();
+    });
   };
   return (
     <Fragment>
@@ -301,8 +303,9 @@ const CreateCardBtn = (props) => {
               </ToggleButtonGroup>
             </Box>
             {/* 포지션 */}
-            <ModalText text={'원하는 파티원의 포지션'} />
+            <ModalText text={'원하는 파티원의 포지션'} type={userInput.type} />
             <ToggleButtonGroup
+              disabled={userInput.type === 'ARAM' ? true : false}
               value={userInput.position}
               exclusive={userInput.type === 'DUO_RANK' ? true : false}
               onChange={handlePosition}
@@ -389,7 +392,7 @@ const CreateCardBtn = (props) => {
               minRows={20} // 이거 어떻게 처리하지...
               maxRows={20}
               placeholder='카드의 내용은 140자 이내로 작성해주세요.'
-              inputProps={{ maxLength: 10 }}
+              inputProps={{ maxLength: 140 }}
             />
           </Grid>
           <Grid
