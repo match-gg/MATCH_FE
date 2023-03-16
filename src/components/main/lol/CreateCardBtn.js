@@ -142,17 +142,18 @@ const CreateCardBtn = (props) => {
       expire: 'FIFTEEN_M',
       content: '',
     });
+    setCertifiedId(false);
   };
   const handleBackdropClick = (e) => {
     e.stopPropagation();
   };
   const postModalInfo = async () => {
     console.log(userInput);
-    await api.post(`/api/lol/board`, { ...userInput }).catch((error) => {
-      alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
-      console.log(error);
-      closeModal();
-    });
+    // await api.post(`/api/lol/board`, { ...userInput }).catch((error) => {
+    //   alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
+    //   console.log(error);
+    //   closeModal();
+    // });
   };
   return (
     <Fragment>
