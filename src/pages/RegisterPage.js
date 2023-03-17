@@ -23,7 +23,7 @@ const RegisterPage = () => {
     phase > 0 ? setPhase(phase - 1) : navigate('/login');
   };
 
-  return (<Container component='main' maxWidth='md'>
+  return (<Container component='main' maxWidth='xl'>
   <Box
     sx={{
       position: 'relative',

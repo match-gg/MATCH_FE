@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import { Box, Checkbox, Typography, Container } from '@mui/material';
 
@@ -6,7 +6,7 @@ const TermSection = (props) => {
   const { title, termContents, term, termHandler } = props;
 
   return (
-    <Fragment>
+    <Box>
       <Typography
         sx={{
           textAlign: 'center',
@@ -21,12 +21,12 @@ const TermSection = (props) => {
           padding: 4,
           backgroundColor: '#f7f7f7',
           borderRadius: 4,
-          height: 360,
-          width: '100%',
+          height: 500,
+          width: 600,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          overflow: 'auto',
+          overflow: 'scroll',
           gap: 2,
         }}
       >
@@ -45,7 +45,7 @@ const TermSection = (props) => {
           {`위의 ${title}을 읽었으며, 위 사항에 동의합니다.`}
         </Box>
       </Container>
-    </Fragment>
+    </Box>
   );
 };
 
