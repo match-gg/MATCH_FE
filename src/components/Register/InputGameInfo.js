@@ -12,14 +12,14 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName }) => {
   const dispatch = useDispatch();
 
   const changeTextField = (e) => {
-    dispatch(registerActions.SET_GAMES_WITH_ID({ id: e.target.id, value: e.target.value }));
+    dispatch(registerActions.SET_GAMES_WITH_ID({ id: e.target.id, value: e.target.value.trim() }));
   };
 
   return (
     <Box
       component='div'
       sx={{
-        width: '70%',
+        width: '50%',
         height: 100,
         display: 'flex',
         flexDirection: 'row',
@@ -31,7 +31,7 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName }) => {
       <Box
         component='div'
         sx={{
-          width: '100%',
+          width: '90%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

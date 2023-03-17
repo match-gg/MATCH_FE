@@ -27,6 +27,7 @@ const RegisterTerm = (props) => {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
+        gap: 2
       }}
     >
       <TermSection

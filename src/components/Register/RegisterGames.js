@@ -1,13 +1,22 @@
-import React, { Fragment } from 'react';
+import React  from 'react';
 
 import InputGameInfo from './InputGameInfo';
 
 import { GameDatas } from './datas/Game.data';
+import { Box } from '@mui/material';
 
 const RegisterGames = () => {
   
   return (
-    <Fragment>
+    <Box sx={{
+      height: '100%',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 1
+    }}>
       {GameDatas.map((content, idx) => {
         return (
           <InputGameInfo
@@ -19,7 +28,7 @@ const RegisterGames = () => {
           />
         );
       })}
-    </Fragment>
+    </Box>
   );
 };
 
