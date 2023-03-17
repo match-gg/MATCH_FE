@@ -42,7 +42,7 @@ const RegisterFooter = (props) => {
       navigate('/login');
     });
 
-    console.log(kakaoAccessToken);
+    // console.log(kakaoAccessToken);
 
     // send request
     const response = await api
