@@ -1,119 +1,36 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import GameIcon from './GameIcon';
+import { GameDatas } from './datas/Game.data';
+import { registerActions } from '../../store/register-slice';
 
-import lolIcon from './logo_images/LoL_Icon_Flat_BLACK.png';
-import pubgIcon from './logo_images/Pubg_Logo.png';
-import overwatchIcon from './logo_images/overwatch_logo.png';
-import lostarkIcon from './logo_images/lost_Ark_Logo.png';
-import maplestoryIcon from './logo_images/maplestory_logo.png';
+const RegisterFavGame = () => {
+  const dispatch = useDispatch();
 
-const RegisterFavGame = (props) => {
-  const { setFavGame, registerInfo } = props;
+  const { games, representative } = useSelector((state) => state.register);
+  const [warning, setWarning] = useState(false);
 
-  const [lolSelected, setLolSelected] = useState(false);
-  const [pubgSelected, setPubgSelected] = useState(false);
-  const [overwatchSelected, setOverwatchSelected] = useState(false);
-  const [lostarkSelected, setLostarkSelected] = useState(false);
-  const [maplestorySelected, setMaplestorySelected] = useState(false);
-
-  useEffect(() => {
-    if (registerInfo.favGame === 'lol') {
-      setLolSelected(true);
-    } else if (registerInfo.favGame === 'pubg') {
-      setPubgSelected(true);
-    } else if (registerInfo.favGame === 'overwatch') {
-      setOverwatchSelected(true);
-    } else if (registerInfo.favGame === 'lostark') {
-      setLostarkSelected(true);
-    } else if (registerInfo.favGame === 'maplestory') {
-      setMaplestorySelected(true);
+  const setRepresentative = (e) => {
+    if (games[e.target.id] === '') {
+      setWarning(true);
+    } else {
+      setWarning(false);
+      dispatch(registerActions.SET_REPRESENTATIVE(e.target.id));
     }
-  }, []);
-
-  const handleLoLSelected = () => {
-    setLolSelected(true);
-    setPubgSelected(false);
-    setOverwatchSelected(false);
-    setLostarkSelected(false);
-    setMaplestorySelected(false);
-    setFavGame('lol');
   };
-  const handlePUBGSelected = () => {
-    setLolSelected(false);
-    setPubgSelected(true);
-    setOverwatchSelected(false);
-    setLostarkSelected(false);
-    setMaplestorySelected(false);
-    setFavGame('pubg');
-  };
-  const handleOVERWATCHSelected = () => {
-    setLolSelected(false);
-    setPubgSelected(false);
-    setOverwatchSelected(true);
-    setLostarkSelected(false);
-    setMaplestorySelected(false);
-    setFavGame('overwatch');
-  };
-  const handleLOSTARKSelected = () => {
-    setLolSelected(false);
-    setPubgSelected(false);
-    setOverwatchSelected(false);
-    setLostarkSelected(true);
-    setMaplestorySelected(false);
-    setFavGame('lostark');
-  };
-  const handleMAPLESTORYSelected = () => {
-    setLolSelected(false);
-    setPubgSelected(false);
-    setOverwatchSelected(false);
-    setLostarkSelected(false);
-    setMaplestorySelected(true);
-    setFavGame('maplestory');
-  };
-
-  const GameIcons = [
-    {
-      gameIcon: lolIcon,
-      altMessage: '리그오브레전드_아이콘',
-      gameName: 'lol',
-      isSelected: lolSelected,
-      setIsSelected: handleLoLSelected,
-    },
-    {
-      gameIcon: pubgIcon,
-      altMessage: '배틀그라운드_아이콘',
-      gameName: 'pubg',
-      isSelected: pubgSelected,
-      setIsSelected: handlePUBGSelected,
-    },
-    {
-      gameIcon: overwatchIcon,
-      altMessage: '오버워치_아이콘',
-      gameName: 'overwatch',
-      isSelected: overwatchSelected,
-      setIsSelected: handleOVERWATCHSelected,
-    },
-    {
-      gameIcon: lostarkIcon,
-      altMessage: '로스트아크_아이콘',
-      gameName: 'lostark',
-      isSelected: lostarkSelected,
-      setIsSelected: handleLOSTARKSelected,
-    },
-    {
-      gameIcon: maplestoryIcon,
-      altMessage: '메이플스토리_아이콘',
-      gameName: 'maplestory',
-      isSelected: maplestorySelected,
-      setIsSelected: handleMAPLESTORYSelected,
-    },
-  ];
 
   return (
     <Fragment>
+      <Typography
+        sx={{
+          color: 'red',
+        }}
+      >
+        {warning && '대표게임으로 설정하려면 우선 게임 정보를 입력해야 합니다.'}
+      </Typography>
       <Box
         component='div'
         sx={{
@@ -125,17 +42,15 @@ const RegisterFavGame = (props) => {
           justifyContent: 'center',
         }}
       >
-        {GameIcons.map((content, idx) => {
+        {GameDatas.map((content, idx) => {
           return (
             <GameIcon
-              key={idx}
-              isFav={true}
+              key={content.gameName}
               gameIcon={content.gameIcon}
               altMessage={content.altMessage}
               gameName={content.gameName}
-              setFavGame={setFavGame}
-              isSelected={content.isSelected}
-              setIsSelected={content.setIsSelected}
+              onClickHandler={setRepresentative}
+              selected={representative === content.gameName ? true : false}
             />
           );
         })}

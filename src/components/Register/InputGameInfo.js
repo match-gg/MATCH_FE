@@ -1,28 +1,25 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Box, TextField } from '@mui/material';
 
+import { registerActions } from '../../store/register-slice';
 import GameIcon from './GameIcon';
 
-const InputGameInfo = (props) => {
-  const {
-    gameIcon,
-    labelText,
-    altMessage,
-    handleNickName,
-    registerInfo,
-    gameName,
-  } = props;
+const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName }) => {
+  const { games } = useSelector((state) => state.register);
 
-  const changeNickName = (e) => {
-    handleNickName(e.target.value);
+  const dispatch = useDispatch();
+
+  const changeTextField = (e) => {
+    dispatch(registerActions.SET_GAMES_WITH_ID({ id: e.target.id, value: e.target.value.trim() }));
   };
 
   return (
     <Box
       component='div'
       sx={{
-        width: '70%',
+        width: '50%',
         height: 100,
         display: 'flex',
         flexDirection: 'row',
@@ -34,18 +31,19 @@ const InputGameInfo = (props) => {
       <Box
         component='div'
         sx={{
-          width: '100%',
+          width: '90%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
       >
         <TextField
+          id={gameName}
           fullWidth
           label={labelText}
           variant='outlined'
-          onChange={changeNickName}
-          defaultValue={registerInfo.games[gameName]}
+          onChange={changeTextField}
+          defaultValue={games[gameName]}
         />
       </Box>
     </Box>

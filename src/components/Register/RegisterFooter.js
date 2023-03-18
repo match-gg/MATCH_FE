@@ -1,54 +1,75 @@
 import React from 'react';
 import { api } from '../../api/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
 
 import { Box, Button } from '@mui/material';
 
 import Copyright from '../ui/Copyright';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { userActions } from '../../store/user-slice';
+import { tokenActions } from '../../store/token-slice';
+import { registerActions } from '../../store/register-slice';
 
 const RegisterFooter = (props) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const { phase, increasePhase, decreasePhase, termAllChecked, handleNextBtn, registerInfo } = props;
-  const { accessToken } = useSelector((state) => state.token);
+  const { phase, increasePhase, decreasePhase } = props;
 
-  const registerHandler = async () => {
-    const refreshToken = localStorage.getItem('matchGG_refreshToken');
+  const { firstTerm, secondTerm, games, representative } = useSelector((state) => state.register);
 
-    // setting headers
-    const headers = {
-      // single quote around Authorization is required.
-      'Authorization': accessToken,
-      'Refresh-Token': refreshToken,
-    };
+  const signUpHandler = async () => {
+    // 1. 인가코드 가져오기
+    const params = new URL(document.URL).searchParams;
+    const code = params.get('code');
 
-    const {favGame, games} = registerInfo;
+    // 2. 인가코드로 카카오 액세스 토큰 발급
+    const {
+      data: { access_token: kakaoAccessToken },
+    } = await api('https://kauth.kakao.com/oauth/token', {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+      },
+      params: {
+        grant_type: 'authorization_code',
+        client_id: process.env.REACT_APP_REST_API_KEY,
+        redirect_uri: process.env.REACT_APP_REDIRECT_URI,
+        code,
+      },
+    }).catch((error) => {
+      alert('카카오 연결 중 문제가 발생했습니다.\n잠시후 다시 시도해 주세요.');
+      navigate('/login');
+    });
 
-    const requestData = {
-      representative: favGame.toUpperCase(),
-      lol: games.lol,
-      overwatch: games.overwatch,
-      pubg: games.pubg,
-      lostark: games.lostark,
-      maplestory: games.maplestory,
-    };
-
-    // console.log('requestHeaders :' + JSON.stringify(headers));
-    // console.log('requestData: ' + JSON.stringify(requestData));
+    // console.log(kakaoAccessToken);
 
     // send request
-    const response = await api.post(
-      `/api/user/register`,
-      { ...requestData },
-      { headers }
-    ).catch((error)=> {
-      alert('회원가입 중 문제가 발생했습니다.\n다시 시도해 주세요.') // mui dialog 이용해서 바꿀 예정
-      navigate('/login');
-    } )
+    const response = await api
+      .post(`/api/user/signup`, {
+        oauth2AccessToken: kakaoAccessToken,
+        representative: representative.toUpperCase(),
+        lol: games.lol,
+        overwatch: games.overwatch,
+        pubg: games.pubg,
+        lostark: games.lostark,
+        maplestory: games.maplestory,
+      })
+      .catch((error) => {
+        alert('회원가입 중 문제가 발생했습니다.\n다시 시도해 주세요.'); // mui dialog 이용해서 바꿀 예정
+        navigate('/login');
+      });
+
+    const { accessToken, refreshToken } = response.data['jwtToken'];
 
     // console.log(response);
-    if (response.status === 201) {
+    if (response.status === 200) {
+      dispatch(tokenActions.SET_TOKEN(accessToken));
+      localStorage.setItem('matchGG_refreshToken', refreshToken);
+      const jwtPayload = jwt_decode(accessToken);
+      dispatch(userActions.SET_USER(jwtPayload));
+      dispatch(registerActions.DELETE_REGISTER());
+
       increasePhase();
     }
   };
@@ -91,13 +112,12 @@ const RegisterFooter = (props) => {
         이전으로
       </Button>
       <Button
-        disabled={!termAllChecked}
+        disabled={!firstTerm || !secondTerm}
         onClick={() => {
           if (phase === 2) {
-            registerHandler();
+            signUpHandler();
           } else {
             increasePhase();
-            handleNextBtn();
           }
         }}
         variant='contained'
@@ -117,7 +137,7 @@ const RegisterFooter = (props) => {
           },
         }}
       >
-        {phase !== 2 ? '다음으로' : '회원가입하기'}
+        {phase !== 2 ? '다음으로' : '회원가입 하기'}
       </Button>
       <Copyright
         sx={{

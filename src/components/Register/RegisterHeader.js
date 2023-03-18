@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Typography, Box } from '@mui/material';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
 
-import RegisterBody from './RegisterBody';
-import { useNavigate } from 'react-router-dom';
+import { RegisterPhases } from './datas/Register.data';
 
 const RegisterHeader = (props) => {
   const navigate = useNavigate();
@@ -99,21 +99,6 @@ const RegisterHeader = (props) => {
                 }}
               />
             )}
-            {/* {phase === 4 ? (
-              <CircleIcon
-                sx={{
-                  color: 'grey',
-                  fontSize: { xs: 'medium', sm: 'large' },
-                }}
-              />
-            ) : (
-              <CircleOutlinedIcon
-                sx={{
-                  color: 'grey',
-                  fontSize: { xs: 'medium', sm: 'large' },
-                }}
-              />
-            )} */}
           </Fragment>
         )}
       </Box>
@@ -126,7 +111,7 @@ const RegisterHeader = (props) => {
           fontSize: { xs: 20, sm: 30 },
         }}
       >
-        {RegisterBody[phase].title}
+        {RegisterPhases[phase].title}
       </Typography>
       <Typography
         component='h3'
@@ -138,7 +123,7 @@ const RegisterHeader = (props) => {
           fontSize: { xs: 13, sm: 18 },
         }}
       >
-        {RegisterBody[phase].description}
+        {RegisterPhases[phase].description}
       </Typography>
     </Fragment>
   );

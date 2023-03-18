@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
@@ -11,11 +11,9 @@ import { CircularProgress, Box, Typography } from '@mui/material';
 
 import SimpleLayout from '../components/ui/SimpeLayout';
 
-const KakaoRedirect = () => {
+const KakaoLoginRedirect = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const [kakaoAccessToken, setKakaoAccessToken] = useState('');
 
   useEffect(() => {
     const kakaoLogin = async () => {
@@ -33,48 +31,37 @@ const KakaoRedirect = () => {
         params: {
           grant_type: 'authorization_code',
           client_id: process.env.REACT_APP_REST_API_KEY,
-          redirect_uri: process.env.REACT_APP_REDIRECT_URI,
+          redirect_uri: process.env.REACT_APP_REDIRECT_URI_LOGIN,
           code,
         },
       });
 
-      // 3. 토큰을 서버로 전송해 가입 여부 확인하기
+      // 3. 액세스 토큰을 담아 로그인 요청 보내기
       const response = await api
-        .post(`/api/user/signup`, {
+        .post('/api/user/signin', {
           oauth2AccessToken: kakaoAccessToken,
         })
-        .catch(async (error) => {
-          if (error.response.status === 400 && error.response.data['status']) {
-            // signin flow 로 전환.
-            const response = await api.post(`/api/user/signin`, {
-              oauth2AccessToken: kakaoAccessToken,
-            });
-            const { accessToken, refreshToken } = response.data;
-
-            dispatch(tokenActions.SET_TOKEN(accessToken));
-            localStorage.setItem('matchGG_refreshToken', refreshToken);
-            const jwtPayload = jwt_decode(accessToken);
-            console.log(jwtPayload);
-
-            dispatch(userActions.SET_USER(jwtPayload));
-
-            navigate('/lol');
-          } else {
-            alert('비정상적인 접근입니다.');
-          }
+        .catch((error) => {
+          // 에러코드 분리해서 코드별로 동작 분리해야 함.
+          alert('로그인에 실패했습니다.');
+          navigate('/login');
         });
 
-      // error 없이 회원가입 프로세스 진행
-      const { accessToken, refreshToken } = response.data['jwtToken'];
+      const { accessToken, refreshToken } = response.data;
 
+      // 액세스 토큰과 리프레쉬 토큰을 각각 앱과, 로컬스토리지에 저장.
       dispatch(tokenActions.SET_TOKEN(accessToken));
       localStorage.setItem('matchGG_refreshToken', refreshToken);
+
+      // 액세스 토큰에서 사용자 정보 decode
       const jwtPayload = jwt_decode(accessToken);
       console.log(jwtPayload);
 
+      // 앱에 사용자 정보 저장.
       dispatch(userActions.SET_USER(jwtPayload));
-
-      navigate('/register');
+      
+      // 사용자가 설정한 대표 게임으로 navigate
+      navigate(`/lol`)
     };
 
     kakaoLogin();
@@ -95,11 +82,11 @@ const KakaoRedirect = () => {
       >
         <CircularProgress />
         <Typography component='h2' variant='h4'>
-          잠시만 기다려 주세요!
+          로그인 중 입니다. 잠시만 기다려 주세요.
         </Typography>
       </Box>
     </SimpleLayout>
   );
 };
 
-export default KakaoRedirect;
+export default KakaoLoginRedirect;

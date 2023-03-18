@@ -1,15 +1,16 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import { Box, Checkbox, Typography, Container } from '@mui/material';
 
 const TermSection = (props) => {
-  const { term, agreeTerm, disagreeTerm, title, termContents } = props;
+  const { title, termContents, term, termHandler } = props;
 
   return (
-    <Fragment>
+    <Box>
       <Typography
         sx={{
           textAlign: 'center',
+          fontSize: 24,
         }}
       >
         {title}
@@ -17,16 +18,15 @@ const TermSection = (props) => {
       <Box
         component='div'
         sx={{
-          padding: '10px',
-          paddingLeft: '20px',
+          padding: 4,
           backgroundColor: '#f7f7f7',
-          borderRadius: '5px',
-          height: 320,
-          width: '100%',
+          borderRadius: 4,
+          height: 500,
+          width: 600,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          overflow: 'auto',
+          overflow: 'scroll',
           gap: 2,
         }}
       >
@@ -40,15 +40,12 @@ const TermSection = (props) => {
           marginBottom: '30px',
         }}
       >
-        {'위의 약관을 읽었으며, 이에 동의하시겠습니까?'}
         <Box>
-          <Checkbox checked={term} onClick={agreeTerm} />
-          {'동의합니다'}
-          <Checkbox checked={!term} onClick={disagreeTerm} />
-          {'동의하지 않습니다.'}
+          <Checkbox checked={term} onChange={termHandler}/>
+          {`위의 ${title}을 읽었으며, 위 사항에 동의합니다.`}
         </Box>
       </Container>
-    </Fragment>
+    </Box>
   );
 };
 
