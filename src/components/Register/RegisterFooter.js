@@ -69,6 +69,8 @@ const RegisterFooter = (props) => {
       const jwtPayload = jwt_decode(accessToken);
       dispatch(userActions.SET_USER(jwtPayload));
       dispatch(registerActions.DELETE_REGISTER());
+
+      increasePhase();
     }
   };
 
@@ -114,7 +116,6 @@ const RegisterFooter = (props) => {
         onClick={() => {
           if (phase === 2) {
             signUpHandler();
-            increasePhase();
           } else {
             increasePhase();
           }

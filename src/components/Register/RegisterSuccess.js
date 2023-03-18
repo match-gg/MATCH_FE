@@ -2,7 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Typography, Button, Card, CardContent, FormControl } from '@mui/material';
+import { Typography, Button, Box, FormControl } from '@mui/material';
+import Copyright from '../ui/Copyright';
 
 const RegisterSuccess = () => {
   const navigate = useNavigate();
@@ -19,21 +20,18 @@ const RegisterSuccess = () => {
   };
 
   return (
-    <Card
+    <Box
       sx={{
-        marginTop: 20,
         width: '100%',
-        height: '30vh',
+        height: '100%',
         backgroundColor: '##edebeb',
-        border: '1px solid black',
-        borderRadius: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
       }}
     >
-      <CardContent
+      <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -54,7 +52,6 @@ const RegisterSuccess = () => {
             sx={{
               marginTop: '5vh',
               width: '10rem',
-              height: '4vh',
               fontSize: '1.4rem',
               fontWeight: '500',
               backgroundColor: '#939393',
@@ -72,8 +69,12 @@ const RegisterSuccess = () => {
             시작하기
           </Button>
         </FormControl>
-      </CardContent>
-    </Card>
+      </Box>
+      <Copyright sx={{
+        position:  'absolute',
+        bottom: 0,
+      }} />
+    </Box>
   );
 };
 
