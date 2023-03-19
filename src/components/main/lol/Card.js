@@ -1,26 +1,12 @@
-import {
-  Card as MuiCard,
-  CardContent,
-  Typography,
-  Box,
-  ImageList,
-  ImageListItem,
-  Button,
-} from '@mui/material';
+import { Card as MuiCard, CardContent, Typography, Box, ImageList, Button } from '@mui/material';
 
 import { PieChart } from 'react-minimal-pie-chart';
 
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 
-const Card = (props) => {
-  const winRate = 70;
-  const tier = 'Platinum 4';
-  const line = 'SPT';
-  const nickname = '완도수산새우도둑';
-  const mic = false;
-  const most3 = ['Lux', 'Aatrox', 'Shen'];
-  const itemText = '골드 2이상 공격적인 원딜러 구합니다. 디코 가능한 유저 환영입니다.';
+const Card = ({ item }) => {
+  const { description, expired, voice, author } = item;
 
   return (
     <MuiCard
@@ -59,8 +45,8 @@ const Card = (props) => {
           <Box sx={{ flexBasis: 88, display: 'flex', flexDirection: 'row' }}>
             <Box sx={{ flexBasis: 64 }}>
               <PieChart
-                data={[{ value: `${winRate}`, color: '#5383e8', name: 'winRate' }]}
-                reveal={winRate} // 퍼센트 치수
+                data={[{ value: `${author.winRate}`, color: '#5383e8', name: 'winRate' }]}
+                reveal={author.winRate} // 퍼센트 치수
                 lineWidth={30} // 두께
                 startAngle={270}
                 background='#E84057'
@@ -84,8 +70,10 @@ const Card = (props) => {
               }}
             >
               <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Typography>{tier}</Typography>
-                <Typography sx={{ ml: 2 }}>{line}</Typography>
+                <Typography sx={{ mr: 4 }}>{author.mostLine}</Typography>
+                <Typography>
+                  {author.tier} {author.tier_level}
+                </Typography>
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <Typography
@@ -98,19 +86,20 @@ const Card = (props) => {
                     textOverflow: 'ellipsis',
                   }}
                 >
-                  {nickname}
+                  {author.nickname}
                 </Typography>
-                <Box sx={{ pr: 1 }}>{mic ? <MicIcon /> : <MicOffIcon />}</Box>
+                <Box sx={{ pr: 1 }}>{voice === 'y' ? <MicIcon /> : <MicOffIcon />}</Box>
               </Box>
             </Box>
             <ImageList sx={{ flexBasis: 144 }} cols={3}>
-              {most3.map((item) => (
+              {author.mostChamps.map((item) => (
                 <Box
+                  key={item.name}
                   component='img'
-                  src={`https://opgg-static.akamaized.net/meta/images/lol/champion/${item}.png?image=c_crop,h_103,w_103,x_9,y_9/q_auto,f_webp,w_48`}
-                  alt={item}
+                  src={`${item.imageUrl}`}
+                  alt={item.name}
                   loading='lazy'
-                  sx={{ width: '100%', borderRadius: 2, objectFit: 'contain' }}
+                  sx={{ width: '100%', height: '100%', objectFit: 'fill' }}
                 />
               ))}
             </ImageList>
@@ -125,12 +114,14 @@ const Card = (props) => {
               }}
             >
               <Typography
+                align='left'
                 sx={{
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: 600,
+                  pr: 1,
                 }}
               >
-                {itemText}
+                {description}
               </Typography>
             </Box>
             <Box
@@ -141,15 +132,14 @@ const Card = (props) => {
                 justifyContent: 'center',
               }}
             >
-              <Button variant='contained' sx={{ borderRadius: '8px' }}>
+              <Button variant='contained' sx={{ borderRadius: 4 }}>
                 <Typography>더보기</Typography>
               </Button>
             </Box>
           </Box>
           <Box sx={{ flexBasis: 24 }}>
             <Typography sx={{ color: 'grey', fontSize: 15, fontWeight: 700 }}>
-              모집현황 [ 3 / 5 ]
-              {/* 나중에 데이터 값 받아서 집어넣기 */}
+              모집현황 [ 3 / 5 ]{/* 나중에 데이터 값 받아서 집어넣기 */}
             </Typography>
           </Box>
         </Box>

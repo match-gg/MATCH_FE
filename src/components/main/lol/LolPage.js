@@ -1,70 +1,86 @@
 import { Fragment, useState, useEffect } from 'react';
 
 import {
-  AppBar,
   Container,
-  Toolbar,
   Typography,
-  Avatar,
   Box,
-  Tooltip,
-  Menu,
   MenuItem,
-  Divider,
-  ListItemIcon,
-  IconButton,
-  Stack,
   Button,
-  ListItemText,
-  Grid,
   FormControl,
   Select,
-  InputLabel,
-  ButtonGroup,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 import Card from './Card';
 
-import Logout from '@mui/icons-material/Logout';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LolPageNavbar from './LolPageNavbar';
+import { api } from '../../../api/api';
 
 const LolPage = () => {
-  const [scrollValue, setScrollValue] = useState(0);
-  const [boards, setBoards] = useState({ items: [] });
+  const [boards, setBoards] = useState([]); // 전체 게시글 저장
+  const [pageNumber, setPageNumber] = useState(0); // 불러 올 페이지 번호
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
 
-  // 큐 타입
-  const [queueType, setQueueType] = useState('');
+  const [queueType, setQueueType] = useState('ALL'); // 큐 타입
+  const [tier, setTier] = useState('ALL'); // 티어
+  const [line, setLine] = useState('ALL'); // 라인
+
   const handleQueueType = (event) => {
+    if (event.target.value === 'ARAM') {
+      setTier('ALL');
+      setLine('ALL');
+    }
     setQueueType(event.target.value);
   };
 
-  // 티어
-  const [tier, setTier] = useState('');
   const handleTier = (event) => {
     setTier(event.target.value);
   };
 
-  // 라인
-  const [line, setLine] = useState('all');
+  const hanldeLine = (event) => {
+    setLine(event.target.value);
+  };
 
-  const fetchBoards = async () => {};
+  // 더 불러오기
+  const moreBoards = async () => {
+    await api
+      .get('/api/lol/boards', {
+        params: { size: 12, page: pageNumber, position: line, type: queueType, tier },
+      })
+      .then((res) => {
+        setBoards([...boards, ...res.data.content]);
+        setPageNumber((prevState) => prevState + 1);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    fetchBoards();
+    console.log(pageNumber);
   };
 
   useEffect(() => {
-    const onScroll = (e) => {
-      setScrollValue((prevState) => (prevState = e.target.documentElement.scrollTop));
+    const fetchBoards = async () => {
+      setIsLoading(true);
+
+      await api
+        .get('/api/lol/boards', {
+          params: { size: 12, page: 0, position: line, type: queueType, tier },
+        })
+        .then((response) => {
+          setBoards([...boards, ...response.data.content]);
+          setPageNumber((prevState) => prevState + 1);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsLoading(false);
+        });
     };
 
-    window.addEventListener('scroll', onScroll);
-
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [scrollValue]);
+    fetchBoards();
+  }, [queueType, tier, line, boards]);
 
   return (
     <Fragment>
@@ -117,136 +133,50 @@ const LolPage = () => {
             }}
           >
             <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
-              <InputLabel id='queue-type-select'>큐 타입</InputLabel>
-              <Select
-                labelId='queue-type-select'
-                id='queue-type-select'
-                value={queueType}
-                label={'큐 타입'}
-                onChange={handleQueueType}
-                defaultValue=''
-              >
-                <MenuItem value={'상관없음'}>상관없음</MenuItem>
-                <MenuItem value={'Normal'}>일반게임</MenuItem>
-                <MenuItem value={'HA'}>칼바람나락</MenuItem>
-                <MenuItem value={'Solo'}>솔로랭크</MenuItem>
-                <MenuItem value={'Free'}>자유랭크</MenuItem>
+              <Select id='queue-type-select' value={queueType} onChange={handleQueueType}>
+                <MenuItem value={'ALL'}>모든 큐</MenuItem>
+                <MenuItem value={'DUO_RANK'}>솔로랭크</MenuItem>
+                <MenuItem value={'FREE_RANK'}>자유랭크</MenuItem>
+                <MenuItem value={'ARAM'}>칼바람나락</MenuItem>
+                <MenuItem value={'NORMAL'}>일반게임</MenuItem>
               </Select>
             </FormControl>
-            <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
-              <InputLabel id='tier-select'>티어</InputLabel>
-              <Select
-                labelId='tier-select'
-                id='tier-select'
-                value={tier}
-                label={'티어'}
-                onChange={handleTier}
-                defaultValue=''
-              >
-                <MenuItem value={'상관없음'}>상관없음</MenuItem>
-                <MenuItem value={'iron'}>아이언+</MenuItem>
-                <MenuItem value={'Bronze'}>브론즈+</MenuItem>
-                <MenuItem value={'silver'}>실버+</MenuItem>
-                <MenuItem value={'gold'}>골드+</MenuItem>
-                <MenuItem value={'platinum'}>플래티넘+</MenuItem>
-                <MenuItem value={'diamond'}>다이아몬드+</MenuItem>
-                {!(queueType === 'Solo') && <MenuItem value={'master'}>마스터+</MenuItem>}
-              </Select>
-            </FormControl>
-            <ButtonGroup
-              variant='outlined'
-              aria-label='line-button-group'
-              color='primary'
-              sx={{
-                height: 40,
-                m: 1,
-              }}
+            <FormControl
+              sx={{ m: 1, minWidth: 120 }}
+              size='small'
+              disabled={queueType === 'ARAM' ? true : false}
             >
-              <Button
-                onClick={() => {
-                  setLine('all');
-                }}
-                sx={{
-                  backgroundColor: line === 'all' ? '#1976d2' : '',
-                  color: line === 'all' ? 'white' : '',
-                  '&:hover': {
-                    color: line === 'all' ? '#1976d2' : '',
-                  },
-                }}
-              >
-                전체
-              </Button>
-              <Button
-                onClick={() => {
-                  setLine('top');
-                }}
-                sx={{
-                  backgroundColor: line === 'top' ? '#1976d2' : '',
-                  color: line === 'top' ? 'white' : '',
-                  '&:hover': {
-                    color: line === 'top' ? '#1976d2' : '',
-                  },
-                }}
-              >
-                탑
-              </Button>
-              <Button
-                onClick={() => {
-                  setLine('jug');
-                }}
-                sx={{
-                  backgroundColor: line === 'jug' ? '#1976d2' : '',
-                  color: line === 'jug' ? 'white' : '',
-                  '&:hover': {
-                    color: line === 'jug' ? '#1976d2' : '',
-                  },
-                }}
-              >
-                정글
-              </Button>
-              <Button
-                onClick={() => {
-                  setLine('mid');
-                }}
-                sx={{
-                  backgroundColor: line === 'mid' ? '#1976d2' : '',
-                  color: line === 'mid' ? 'white' : '',
-                  '&:hover': {
-                    color: line === 'mid' ? '#1976d2' : '',
-                  },
-                }}
-              >
-                미드
-              </Button>
-              <Button
-                onClick={() => {
-                  setLine('adc');
-                }}
-                sx={{
-                  backgroundColor: line === 'adc' ? '#1976d2' : '',
-                  color: line === 'adc' ? 'white' : '',
-                  '&:hover': {
-                    color: line === 'adc' ? '#1976d2' : '',
-                  },
-                }}
-              >
-                원딜
-              </Button>
-              <Button
-                onClick={() => {
-                  setLine('spt');
-                }}
-                sx={{
-                  backgroundColor: line === 'spt' ? '#1976d2' : '',
-                  color: line === 'spt' ? 'white' : '',
-                  '&:hover': {
-                    color: line === 'spt' ? '#1976d2' : '',
-                  },
-                }}
-              >
-                서폿
-              </Button>
-            </ButtonGroup>
+              <Select id='tier-select' value={tier} onChange={handleTier}>
+                <MenuItem value={'ALL'}>모든 티어</MenuItem>
+                {!(queueType === 'DUO_RANK') && <MenuItem value={'MASTER'}>Master+</MenuItem>}
+                <MenuItem value={'DIAMOND'}>Diamond+</MenuItem>
+                <MenuItem value={'PLATINUM'}>Platinum+</MenuItem>
+                <MenuItem value={'GOLD'}>Gold+</MenuItem>
+                <MenuItem value={'SILVER'}>Silver+</MenuItem>
+                <MenuItem value={'BRONZE'}>Bronze+</MenuItem>
+                <MenuItem value={'IRON'}>Iron+</MenuItem>
+              </Select>
+            </FormControl>
+            <ToggleButtonGroup
+              value={line}
+              onChange={hanldeLine}
+              exclusive
+              sx={{
+                ml: 1,
+                height: 40,
+                '& > *': {
+                  width: 50,
+                },
+              }}
+              disabled={queueType === 'ARAM' ? true : false}
+            >
+              <ToggleButton value='ALL'>전체</ToggleButton>
+              <ToggleButton value='TOP'>탑</ToggleButton>
+              <ToggleButton value='JUG'>정글</ToggleButton>
+              <ToggleButton value='MID'>미드</ToggleButton>
+              <ToggleButton value='ADC'>원딜</ToggleButton>
+              <ToggleButton value='SPT'>서폿</ToggleButton>
+            </ToggleButtonGroup>
           </Box>
           <Box
             sx={{
@@ -254,10 +184,23 @@ const LolPage = () => {
             }}
           ></Box>
           <Box>
-            <Button variant='outlined' sx={{ height: 40, mr: 1 }}>
+            <Button
+              variant='outlined'
+              sx={{
+                height: 40,
+                mr: 1,
+                borderColor: '#dddddd',
+                color: 'black',
+                '&:hover': {
+                  borderColor: '#dddddd',
+                  color: 'black',
+                  backgroundColor: '#f3f3f3',
+                },
+              }}
+            >
               글 작성하기
             </Button>
-            <Button sx={{ height: 40 }}>
+            <Button sx={{ height: 40, color: 'black' }}>
               새로고침
               <RefreshIcon />
             </Button>
@@ -265,9 +208,9 @@ const LolPage = () => {
         </Box>
         <Container maxWidth='xl' sx={{ mt: 5 }}>
           <Box
-            container
             sx={{
               height: '100%',
+              minHeight: 400,
               justifyContent: 'center',
               display: 'flex',
               flexWrap: 'wrap',
@@ -275,22 +218,16 @@ const LolPage = () => {
               pt: 3,
             }}
           >
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+            {!isLoading &&
+              boards.map((item, _index) => {
+                return <Card key={item.id} item={item} />;
+              })}
+            {isLoading && <Typography>Loading...</Typography>}
           </Box>
-          
         </Container>
-      <Button sx={{mb:4}}>더 불러오기</Button>
+        <Button sx={{ mb: 4 }} onClick={moreBoards}>
+          더 불러오기
+        </Button>
       </Box>
     </Fragment>
   );
