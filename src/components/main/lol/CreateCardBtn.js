@@ -43,10 +43,10 @@ const CreateCardBtn = (props) => {
   const [userInput, setUserInput] = useState({
     name: props.name ? props.name : '',
     type: 'DUO_RANK',
-    tier: ['IRON'],
-    position: ['TOP'],
+    tier: 'IRON',
+    position: 'TOP',
     expire: 'FIFTEEN_M',
-    voice: 'N',
+    voice: 'n',
     content: '',
   });
 
@@ -54,60 +54,63 @@ const CreateCardBtn = (props) => {
   const handleName = (e) => {
     setUserInput({ ...userInput, name: e.target.value });
   };
+
   const handleType = (e, newValue) => {
     if (newValue === null) {
       return;
     } else if (newValue === 'ARAM') {
-      setUserInput({ ...userInput, position: [], tier: [], type: newValue });
+      setUserInput({
+        ...userInput,
+        tier: 'ALL',
+        position: 'ALL',
+        type: newValue,
+      });
+    } else if (userInput.type === 'ARAM' && newValue !== 'ARAM') {
+      setUserInput({
+        ...userInput,
+        tier: 'IRON',
+        position: 'TOP',
+        type: newValue,
+      });
+    } else if (
+      newValue === 'DUO_RANK' &&
+      (userInput.tier === 'MASTER' ||
+        userInput.tier === 'ALL' ||
+        userInput.position === 'ALL')
+    ) {
+      setUserInput({
+        ...userInput,
+        tier: 'IRON',
+        position: 'TOP',
+        type: newValue,
+      });
     } else {
-      if (userInput.type !== 'DUO_RANK' && newValue === 'DUO_RANK') {
-        setUserInput({
-          ...userInput,
-          tier: ['IRON'],
-          position: ['TOP'],
-          type: newValue,
-        });
-      } else if (userInput.type === 'ARAM' && newValue !== 'ARAM') {
-        setUserInput({
-          ...userInput,
-          tier: ['IRON'],
-          position: ['TOP'],
-          type: newValue,
-        });
-      } else {
-        setUserInput({ ...userInput, type: newValue });
-      }
+      setUserInput({ ...userInput, type: newValue });
     }
   };
 
   const handleTier = (e, newValue) => {
-    if (newValue.length === 0) {
+    if (newValue === null) {
       return;
-    } else {
-      if (userInput.type === 'DUO_RANK') {
-        setUserInput({ ...userInput, tier: [newValue] });
-      } else {
-        setUserInput({ ...userInput, tier: newValue });
-      }
     }
+    setUserInput({ ...userInput, tier: newValue });
   };
+
   const handlePosition = (e, newValue) => {
-    if (newValue.length === 0) {
+    if (newValue === null) {
       return;
-    } else {
-      if (userInput.type === 'DUO_RANK') {
-        setUserInput({ ...userInput, position: [newValue] });
-      } else {
-        setUserInput({ ...userInput, position: newValue });
-      }
     }
+    setUserInput({ ...userInput, position: newValue });
   };
+
   const handleExpire = (e, newValue) => {
     setUserInput({ ...userInput, expire: e.target.value });
   };
+
   const handleVoice = (e) => {
-    setUserInput({ ...userInput, voice: e.target.checked ? 'Y' : 'N' });
+    setUserInput({ ...userInput, voice: e.target.checked ? 'y' : 'n' });
   };
+
   const handleContent = (e) => {
     setUserInput({ ...userInput, content: e.target.value });
   };
@@ -146,9 +149,9 @@ const CreateCardBtn = (props) => {
     setUserInput({
       name: props.name ? props.name : '',
       type: 'DUO_RANK',
-      tier: ['IRON'],
-      position: ['TOP'],
-      voice: 'N',
+      tier: 'IRON',
+      position: 'TOP',
+      voice: 'n',
       expire: 'FIFTEEN_M',
       content: '',
     });
@@ -187,15 +190,14 @@ const CreateCardBtn = (props) => {
             left: '50%',
             position: 'absolute',
             transform: 'translate(-50%, -50%)',
-            width: '55vw',
-            // height: '70%',
+            width: '60vw',
+            // height: '60%',
             bgcolor: 'white',
             padding: '10px 30px 15px 30px',
             // minHeight: '70vw',
             // minWidth: '1000px',
             // maxHeight: '650px',
             maxWidth: '700px',
-            // boxShadow: '5px 10px 10px 1px rgba(0,0,0,.3)',
             border: '1px solid #dddddd',
           }}
         >
@@ -227,6 +229,7 @@ const CreateCardBtn = (props) => {
                   fontWeight: 'bold',
                 }}
               >
+                {/* 나중에 redux의 유저 정보를 통해 불러와야함 */}
                 현재 계정 사용 : {props.name ? props.name : '-'}
               </Typography>
             </Box>
@@ -269,9 +272,9 @@ const CreateCardBtn = (props) => {
           {/* 큐타입 */}
           <ModalText text={'플레이할 큐타입'} />
           <ToggleButtonGroup
+            exclusive
             size='small'
             value={userInput.type}
-            exclusive={true}
             onChange={handleType}
             sx={{
               '& .MuiToggleButton-root.Mui-selected': {
@@ -280,27 +283,19 @@ const CreateCardBtn = (props) => {
               },
             }}
           >
-            <ToggleButton value='DUO_RANK' sx={{ whiteSpace: 'nowrap' }}>
-              듀오 랭크
-            </ToggleButton>
-            <ToggleButton value='FREE_RANK' sx={{ whiteSpace: 'nowrap' }}>
-              자유 랭크
-            </ToggleButton>
-            <ToggleButton value='NORMAL' sx={{ whiteSpace: 'nowrap' }}>
-              노말 게임
-            </ToggleButton>
-            <ToggleButton value='ARAM' sx={{ whiteSpace: 'nowrap' }}>
-              무작위 총력전
-            </ToggleButton>
+            <ToggleButton value='DUO_RANK'>듀오 랭크</ToggleButton>
+            <ToggleButton value='FREE_RANK'>자유 랭크</ToggleButton>
+            <ToggleButton value='NORMAL'>노말 게임</ToggleButton>
+            <ToggleButton value='ARAM'>무작위 총력전</ToggleButton>
           </ToggleButtonGroup>
           {/* 티어 */}
-          <ModalText text={'원하는 파티원의 티어'} />
+          <ModalText text={'원하는 파티원의 티어'} type={userInput.type} />
           <ToggleButtonGroup
             disabled={userInput.type === 'ARAM' ? true : false}
             size='small'
             value={userInput.tier}
             onChange={handleTier}
-            exclusive={userInput.type === 'DUO_RANK' ? true : false}
+            exclusive
             sx={{
               '& .MuiToggleButton-root.Mui-selected': {
                 backgroundColor: '#4f90db',
@@ -321,7 +316,7 @@ const CreateCardBtn = (props) => {
               MASTER
             </ToggleButton>
             <ToggleButton
-              value='NONE'
+              value='ALL'
               disabled={userInput.type === 'DUO_RANK' ? true : false}
             >
               상관없음
@@ -333,7 +328,7 @@ const CreateCardBtn = (props) => {
             size='small'
             disabled={userInput.type === 'ARAM' ? true : false}
             value={userInput.position}
-            exclusive={userInput.type === 'DUO_RANK' ? true : false}
+            exclusive
             onChange={handlePosition}
             sx={{
               '& .MuiToggleButton-root.Mui-selected': {
@@ -347,7 +342,7 @@ const CreateCardBtn = (props) => {
             <ToggleButton value='MID'>MID</ToggleButton>
             <ToggleButton value='ADC'>ADC</ToggleButton>
             <ToggleButton value='SUP'>SUP</ToggleButton>
-            <ToggleButton value='NONE'>상관없음</ToggleButton>
+            <ToggleButton value='ALL'>상관없음</ToggleButton>
           </ToggleButtonGroup>
           {/* 카드 만료 시간 */}
           <ModalText text={'카드 만료 시간'} />
@@ -382,7 +377,7 @@ const CreateCardBtn = (props) => {
                   fontWeight: 'bold',
                 }}
               >
-                <MicIcon color={userInput.voice === 'Y' ? 'primary' : ''} />
+                <MicIcon color={userInput.voice === 'y' ? 'primary' : ''} />
                 음성채팅 사용 여부
               </Typography>
             </Box>
