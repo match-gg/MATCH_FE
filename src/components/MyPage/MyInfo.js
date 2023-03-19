@@ -16,10 +16,9 @@ import CircleIcon from '@mui/icons-material/Circle';
 import { PieChart } from 'react-minimal-pie-chart';
 
 const MyInfo = props => {
-  const matchNumber = 64;
-  const like = 50;
-  const dislike = 12;
-  const likeRate = Math.floor((like / (like + dislike)) * 100);
+  const { matchCount, likeCount, dislikeCount, lol, overwatch, pubg, maplestory, lostark } = props.UserData;
+
+  const likeRate = Math.floor((likeCount / (likeCount + dislikeCount)) * 100);
 
   return (
     <Box
@@ -81,9 +80,9 @@ const MyInfo = props => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableCell align='center'>{matchNumber}</TableCell>
-                  <TableCell align='center'>{like}</TableCell>
-                  <TableCell align='center'>{dislike}</TableCell>
+                  <TableCell align='center'>{matchCount}</TableCell>
+                  <TableCell align='center'>{likeCount}</TableCell>
+                  <TableCell align='center'>{dislikeCount}</TableCell>
                 </TableBody>
               </Table>
             </TableContainer>
@@ -129,7 +128,7 @@ const MyInfo = props => {
               }}>
               <CircleIcon
                 sx={{
-                  color: `${props.name ? '#80EE9F' : '#D9D9D9'}`,
+                  color: `${lol.length > 0 ? '#80EE9F' : '#D9D9D9'}`,
                   fontSize: { xs: 'medium', sm: 'large' }
                 }}
               />
@@ -138,7 +137,7 @@ const MyInfo = props => {
             <TextField
               id='standard-basic'
               variant='standard'
-              defaultValue='밍꾸라지'
+              defaultValue={lol}
               sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
             />
             <Button>변경하기</Button>
@@ -160,7 +159,7 @@ const MyInfo = props => {
               }}>
               <CircleIcon
                 sx={{
-                  color: `${props.name ? '#80EE9F' : '#D9D9D9'}`,
+                  color: `${overwatch.length > 0 ? '#80EE9F' : '#D9D9D9'}`,
                   fontSize: { xs: 'medium', sm: 'large' }
                 }}
               />
@@ -169,7 +168,7 @@ const MyInfo = props => {
             <TextField
               id='standard-basic'
               variant='standard'
-              defaultValue='밍꾸라지'
+              defaultValue={overwatch}
               sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
             />
             <Button>변경하기</Button>
@@ -191,7 +190,7 @@ const MyInfo = props => {
               }}>
               <CircleIcon
                 sx={{
-                  color: `${props.name ? '#80EE9F' : '#D9D9D9'}`,
+                  color: `${pubg.length > 0 ? '#80EE9F' : '#D9D9D9'}`,
                   fontSize: { xs: 'medium', sm: 'large' }
                 }}
               />
@@ -200,7 +199,7 @@ const MyInfo = props => {
             <TextField
               id='standard-basic'
               variant='standard'
-              defaultValue='밍꾸라지'
+              defaultValue={pubg}
               sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
             />
             <Button>변경하기</Button>
@@ -222,7 +221,7 @@ const MyInfo = props => {
               }}>
               <CircleIcon
                 sx={{
-                  color: `${props.name ? '#80EE9F' : '#D9D9D9'}`,
+                  color: `${maplestory.length > 0 ? '#80EE9F' : '#D9D9D9'}`,
                   fontSize: { xs: 'medium', sm: 'large' }
                 }}
               />
@@ -231,7 +230,7 @@ const MyInfo = props => {
             <TextField
               id='standard-basic'
               variant='standard'
-              defaultValue='밍꾸라지'
+              defaultValue={maplestory}
               sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
             />
             <Button>변경하기</Button>
@@ -253,7 +252,7 @@ const MyInfo = props => {
               }}>
               <CircleIcon
                 sx={{
-                  color: `${props.name ? '#80EE9F' : '#D9D9D9'}`,
+                  color: `${lostark.length > 0 ? '#80EE9F' : '#D9D9D9'}`,
                   fontSize: { xs: 'medium', sm: 'large' }
                 }}
               />
@@ -262,7 +261,7 @@ const MyInfo = props => {
             <TextField
               id='standard-basic'
               variant='standard'
-              defaultValue='밍꾸라지'
+              defaultValue={lostark}
               sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
             />
             <Button>변경하기</Button>
