@@ -1,3 +1,4 @@
+import React, { Fragment, useState } from 'react';
 import {
   Button,
   Select,
@@ -5,25 +6,22 @@ import {
   Typography,
   Box,
   Modal,
-  Grid,
   Stack,
-  InputLabel,
   MenuItem,
   FormControl,
   Switch,
   ToggleButtonGroup,
   ToggleButton,
-  ButtonGroup,
   OutlinedInput,
-  InputAdornment,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import BackspaceIcon from '@mui/icons-material/Backspace';
-import { Fragment, useEffect, useState } from 'react';
 import MicIcon from '@mui/icons-material/Mic';
-import { api } from '../../../api/api';
 import CloseIcon from '@mui/icons-material/Close';
 
+import { api } from '../../../api/api';
+
+//글 작성 모달 창의  각 입력 영역의 텍스트
 const ModalText = ({ text, type }) => {
   return (
     <Typography
@@ -38,8 +36,125 @@ const ModalText = ({ text, type }) => {
   );
 };
 
+const typeData = [
+  {
+    value: 'DUO_RANK',
+    text: '듀오 랭크',
+  },
+  {
+    value: 'FREE_RANK',
+    text: '자유 랭크',
+  },
+  {
+    value: 'NORMAL',
+    text: '노말 게임',
+  },
+  {
+    value: 'ARAM',
+    text: '무작위 총력전',
+  },
+];
+
+const tierData = [
+  {
+    value: 'IRON',
+    text: 'IRON',
+  },
+  {
+    value: 'BRONZE',
+    text: 'BRONZE',
+  },
+  {
+    value: 'SILVER',
+    text: 'SILVER',
+  },
+  {
+    value: 'GOLD',
+    text: 'GOLD',
+  },
+  {
+    value: 'PLATINUM',
+    text: 'PLATINUM',
+  },
+  {
+    value: 'DIAMOND',
+    text: 'DIAMOND',
+  },
+  {
+    value: 'MASTER',
+    text: 'MASTER',
+  },
+  {
+    value: 'ALL',
+    text: '상관없음',
+  },
+];
+
+const positionData = [
+  {
+    value: 'TOP',
+    text: 'TOP',
+  },
+  {
+    value: 'JUG',
+    text: 'JUG',
+  },
+  {
+    value: 'MID',
+    text: 'MID',
+  },
+  {
+    value: 'ADC',
+    text: 'ADC',
+  },
+  {
+    value: 'SUP',
+    text: 'SUP',
+  },
+  {
+    value: 'ALL',
+    text: '상관없음',
+  },
+];
+
+const expireData = [
+  {
+    value: 'FIFTEEN_M',
+    text: '15분',
+  },
+  {
+    value: 'THIRTY_M',
+    text: '30분',
+  },
+  {
+    value: 'ONE_H',
+    text: '1시간',
+  },
+  {
+    value: 'TWO_H',
+    text: '2시간',
+  },
+  {
+    value: 'THREE_H',
+    text: '3시간',
+  },
+  {
+    value: 'SIX_H',
+    text: '6시간',
+  },
+  {
+    value: 'TWELVE_H',
+    text: '12시간',
+  },
+  {
+    value: 'TWENTY_FOUR_H',
+    text: '24시간',
+  },
+];
+
 const CreateCardBtn = (props) => {
-  //작성하기 Modal 창에서 사용자에게 입력받을 정보
+  //모달에서 사용자의 입력 값을 담을 state, 초기값
+  //name은 lol 페이지에서 버튼에 props 값으로 줄 예정
   const [userInput, setUserInput] = useState({
     name: props.name ? props.name : '',
     type: 'DUO_RANK',
@@ -115,7 +230,7 @@ const CreateCardBtn = (props) => {
     setUserInput({ ...userInput, content: e.target.value });
   };
 
-  //연결된 아이디 Switch에 사용할 state와 함수
+  //연결된 아이디 Switch 컴포넌트에 사용할 state와 함수
   const [idConnected, setIdConnected] = useState(
     userInput.length ? true : false
   );
@@ -126,7 +241,8 @@ const CreateCardBtn = (props) => {
   //아이디 인증에 사용할 state와 함수
   const [certyfiedId, setCertifiedId] = useState(false);
   const certifyNickname = () => {
-    //나중에 서버로 nickname 보내서 인증받는 유효성 검사
+    //나중에 서버로 nickname 보내서 인증받는 유효성 검사 추가해야함
+    //일단은 true로 바꾸게 작성해놈
     setCertifiedId(true);
   };
 
@@ -144,6 +260,8 @@ const CreateCardBtn = (props) => {
       return;
     }
   };
+
+  //모달 창 나가면 동작하는 함수
   const closeModal = () => {
     setOpen(false);
     setUserInput({
@@ -157,18 +275,26 @@ const CreateCardBtn = (props) => {
     });
     setCertifiedId(false);
   };
+
+  //모달 창 외부 클릭 시 나가지는 동작을 막는 함수
   const handleBackdropClick = (e) => {
     e.stopPropagation();
   };
+
+  //글 작성 완료시 서버로 데이터 전송
   const postModalInfo = async () => {
-    console.log(userInput);
-    //서버로 전송
-    await api.post(`/api/lol/board`, { ...userInput }).catch((error) => {
+    const userInputData = JSON.stringify({
+      ...userInput,
+      content: userInput.content.trim(),
+    });
+    // 서버로 전송
+    await api.post(`/api/lol/board`, userInputData).catch((error) => {
       alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
       console.log(error);
       closeModal();
     });
   };
+
   return (
     <Fragment>
       <Button variant='outlined' sx={{ height: 40, mr: 1 }} onClick={openModal}>
@@ -191,21 +317,16 @@ const CreateCardBtn = (props) => {
             position: 'absolute',
             transform: 'translate(-50%, -50%)',
             width: '60vw',
-            // height: '60%',
             bgcolor: 'white',
             padding: '10px 30px 15px 30px',
-            // minHeight: '70vw',
-            // minWidth: '1000px',
-            // maxHeight: '650px',
             maxWidth: '700px',
             border: '1px solid #dddddd',
           }}
         >
-          {/* 아이디 */}
+          {/* 아이디  영역*/}
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
@@ -229,7 +350,6 @@ const CreateCardBtn = (props) => {
                   fontWeight: 'bold',
                 }}
               >
-                {/* 나중에 redux의 유저 정보를 통해 불러와야함 */}
                 현재 계정 사용 : {props.name ? props.name : '-'}
               </Typography>
             </Box>
@@ -269,7 +389,7 @@ const CreateCardBtn = (props) => {
               }
             />
           </Box>
-          {/* 큐타입 */}
+          {/* 큐타입  영역*/}
           <ModalText text={'플레이할 큐타입'} />
           <ToggleButtonGroup
             exclusive
@@ -283,12 +403,15 @@ const CreateCardBtn = (props) => {
               },
             }}
           >
-            <ToggleButton value='DUO_RANK'>듀오 랭크</ToggleButton>
-            <ToggleButton value='FREE_RANK'>자유 랭크</ToggleButton>
-            <ToggleButton value='NORMAL'>노말 게임</ToggleButton>
-            <ToggleButton value='ARAM'>무작위 총력전</ToggleButton>
+            {typeData.map((data, idx) => {
+              return (
+                <ToggleButton key={idx} value={data.value}>
+                  {data.text}
+                </ToggleButton>
+              );
+            })}
           </ToggleButtonGroup>
-          {/* 티어 */}
+          {/* 티어  영역*/}
           <ModalText text={'원하는 파티원의 티어'} type={userInput.type} />
           <ToggleButtonGroup
             disabled={userInput.type === 'ARAM' ? true : false}
@@ -303,26 +426,24 @@ const CreateCardBtn = (props) => {
               },
             }}
           >
-            <ToggleButton value='IRON'>IRON</ToggleButton>
-            <ToggleButton value='BRONZE'>BRONZE</ToggleButton>
-            <ToggleButton value='SILVER'>SILVER</ToggleButton>
-            <ToggleButton value='GOLD'>GOLD</ToggleButton>
-            <ToggleButton value='PLATINUM'>PLATINUM</ToggleButton>
-            <ToggleButton value='DIAMOND'>DIAMOND</ToggleButton>
-            <ToggleButton
-              value='MASTER'
-              disabled={userInput.type === 'DUO_RANK' ? true : false}
-            >
-              MASTER
-            </ToggleButton>
-            <ToggleButton
-              value='ALL'
-              disabled={userInput.type === 'DUO_RANK' ? true : false}
-            >
-              상관없음
-            </ToggleButton>
+            {tierData.map((data, idx) => {
+              return (
+                <ToggleButton
+                  key={idx}
+                  value={data.value}
+                  disabled={
+                    (data.value === 'MASTER' || data.value === 'ALL') &&
+                    userInput.type === 'DUO_RANK'
+                      ? true
+                      : false
+                  }
+                >
+                  {data.text}
+                </ToggleButton>
+              );
+            })}
           </ToggleButtonGroup>
-          {/* 포지션 */}
+          {/* 포지션  영역*/}
           <ModalText text={'원하는 파티원의 포지션'} type={userInput.type} />
           <ToggleButtonGroup
             size='small'
@@ -337,26 +458,26 @@ const CreateCardBtn = (props) => {
               },
             }}
           >
-            <ToggleButton value='TOP'>TOP</ToggleButton>
-            <ToggleButton value='JUG'>JUG</ToggleButton>
-            <ToggleButton value='MID'>MID</ToggleButton>
-            <ToggleButton value='ADC'>ADC</ToggleButton>
-            <ToggleButton value='SUP'>SUP</ToggleButton>
-            <ToggleButton value='ALL'>상관없음</ToggleButton>
+            {positionData.map((data, idx) => {
+              return (
+                <ToggleButton key={idx} value={data.value}>
+                  {data.text}
+                </ToggleButton>
+              );
+            })}
           </ToggleButtonGroup>
-          {/* 카드 만료 시간 */}
+          {/* 카드 만료 시간  영역*/}
           <ModalText text={'카드 만료 시간'} />
           <Box>
             <FormControl size='small' sx={{ width: '300px' }}>
               <Select value={userInput.expire} onChange={handleExpire}>
-                <MenuItem value='FIFTEEN_M'>15분</MenuItem>
-                <MenuItem value='THIRTY_M'>30분</MenuItem>
-                <MenuItem value='ONE_H'>1시간</MenuItem>
-                <MenuItem value='TWO_H'>2시간</MenuItem>
-                <MenuItem value='THREE_H'>3시간</MenuItem>
-                <MenuItem value='SIX_H'>6시간</MenuItem>
-                <MenuItem value='TWELVE_H'>12시간</MenuItem>
-                <MenuItem value='TWENTY_FOUR_H'>24시간</MenuItem>
+                {expireData.map((data, idx) => {
+                  return (
+                    <MenuItem key={idx} value={data.value}>
+                      {data.text}
+                    </MenuItem>
+                  );
+                })}
               </Select>
             </FormControl>
           </Box>
