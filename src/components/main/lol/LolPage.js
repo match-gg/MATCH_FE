@@ -57,7 +57,7 @@ const LolPage = () => {
         console.log(error);
       });
 
-    console.log(pageNumber);
+    // console.log(pageNumber);
   };
 
   useEffect(() => {
