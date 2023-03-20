@@ -211,13 +211,13 @@ const CreateCardBtn = (props) => {
     setIsChanged(true);
   };
 
-  const handleVoice = (e) => {
-    setUserInput({ ...userInput, voice: e.target.checked ? 'y' : 'n' });
+  const handleVoice = (e, newValue) => {
+    setUserInput({ ...userInput, voice: newValue });
     setIsChanged(true);
   };
 
   const handleContent = (e) => {
-    setUserInput({ ...userInput, content: e.target.value });
+    setUserInput({ ...userInput, content: e.target.value.trim() });
     setIsChanged(true);
   };
 
@@ -271,14 +271,10 @@ const CreateCardBtn = (props) => {
 
   //글 작성 완료시 서버로 데이터 전송
   const postModalInfo = async () => {
-    const userInputData = JSON.stringify({
-      ...userInput,
-      content: userInput.content.trim(),
-    });
-    // 서버로 전송
-    await api.post(`/api/lol/board`, userInputData).catch((error) => {
+    await api.post(`/api/lol/board`, userInput).catch((error) => {
       alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
       console.log(error);
+    }).then((_res) => {
       closeModal();
     });
   };
@@ -522,7 +518,7 @@ const CreateCardBtn = (props) => {
               파티찾기 지속시간
             </Typography>
             <FormControl size='small' sx={{ width: 240 }}>
-              <Select value={userInput.expire} onChange={handleExpire} sx={{ color: 'grey'}}>
+              <Select value={userInput.expire} onChange={handleExpire} sx={{ color: 'grey' }}>
                 {expireData.map((data, idx) => {
                   return (
                     <MenuItem key={idx} value={data.value} sx={{ color: 'grey' }}>
@@ -546,14 +542,30 @@ const CreateCardBtn = (props) => {
             >
               인게임 보이스 or 음성채팅 사용 여부
             </Typography>
-            <Box flex={{ display: 'flex', alignItems: 'center' }}>
-              {userInput.voice === 'y' ? (
-                <MicIcon sx={{ color: 'grey' }} />
-              ) : (
-                <MicOffIcon sx={{ color: 'grey' }} />
-              )}
-              <Switch defaultChecked={false} onChange={handleVoice} sx={{ ml: 1 }} />
-            </Box>
+            <ToggleButtonGroup
+              exclusive
+              value={userInput.voice}
+              onChange={handleVoice}
+              sx={{
+                '& .MuiToggleButton-root.Mui-selected': {
+                  backgroundColor: '#4f90db',
+                  color: 'white',
+                },
+                '& > *': {
+                  height: 40,
+                  px: 2,
+                },
+              }}
+            >
+              <ToggleButton key={'on'} value={'y'}>
+                <MicIcon sx={{ mr: 1 }} />
+                사용{' '}
+              </ToggleButton>
+              <ToggleButton key={'off'} value={'n'}>
+                <MicOffIcon sx={{ mr: 1 }} />
+                사용안함
+              </ToggleButton>
+            </ToggleButtonGroup>
           </Box>
           <Box sx={{ mt: 2 }}>
             <TextField
