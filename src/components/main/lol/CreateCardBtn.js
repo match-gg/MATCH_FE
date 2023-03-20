@@ -392,15 +392,13 @@ const CreateCardBtn = (props) => {
               value={userInput.type}
               onChange={handleType}
               sx={{
-                width: 360,
                 '& .MuiToggleButton-root.Mui-selected': {
                   backgroundColor: '#4f90db',
                   color: 'white',
                 },
                 '& > *': {
-                  width: '25%',
                   height: 40,
-                  p: 0,
+                  px: 2,
                 },
               }}
             >
@@ -448,6 +446,7 @@ const CreateCardBtn = (props) => {
                 },
                 '& > *': {
                   height: 40,
+                  px:1.5,
                 },
               }}
             >
@@ -490,15 +489,13 @@ const CreateCardBtn = (props) => {
               exclusive
               onChange={handlePosition}
               sx={{
-                width: 360,
                 '& .MuiToggleButton-root.Mui-selected': {
                   backgroundColor: '#4f90db',
                   color: 'white',
                 },
                 '& > *': {
-                  width: '20%',
                   height: 40,
-                  p: 0,
+                  px: 2,
                 },
               }}
             >
@@ -524,7 +521,7 @@ const CreateCardBtn = (props) => {
             >
               파티찾기 지속시간
             </Typography>
-            <FormControl size='small' sx={{ width: 180 }}>
+            <FormControl size='small' sx={{ width: 240 }}>
               <Select value={userInput.expire} onChange={handleExpire}>
                 {expireData.map((data, idx) => {
                   return (
