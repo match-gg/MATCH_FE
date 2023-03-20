@@ -13,76 +13,63 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   OutlinedInput,
+  Divider,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { api } from '../../../api/api';
 
-//글 작성 모달 창의  각 입력 영역의 텍스트
-const ModalText = ({ text, type }) => {
-  return (
-    <Typography
-      color={type === 'ARAM' ? '#c3c3c3' : 'primary'}
-      sx={{
-        marginTop: '10px',
-        fontSize: '16px',
-      }}
-    >
-      {text}
-    </Typography>
-  );
-};
-
 const typeData = [
   {
     value: 'DUO_RANK',
-    text: '듀오 랭크',
+    text: '듀오랭크',
   },
   {
     value: 'FREE_RANK',
-    text: '자유 랭크',
-  },
-  {
-    value: 'NORMAL',
-    text: '노말 게임',
+    text: '자유랭크',
   },
   {
     value: 'ARAM',
-    text: '무작위 총력전',
+    text: '칼바람나락',
+  },
+  {
+    value: 'NORMAL',
+    text: '일반게임',
   },
 ];
 
 const tierData = [
   {
     value: 'IRON',
-    text: 'IRON',
+    text: '아이언',
   },
   {
     value: 'BRONZE',
-    text: 'BRONZE',
+    text: '브론즈',
   },
   {
     value: 'SILVER',
-    text: 'SILVER',
+    text: '실버',
   },
   {
     value: 'GOLD',
-    text: 'GOLD',
+    text: '골드',
   },
   {
     value: 'PLATINUM',
-    text: 'PLATINUM',
+    text: '플레티넘',
   },
   {
     value: 'DIAMOND',
-    text: 'DIAMOND',
+    text: '다이아몬드',
   },
   {
     value: 'MASTER',
-    text: 'MASTER',
+    text: '마스터',
   },
   {
     value: 'ALL',
@@ -93,23 +80,23 @@ const tierData = [
 const positionData = [
   {
     value: 'TOP',
-    text: 'TOP',
+    text: '탑',
   },
   {
     value: 'JUG',
-    text: 'JUG',
+    text: '정글',
   },
   {
     value: 'MID',
-    text: 'MID',
+    text: '미드',
   },
   {
     value: 'ADC',
-    text: 'ADC',
+    text: '원딜',
   },
   {
     value: 'SUP',
-    text: 'SUP',
+    text: '서폿',
   },
   {
     value: 'ALL',
@@ -153,8 +140,9 @@ const expireData = [
 ];
 
 const CreateCardBtn = (props) => {
-  //모달에서 사용자의 입력 값을 담을 state, 초기값
-  //name은 lol 페이지에서 버튼에 props 값으로 줄 예정
+
+  const [isChanged, setIsChanged] = useState(false);
+  
   const [userInput, setUserInput] = useState({
     name: props.name ? props.name : '',
     type: 'DUO_RANK',
@@ -165,9 +153,9 @@ const CreateCardBtn = (props) => {
     content: '',
   });
 
-  //사용자의 입력을 통해 userInput의 값을 변경하는 함수
   const handleName = (e) => {
     setUserInput({ ...userInput, name: e.target.value });
+    setIsChanged(true);
   };
 
   const handleType = (e, newValue) => {
@@ -189,9 +177,7 @@ const CreateCardBtn = (props) => {
       });
     } else if (
       newValue === 'DUO_RANK' &&
-      (userInput.tier === 'MASTER' ||
-        userInput.tier === 'ALL' ||
-        userInput.position === 'ALL')
+      (userInput.tier === 'MASTER' || userInput.tier === 'ALL' || userInput.position === 'ALL')
     ) {
       setUserInput({
         ...userInput,
@@ -202,6 +188,7 @@ const CreateCardBtn = (props) => {
     } else {
       setUserInput({ ...userInput, type: newValue });
     }
+    setIsChanged(true);
   };
 
   const handleTier = (e, newValue) => {
@@ -209,6 +196,7 @@ const CreateCardBtn = (props) => {
       return;
     }
     setUserInput({ ...userInput, tier: newValue });
+    setIsChanged(true);
   };
 
   const handlePosition = (e, newValue) => {
@@ -216,26 +204,29 @@ const CreateCardBtn = (props) => {
       return;
     }
     setUserInput({ ...userInput, position: newValue });
+    setIsChanged(true);
   };
 
   const handleExpire = (e, newValue) => {
     setUserInput({ ...userInput, expire: e.target.value });
+    setIsChanged(true);
   };
 
   const handleVoice = (e) => {
     setUserInput({ ...userInput, voice: e.target.checked ? 'y' : 'n' });
+    setIsChanged(true);
   };
 
   const handleContent = (e) => {
     setUserInput({ ...userInput, content: e.target.value });
+    setIsChanged(true);
   };
 
   //연결된 아이디 Switch 컴포넌트에 사용할 state와 함수
-  const [idConnected, setIdConnected] = useState(
-    userInput.length ? true : false
-  );
+  const [idConnected, setIdConnected] = useState(userInput.length ? true : false);
   const handleSwitch = (e) => {
     setIdConnected(!idConnected);
+    setIsChanged(true);
   };
 
   //아이디 인증에 사용할 state와 함수
@@ -244,20 +235,17 @@ const CreateCardBtn = (props) => {
     //나중에 서버로 nickname 보내서 인증받는 유효성 검사 추가해야함
     //일단은 true로 바꾸게 작성해놈
     setCertifiedId(true);
+    setIsChanged(true);
   };
 
   //Modal 관련 state와 함수
   const [open, setOpen] = useState(false);
   const openModal = () => setOpen(true);
   const closeModalConfirm = () => {
-    if (
-      window.confirm(
-        '현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'
-      )
-    ) {
-      closeModal();
+    if (isChanged){
+      if (window.confirm('현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?')) closeModal();
     } else {
-      return;
+      closeModal();
     }
   };
 
@@ -304,77 +292,72 @@ const CreateCardBtn = (props) => {
         open={open}
         onClose={closeModal}
         disableEscapeKeyDown
-        BackdropProps={{ onClick: handleBackdropClick }}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        slotProps={{ backdrop: { onClick: handleBackdropClick } }}
       >
-        {/* hideBackdrop 속성을 사용하면 배경 클릭해도 안닫히기는 하는데 배경이 blur 처리되는것도 동작하지 않음 (그냥 배경을 안만들어주는듯) */}
         <Stack
           direction='column'
           justifyContent='center'
           alignItems='stretch'
           sx={{
-            top: '50%',
-            left: '50%',
-            position: 'absolute',
-            transform: 'translate(-50%, -50%)',
-            width: '60vw',
+            width: '50%',
             bgcolor: 'white',
-            padding: '10px 30px 15px 30px',
-            maxWidth: '700px',
-            border: '1px solid #dddddd',
+            px: 4,
+            py: 3,
+            maxWidth: 640,
+            borderRadius: 4,
           }}
         >
-          {/* 아이디  영역*/}
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}
+          >
+            <Typography component='h1' sx={{ fontSize: 28, ml: 1 }}>
+              새 게시글 등록
+            </Typography>
+            <CloseIcon color='primary' onClick={closeModalConfirm} sx={{ mr: 1 }} />
+          </Box>
+          <Divider sx={{ mb: 1 }} />
           <Box
             sx={{
               display: 'flex',
+              flexDirection: 'row-reverse',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              justifyContent: 'flex-start',
             }}
           >
-            <Box
+            <Switch
+              defaultChecked={props.name ? true : false}
+              onChange={handleSwitch}
+              disabled={props.name ? false : true}
+            />
+            <Typography
+              color={idConnected ? 'primary' : 'grey'}
               sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'start',
-                alignItems: 'center',
+                fontSize: '16px',
+                fontWeight: 'bold',
               }}
             >
-              <Switch
-                defaultChecked={props.name ? true : false}
-                onChange={handleSwitch}
-              />
-              <Typography
-                color={idConnected ? 'primary' : 'grey'}
-                sx={{
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                }}
-              >
-                현재 계정 사용 : {props.name ? props.name : '-'}
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                '&:hover': {
-                  cursor: 'pointer',
-                  boxShadow: '0 0 2px 1px #4f8fdb',
-                },
-              }}
-            >
-              <CloseIcon color='primary' onClick={closeModalConfirm} />
-            </Box>
+              이 아이디 사용하기 : {props.name ? props.name : '연결된 소환사명 없음'}
+            </Typography>
           </Box>
-          <Box
-            sx={{ maxWidth: '350px', display: 'felx', flexDirection: 'row' }}
-          >
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography
+              component='h2'
+              sx={{
+                fontSize: 20,
+                fontWeight: 400,
+                color: 'grey',
+              }}
+            >
+              등록할 소환사 명
+            </Typography>
             <OutlinedInput
               size='small'
-              fullWidth
-              placeholder='연결할 아이디를 입력해주세요.'
+              placeholder='리그오브레전드 소환사 명을 입력하세요.'
               disabled={idConnected}
               onChange={handleName}
               endAdornment={
@@ -387,89 +370,161 @@ const CreateCardBtn = (props) => {
                   인증하기
                 </Button>
               }
+              sx={{ width: 360 }}
             />
           </Box>
-          {/* 큐타입  영역*/}
-          <ModalText text={'플레이할 큐타입'} />
-          <ToggleButtonGroup
-            exclusive
-            size='small'
-            value={userInput.type}
-            onChange={handleType}
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}
+          >
+            <Typography
+              component='h2'
+              sx={{
+                fontSize: 20,
+                fontWeight: 400,
+                color: 'grey',
+              }}
+            >
+              플레이할 큐 타입
+            </Typography>
+            <ToggleButtonGroup
+              exclusive
+              size='small'
+              value={userInput.type}
+              onChange={handleType}
+              sx={{
+                width: 360,
+                '& .MuiToggleButton-root.Mui-selected': {
+                  backgroundColor: '#4f90db',
+                  color: 'white',
+                },
+                '& > *': {
+                  width: '25%',
+                  height: 40,
+                  p: 0,
+                },
+              }}
+            >
+              {typeData.map((data, idx) => {
+                return (
+                  <ToggleButton key={idx} value={data.value}>
+                    {data.text}
+                  </ToggleButton>
+                );
+              })}
+            </ToggleButtonGroup>
+          </Box>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}
+          >
+            <Typography
+              component='h2'
+              sx={{
+                fontSize: 20,
+                fontWeight: 400,
+                color: 'grey',
+              }}
+            >
+              원하는 파티원의 티어
+            </Typography>
+          </Box>
+          <Box
             sx={{
-              '& .MuiToggleButton-root.Mui-selected': {
-                backgroundColor: '#4f90db',
-                color: 'white',
-              },
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              mt: 1,
             }}
           >
-            {typeData.map((data, idx) => {
-              return (
-                <ToggleButton key={idx} value={data.value}>
-                  {data.text}
-                </ToggleButton>
-              );
-            })}
-          </ToggleButtonGroup>
-          {/* 티어  영역*/}
-          <ModalText text={'원하는 파티원의 티어'} type={userInput.type} />
-          <ToggleButtonGroup
-            disabled={userInput.type === 'ARAM' ? true : false}
-            size='small'
-            value={userInput.tier}
-            onChange={handleTier}
-            exclusive
-            sx={{
-              '& .MuiToggleButton-root.Mui-selected': {
-                backgroundColor: '#4f90db',
-                color: 'white',
-              },
-            }}
+            <ToggleButtonGroup
+              disabled={userInput.type === 'ARAM' ? true : false}
+              size='small'
+              value={userInput.tier}
+              onChange={handleTier}
+              exclusive
+              sx={{
+                '& .MuiToggleButton-root.Mui-selected': {
+                  backgroundColor: '#4f90db',
+                  color: 'white',
+                },
+                '& > *': {
+                  height: 40,
+                },
+              }}
+            >
+              {tierData.map((data, idx) => {
+                return (
+                  <ToggleButton
+                    key={idx}
+                    value={data.value}
+                    disabled={
+                      (data.value === 'MASTER' || data.value === 'ALL') &&
+                      userInput.type === 'DUO_RANK'
+                        ? true
+                        : false
+                    }
+                  >
+                    {data.text}
+                  </ToggleButton>
+                );
+              })}
+            </ToggleButtonGroup>
+          </Box>
+
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}
           >
-            {tierData.map((data, idx) => {
-              return (
-                <ToggleButton
-                  key={idx}
-                  value={data.value}
-                  disabled={
-                    (data.value === 'MASTER' || data.value === 'ALL') &&
-                    userInput.type === 'DUO_RANK'
-                      ? true
-                      : false
-                  }
-                >
-                  {data.text}
-                </ToggleButton>
-              );
-            })}
-          </ToggleButtonGroup>
-          {/* 포지션  영역*/}
-          <ModalText text={'원하는 파티원의 포지션'} type={userInput.type} />
-          <ToggleButtonGroup
-            size='small'
-            disabled={userInput.type === 'ARAM' ? true : false}
-            value={userInput.position}
-            exclusive
-            onChange={handlePosition}
-            sx={{
-              '& .MuiToggleButton-root.Mui-selected': {
-                backgroundColor: '#4f90db',
-                color: 'white',
-              },
-            }}
+            <Typography
+              component='h2'
+              sx={{
+                fontSize: 20,
+                fontWeight: 400,
+                color: 'grey',
+              }}
+            >
+              원하는 파티원의 포지션
+            </Typography>
+            <ToggleButtonGroup
+              size='small'
+              disabled={userInput.type === 'ARAM' ? true : false}
+              value={userInput.position}
+              exclusive
+              onChange={handlePosition}
+              sx={{
+                width: 360,
+                '& .MuiToggleButton-root.Mui-selected': {
+                  backgroundColor: '#4f90db',
+                  color: 'white',
+                },
+                '& > *': {
+                  width: '20%',
+                  height: 40,
+                  p: 0,
+                },
+              }}
+            >
+              {positionData.map((data, idx) => {
+                return (
+                  <ToggleButton key={idx} value={data.value}>
+                    {data.text}
+                  </ToggleButton>
+                );
+              })}
+            </ToggleButtonGroup>
+          </Box>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}
           >
-            {positionData.map((data, idx) => {
-              return (
-                <ToggleButton key={idx} value={data.value}>
-                  {data.text}
-                </ToggleButton>
-              );
-            })}
-          </ToggleButtonGroup>
-          {/* 카드 만료 시간  영역*/}
-          <ModalText text={'카드 만료 시간'} />
-          <Box>
-            <FormControl size='small' sx={{ width: '300px' }}>
+            <Typography
+              component='h2'
+              sx={{
+                fontSize: 20,
+                fontWeight: 400,
+                color: 'grey',
+              }}
+            >
+              파티찾기 지속시간
+            </Typography>
+            <FormControl size='small' sx={{ width: 180 }}>
               <Select value={userInput.expire} onChange={handleExpire}>
                 {expireData.map((data, idx) => {
                   return (
@@ -482,77 +537,68 @@ const CreateCardBtn = (props) => {
             </FormControl>
           </Box>
           <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'start',
-            }}
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}
           >
-            <Box sx={{ display: 'flex', marginTop: '10px' }}>
-              <Switch defaultChecked={false} onChange={handleVoice} />
-              <Typography
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                }}
-              >
-                <MicIcon color={userInput.voice === 'y' ? 'primary' : ''} />
-                음성채팅 사용 여부
-              </Typography>
-            </Box>
+            <Typography
+              component='h2'
+              sx={{
+                fontSize: 20,
+                fontWeight: 400,
+                color: 'grey',
+              }}
+            >
+              {' '}
+              인게임 보이스 or 음성채팅 사용 여부
+            </Typography>
+            {userInput.voice === 'y' ? <MicIcon /> : <MicOffIcon />}
+            <Switch defaultChecked={false} onChange={handleVoice} />
           </Box>
-          <Box xs={6} sx={{ height: '80%' }}>
-            <ModalText text={'카드 내용 작성하기'} />
+          <Box sx={{ mt: 2 }}>
             <TextField
               sx={{ bgcolor: 'white' }}
               onChange={handleContent}
               fullWidth
               multiline
-              minRows={5} // 이거 어떻게 처리하지...
-              maxRows={5}
-              placeholder='카드의 내용은 140자 이내로 작성해주세요.'
+              minRows={4} // 이거 어떻게 처리하지...
+              maxRows={4}
+              placeholder='140자 이내로 원하는 파티원에 대한 설명이나, 자신을 소개해 보세요.'
               inputProps={{ maxLength: 140 }}
             />
           </Box>
+          <Divider sx={{ mt: 2 }} />
           <Box
-            xs={12}
-            display='flex'
-            justifyContent='space-between'
-            alignItems='center'
-            sx={{ backgroundColor: 'white', marginTop: '20px' }}
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              mt: 2,
+            }}
           >
-            <Stack
-              direction='row'
-              alignItems='center'
-              justifyContent='space-around'
-              sx={{ width: '100%' }}
+            <Button
+              onClick={closeModalConfirm}
+              startIcon={<BackspaceIcon />}
+              variant='contained'
+              size='large'
+              sx={{
+                bgcolor: '#808080',
+                mr: 2,
+                ':hover': {
+                  bgcolor: '#a0a0a0',
+                },
+              }}
             >
-              <Button
-                onClick={closeModalConfirm}
-                startIcon={<BackspaceIcon />}
-                variant='contained'
-                size='large'
-                sx={{
-                  bgcolor: '#808080',
-                  ':hover': {
-                    bgcolor: '#a0a0a0',
-                  },
-                }}
-              >
-                뒤로가기
-              </Button>
-              <Button
-                onClick={postModalInfo}
-                startIcon={<EditIcon />}
-                variant='contained'
-                size='large'
-                disabled={!(idConnected || certyfiedId)}
-              >
-                작성하기
-              </Button>
-            </Stack>
+              뒤로가기
+            </Button>
+            <Button
+              onClick={postModalInfo}
+              startIcon={<EditIcon />}
+              variant='contained'
+              size='large'
+              disabled={!(idConnected || certyfiedId)}
+            >
+              작성하기
+            </Button>
           </Box>
         </Stack>
       </Modal>
