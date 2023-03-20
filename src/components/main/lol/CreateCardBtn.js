@@ -140,9 +140,8 @@ const expireData = [
 ];
 
 const CreateCardBtn = (props) => {
-
   const [isChanged, setIsChanged] = useState(false);
-  
+
   const [userInput, setUserInput] = useState({
     name: props.name ? props.name : '',
     type: 'DUO_RANK',
@@ -242,8 +241,9 @@ const CreateCardBtn = (props) => {
   const [open, setOpen] = useState(false);
   const openModal = () => setOpen(true);
   const closeModalConfirm = () => {
-    if (isChanged){
-      if (window.confirm('현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?')) closeModal();
+    if (isChanged) {
+      if (window.confirm('현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'))
+        closeModal();
     } else {
       closeModal();
     }
@@ -446,7 +446,7 @@ const CreateCardBtn = (props) => {
                 },
                 '& > *': {
                   height: 40,
-                  px:1.5,
+                  px: 1.5,
                 },
               }}
             >
@@ -522,10 +522,10 @@ const CreateCardBtn = (props) => {
               파티찾기 지속시간
             </Typography>
             <FormControl size='small' sx={{ width: 240 }}>
-              <Select value={userInput.expire} onChange={handleExpire}>
+              <Select value={userInput.expire} onChange={handleExpire} sx={{ color: 'grey'}}>
                 {expireData.map((data, idx) => {
                   return (
-                    <MenuItem key={idx} value={data.value}>
+                    <MenuItem key={idx} value={data.value} sx={{ color: 'grey' }}>
                       {data.text}
                     </MenuItem>
                   );
@@ -544,11 +544,16 @@ const CreateCardBtn = (props) => {
                 color: 'grey',
               }}
             >
-              {' '}
               인게임 보이스 or 음성채팅 사용 여부
             </Typography>
-            {userInput.voice === 'y' ? <MicIcon /> : <MicOffIcon />}
-            <Switch defaultChecked={false} onChange={handleVoice} />
+            <Box flex={{ display: 'flex', alignItems: 'center' }}>
+              {userInput.voice === 'y' ? (
+                <MicIcon sx={{ color: 'grey' }} />
+              ) : (
+                <MicOffIcon sx={{ color: 'grey' }} />
+              )}
+              <Switch defaultChecked={false} onChange={handleVoice} sx={{ ml: 1 }} />
+            </Box>
           </Box>
           <Box sx={{ mt: 2 }}>
             <TextField
