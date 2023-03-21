@@ -30,6 +30,7 @@ import Logout from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LolPageNavbar from './LolPageNavbar';
 import CreateCardBtn from './CreateCardBtn';
+import Footer from '../Footer';
 
 const LolPage = () => {
   const [scrollValue, setScrollValue] = useState(0);
@@ -297,6 +298,7 @@ const LolPage = () => {
         </Container>
         <Button sx={{ mb: 4 }}>더 불러오기</Button>
       </Box>
+      <Footer />
     </Fragment>
   );
 };
