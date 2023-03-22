@@ -17,6 +17,7 @@ import Card from './Card';
 
 import LolPageNavbar from './LolPageNavbar';
 import { api } from '../../../api/api';
+import CreateCardBtn from './CreateCardBtn';
 
 const LolPage = () => {
   const [boards, setBoards] = useState([]); // 전체 게시글 저장
@@ -184,23 +185,8 @@ const LolPage = () => {
             }}
           ></Box>
           <Box>
-            <Button
-              variant='outlined'
-              sx={{
-                height: 40,
-                mr: 1,
-                borderColor: '#dddddd',
-                color: 'black',
-                '&:hover': {
-                  borderColor: '#dddddd',
-                  color: 'black',
-                  backgroundColor: '#f3f3f3',
-                },
-              }}
-            >
-              글 작성하기
-            </Button>
-            <Button sx={{ height: 40, color: 'black' }}>
+            <CreateCardBtn />
+            <Button sx={{ height: 40 }}>
               새로고침
               <RefreshIcon />
             </Button>
