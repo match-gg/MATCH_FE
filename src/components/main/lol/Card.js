@@ -12,6 +12,7 @@ import { PieChart } from 'react-minimal-pie-chart';
 
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
+import PartyModalBtn from './PartyModalBtn';
 
 const Card = (props) => {
   const winRate = 70;
@@ -141,9 +142,7 @@ const Card = (props) => {
                 justifyContent: 'center',
               }}
             >
-              <Button variant='contained' sx={{ borderRadius: '8px' }}>
-                <Typography>더보기</Typography>
-              </Button>
+              <PartyModalBtn />
             </Box>
           </Box>
           <Box sx={{ flexBasis: 24 }}>
