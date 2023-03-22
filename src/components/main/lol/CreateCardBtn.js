@@ -212,7 +212,7 @@ const CreateCardBtn = (props) => {
   };
 
   const handleVoice = (e, newValue) => {
-    setUserInput({ ...userInput, voice: newValue });
+    setUserInput({ ...userInput, voice: e.target.value });
     setIsChanged(true);
   };
 
@@ -271,17 +271,34 @@ const CreateCardBtn = (props) => {
 
   //글 작성 완료시 서버로 데이터 전송
   const postModalInfo = async () => {
-    await api.post(`/api/lol/board`, userInput).catch((error) => {
-      alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
-      console.log(error);
-    }).then((_res) => {
-      closeModal();
-    });
+    await api
+      .post(`/api/lol/board`, userInput)
+      .catch((error) => {
+        alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
+        console.log(error);
+      })
+      .then((_res) => {
+        closeModal();
+      });
   };
 
   return (
     <Fragment>
-      <Button variant='outlined' sx={{ height: 40, mr: 1 }} onClick={openModal}>
+      <Button
+        variant='outlined'
+        sx={{
+          height: 40,
+          mr: 1,
+          borderColor: '#dddddd',
+          color: 'black',
+          '&:hover': {
+            borderColor: '#dddddd',
+            color: 'black',
+            backgroundColor: '#f3f3f3',
+          },
+        }}
+        onClick={openModal}
+      >
         글 작성하기
       </Button>
       <Modal
@@ -384,7 +401,6 @@ const CreateCardBtn = (props) => {
             </Typography>
             <ToggleButtonGroup
               exclusive
-              size='small'
               value={userInput.type}
               onChange={handleType}
               sx={{
@@ -394,7 +410,7 @@ const CreateCardBtn = (props) => {
                 },
                 '& > *': {
                   height: 40,
-                  px: 2,
+                  px: '10px',
                 },
               }}
             >
@@ -431,7 +447,6 @@ const CreateCardBtn = (props) => {
           >
             <ToggleButtonGroup
               disabled={userInput.type === 'ARAM' ? true : false}
-              size='small'
               value={userInput.tier}
               onChange={handleTier}
               exclusive
@@ -442,7 +457,7 @@ const CreateCardBtn = (props) => {
                 },
                 '& > *': {
                   height: 40,
-                  px: 1.5,
+                  px: '10px',
                 },
               }}
             >
@@ -479,7 +494,6 @@ const CreateCardBtn = (props) => {
               원하는 파티원의 포지션
             </Typography>
             <ToggleButtonGroup
-              size='small'
               disabled={userInput.type === 'ARAM' ? true : false}
               value={userInput.position}
               exclusive
@@ -491,7 +505,7 @@ const CreateCardBtn = (props) => {
                 },
                 '& > *': {
                   height: 40,
-                  px: 2,
+                  px: '10px',
                 },
               }}
             >
@@ -517,8 +531,8 @@ const CreateCardBtn = (props) => {
             >
               파티찾기 지속시간
             </Typography>
-            <FormControl size='small' sx={{ width: 240 }}>
-              <Select value={userInput.expire} onChange={handleExpire} sx={{ color: 'grey' }}>
+            <FormControl sx={{ width: 240 }}>
+              <Select value={userInput.expire} onChange={handleExpire} sx={{ color: 'grey', height: 40 }}>
                 {expireData.map((data, idx) => {
                   return (
                     <MenuItem key={idx} value={data.value} sx={{ color: 'grey' }}>
@@ -553,13 +567,13 @@ const CreateCardBtn = (props) => {
                 },
                 '& > *': {
                   height: 40,
-                  px: 2,
+                  px: 1.5,
                 },
               }}
             >
               <ToggleButton key={'on'} value={'y'}>
                 <MicIcon sx={{ mr: 1 }} />
-                사용{' '}
+                사용
               </ToggleButton>
               <ToggleButton key={'off'} value={'n'}>
                 <MicOffIcon sx={{ mr: 1 }} />
