@@ -186,7 +186,7 @@ const LolPage = () => {
           ></Box>
           <Box>
             <CreateCardBtn />
-            <Button sx={{ height: 40 }}>
+            <Button sx={{ height: 40, color: '#3d3939' }}>
               새로고침
               <RefreshIcon />
             </Button>
@@ -211,7 +211,7 @@ const LolPage = () => {
             {isLoading && <Typography>Loading...</Typography>}
           </Box>
         </Container>
-        <Button sx={{ mb: 4 }} onClick={moreBoards}>
+        <Button sx={{ mb: 4, color: '#3d3939' }} onClick={moreBoards}>
           더 불러오기
         </Button>
       </Box>
