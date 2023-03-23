@@ -1,9 +1,11 @@
-import { Button, Typography } from '@mui/material';
+import { Button, Typography, Stack, Divider, IconButton, Box, Modal } from '@mui/material';
 
 import { Fragment, useState } from 'react';
 
-import PartyInfo from './PartyInfo';
-import ViewDetail from './ViewDetail';
+import PartyMember from './PartyMember';
+import Recruitment from './Recruitment';
+
+import CloseIcon from '@mui/icons-material/Close';
 
 const PartyModalBtn = props => {
   //Modal 관련 state와 함수
@@ -11,22 +13,66 @@ const PartyModalBtn = props => {
   const openModalHandler = () => setOpen(true);
   const closeModalHandler = () => {
     setOpen(false);
-    setViewDetail(false);
   };
-
-  // 파티원 정보 상세보기 Modal 관련 state와 함수
-  const [viewDetail, setViewDetail] = useState(false);
-  const showViewDetailHandler = b => {
-    setViewDetail(b)
-  }
 
   return (
     <Fragment>
       <Button variant='contained' sx={{ borderRadius: '8px' }} onClick={openModalHandler}>
         <Typography>더보기</Typography>
       </Button>
-      {!viewDetail && <PartyInfo open={open} onCloseModal={closeModalHandler} onViewDetail={showViewDetailHandler} />}
-      {viewDetail && <ViewDetail open={open} onCloseModal={closeModalHandler} onCloseViewDetail={showViewDetailHandler} />}
+      <Modal
+        open={open}
+        onClose={closeModalHandler}
+        disableEnforceFocus
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Stack
+          direction='column'
+          justifyContent='center'
+          alignItems='stretch'
+          sx={{
+            width: '40%',
+            maxHeight: '700px',
+            bgcolor: 'white',
+            padding: '16px',
+            borderRadius: 4
+          }}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography component='h1' sx={{ fontSize: 24, fontWeight: 600, ml: 1 }}>
+              파티 정보 상세보기
+            </Typography>
+            <IconButton size='small' onClick={closeModalHandler}>
+              <CloseIcon fontSize='inherit' />
+            </IconButton>
+          </Box>
+          <Divider sx={{ mt: 1 }} />
+          <Stack alignItems='center' divider={<Divider flexItem />} sx={{ overflow: 'auto' }}>
+            <PartyMember />
+            <PartyMember />
+            <Recruitment />
+            <Recruitment />
+            <Recruitment />
+          </Stack>
+          <Divider />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1, mt: 1 }}>
+            <Button
+              variant='contained'
+              size='small'
+              sx={{
+                p: 1,
+                bgcolor: '#808080',
+                ':hover': {
+                  bgcolor: '#a0a0a0'
+                }
+              }}
+              onClick={closeModalHandler}>
+              뒤로가기
+            </Button>
+            <Button variant='contained' size='small' sx={{ p: 1 }}>
+              참여하기
+            </Button>
+          </Box>
+        </Stack>
+      </Modal>
     </Fragment>
   );
 }
