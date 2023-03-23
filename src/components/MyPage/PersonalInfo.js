@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 
 const PersonalInfo = props => {
-  const { email, registerDate } = props.userData;
+  const { email, regdate } = props.userData;
 
   return (
     <Box
@@ -84,7 +84,7 @@ const PersonalInfo = props => {
               padding: 1,
               marginLeft: 1
             }}>
-            {registerDate || '생성일자'}
+            {regdate || '생성일자'}
           </Typography>
         </Box>
       </Box>
