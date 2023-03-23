@@ -43,29 +43,6 @@ const FollowList = () => {
           <FollowItem />
           <FollowItem />
           <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
         </Box>
       </Box>
     </Box>
