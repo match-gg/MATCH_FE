@@ -7,13 +7,19 @@ import { CssBaseline } from '@mui/material';
 
 import App from './App';
 import store from './store/index';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from 'redux-persist';
+
+const persistor = persistStore(store);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <CookiesProvider>
     <Provider store={store}>
-      <CssBaseline />
-      <App />
+      <PersistGate loading={null} persistor={persistor}>
+        <CssBaseline />
+        <App />
+      </PersistGate>
     </Provider>
   </CookiesProvider>
 );
