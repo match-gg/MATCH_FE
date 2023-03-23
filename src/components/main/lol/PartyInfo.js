@@ -26,11 +26,11 @@ const PartyModal = props => {
             padding: '16px',
             borderRadius: 4
           }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography component='h1' sx={{ fontSize: 24, ml: 1 }}>
               파티 정보 상세보기
             </Typography>
-            <IconButton size='small' sx={{ mr: 1 }} onClick={props.onCloseModal}>
+            <IconButton size='small' onClick={props.onCloseModal}>
               <CloseIcon fontSize='inherit' />
             </IconButton>
           </Box>
