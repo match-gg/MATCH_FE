@@ -14,7 +14,23 @@ import { useSelector } from 'react-redux';
 
 const MyPageLayout = () => {
   const [menu, setMenu] = useState('my_info');
-  const [userData, setUserData] = useState();
+  const [userInfo, setUserInfo] = useState({
+    id: -1,
+    oauth2Id: '',
+    nickname: '',
+    email: '',
+    imageUrl: '',
+    representative: '',
+    lol: '',
+    overwatch: '',
+    pubg: '',
+    maplestory: '',
+    lostark: '',
+    likeCount: 0,
+    dislikeCount: 0,
+    matchCount: 0,
+    regDate: ''
+  });
 
   const chooseMenuHandler = selectedMenu => {
     setMenu(selectedMenu);
@@ -26,14 +42,14 @@ const MyPageLayout = () => {
   useEffect(() => {
     const getUserDataHandler = async () => {
       await api
-        .get('/api/user/info', null, {
+        .get('/api/user/info', {
           headers: {
-            Authorization: accessToken,
+            Authorization: `Bearer ${accessToken}`,
             'Refresh-Token': refreshToken
           }
         })
         .then(res => {
-          setUserData(res.data);
+          setUserInfo({...res.data});
           console.log(res.data);
         })
         .catch(error => {
@@ -60,9 +76,9 @@ const MyPageLayout = () => {
             height: 'calc(100vh - 150px)',
             width: '70%'
           }}>
-          {menu === 'my_info' && <MyInfo userData={userData} />}
+          {menu === 'my_info' && <MyInfo userInfo={userInfo} />}
           {menu === 'follow_list' && <FollowList />}
-          {menu === 'personal_info' && <PersonalInfo userData={userData} />}
+          {menu === 'personal_info' && <PersonalInfo userInfo={userInfo} />}
           {menu === 'withdraw' && <Withdraw />}
         </Box>
       </Box>

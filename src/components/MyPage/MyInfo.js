@@ -15,10 +15,11 @@ import {
 import CircleIcon from '@mui/icons-material/Circle';
 import { PieChart } from 'react-minimal-pie-chart';
 
-const MyInfo = props => {
-  const { matchCount, likeCount, dislikeCount, lol, overwatch, pubg, maplestory, lostark } = props.UserData;
+const MyInfo = ({ userInfo }) => {
 
-  const likeRate = Math.floor((likeCount / (likeCount + dislikeCount)) * 100);
+  const { matchCount, likeCount, dislikeCount, lol, overwatch, pubg, maplestory, lostark } = userInfo;
+
+  const likeRate = matchCount === 0 ? 0 : Math.floor((likeCount / (likeCount + dislikeCount)) * 100);
 
   return (
     <Box
@@ -80,9 +81,11 @@ const MyInfo = props => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableCell align='center'>{matchCount}</TableCell>
-                  <TableCell align='center'>{likeCount}</TableCell>
-                  <TableCell align='center'>{dislikeCount}</TableCell>
+                  <TableRow>
+                    <TableCell align='center'>{matchCount}</TableCell>
+                    <TableCell align='center'>{likeCount}</TableCell>
+                    <TableCell align='center'>{dislikeCount}</TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
