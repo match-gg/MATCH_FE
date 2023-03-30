@@ -197,28 +197,25 @@ const CreateCardBtn = (props) => {
   };
 
   const handleTier = (e, newValue) => {
-    if (newValue === null) {
-      return;
-    }
+    if (newValue === null) return;
     setUserInput({ ...userInput, tier: newValue });
     setIsChanged(true);
   };
 
   const handlePosition = (e, newValue) => {
-    if (newValue === null) {
-      return;
-    }
+    if (newValue === null) return;
     setUserInput({ ...userInput, position: newValue });
     setIsChanged(true);
   };
 
-  const handleExpire = (e, newValue) => {
+  const handleExpire = (e) => {
     setUserInput({ ...userInput, expire: e.target.value });
     setIsChanged(true);
   };
 
   const handleVoice = (e, newValue) => {
-    setUserInput({ ...userInput, voice: e.target.value });
+    if (newValue === null) return;
+    setUserInput({ ...userInput, voice: newValue });
     setIsChanged(true);
   };
 
@@ -568,7 +565,7 @@ const CreateCardBtn = (props) => {
               인게임 보이스 or 음성채팅 사용 여부
             </Typography>
             <ToggleButtonGroup
-              exclusive
+              exclusive='true'
               value={userInput.voice}
               onChange={handleVoice}
               sx={{
@@ -582,11 +579,11 @@ const CreateCardBtn = (props) => {
                 },
               }}
             >
-              <ToggleButton key={'on'} value={'y'}>
+              <ToggleButton key={'micOn'} value={'y'}>
                 <MicIcon sx={{ mr: 1 }} />
                 사용
               </ToggleButton>
-              <ToggleButton key={'off'} value={'n'}>
+              <ToggleButton key={'micOff'} value={'n'}>
                 <MicOffIcon sx={{ mr: 1 }} />
                 사용안함
               </ToggleButton>
