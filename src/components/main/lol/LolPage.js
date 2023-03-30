@@ -22,7 +22,7 @@ import Footer from '../Footer';
 
 const LolPage = () => {
   const [boards, setBoards] = useState([]); // 전체 게시글 저장
-  const [pageNumber, setPageNumber] = useState(0); // 불러 올 페이지 번호
+  const [pageNumber, setPageNumber] = useState(1); // 불러 올 페이지 번호
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
 
   const [queueType, setQueueType] = useState('ALL'); // 큐 타입
@@ -48,7 +48,7 @@ const LolPage = () => {
   // 더 불러오기
   const moreBoards = async () => {
     await api
-      .get('/api/lol/boards', {
+      .get('/api/lol/board', {
         params: { size: 12, page: pageNumber, position: line, type: queueType, tier },
       })
       .then((res) => {
@@ -67,12 +67,12 @@ const LolPage = () => {
       setIsLoading(true);
 
       await api
-        .get('/api/lol/boards', {
+        .get('/api/lol/board', {
           params: { size: 12, page: 0, position: line, type: queueType, tier },
         })
         .then((response) => {
-          setBoards([...boards, ...response.data.content]);
-          setPageNumber((prevState) => prevState + 1);
+          setBoards(response.data.content);
+          setPageNumber(1);
           setIsLoading(false);
         })
         .catch((error) => {
@@ -82,7 +82,7 @@ const LolPage = () => {
     };
 
     fetchBoards();
-  }, [queueType, tier, line, boards]);
+  }, [queueType, tier, line]);
 
   return (
     <Fragment>

@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { api } from '../../../api/api';
 
@@ -27,11 +27,14 @@ import Card from './Card';
 import Logout from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router-dom';
+import { userActions } from '../../../store/user-slice';
+import { tokenActions } from '../../../store/token-slice';
 
 const LolPageNavbar = () => {
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { nickname, imageUrl } = useSelector((state) => state.user);
 
@@ -59,11 +62,13 @@ const LolPageNavbar = () => {
     await api
       .post(`/api/user/logout`, null, {
         headers: {
-          'Authorization': accessToken,
+          Authorization: `Bearer ${accessToken}`,
           'Refresh-Token': refreshToken,
         },
       })
       .then((response) => {
+        dispatch(userActions.DELETE_USER());
+        dispatch(tokenActions.DELETE_TOKEN());
         navigate('/login');
       })
       .catch((error) => {

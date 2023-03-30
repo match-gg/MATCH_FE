@@ -141,6 +141,7 @@ const MyInfo = ({ userInfo }) => {
               id='standard-basic'
               variant='standard'
               defaultValue={lol}
+              value={lol}
               sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
             />
             <Button>변경하기</Button>
@@ -172,6 +173,7 @@ const MyInfo = ({ userInfo }) => {
               id='standard-basic'
               variant='standard'
               defaultValue={overwatch}
+              value={overwatch}
               sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
             />
             <Button>변경하기</Button>
@@ -203,6 +205,7 @@ const MyInfo = ({ userInfo }) => {
               id='standard-basic'
               variant='standard'
               defaultValue={pubg}
+              value={pubg}
               sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
             />
             <Button>변경하기</Button>
@@ -234,6 +237,7 @@ const MyInfo = ({ userInfo }) => {
               id='standard-basic'
               variant='standard'
               defaultValue={maplestory}
+              value={maplestory}
               sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
             />
             <Button>변경하기</Button>
@@ -265,6 +269,7 @@ const MyInfo = ({ userInfo }) => {
               id='standard-basic'
               variant='standard'
               defaultValue={lostark}
+              value={lostark}
               sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
             />
             <Button>변경하기</Button>

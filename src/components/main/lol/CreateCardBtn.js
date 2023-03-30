@@ -1,4 +1,6 @@
 import React, { Fragment, useState } from 'react';
+import { useSelector } from  'react-redux';
+
 import {
   Button,
   Select,
@@ -140,6 +142,10 @@ const expireData = [
 ];
 
 const CreateCardBtn = (props) => {
+
+  const { accessToken } = useSelector((state) => state.token);
+  const refreshToken = localStorage.getItem('matchGG_refreshToken');
+
   const [isChanged, setIsChanged] = useState(false);
 
   const [userInput, setUserInput] = useState({
@@ -272,7 +278,12 @@ const CreateCardBtn = (props) => {
   //글 작성 완료시 서버로 데이터 전송
   const postModalInfo = async () => {
     await api
-      .post(`/api/lol/board`, userInput)
+      .post(`/api/lol/board`, userInput, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Refresh-Token': refreshToken,
+        },
+      })
       .catch((error) => {
         alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
         console.log(error);
