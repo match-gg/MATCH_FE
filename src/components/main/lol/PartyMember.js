@@ -31,7 +31,7 @@ const PartyInfo = ({data}) => {
           width: '100%'
         }}
         onClick={viewDetailHandler}>
-        <Box sx={{ flexBasis: 72 }}>
+        <Box sx={{ flexBasis: 64 }}>
           <PieChart
             data={[{ value: `${winRate}`, color: '#5383e8', name: 'winRate' }]}
             reveal={winRate} // 퍼센트 치수
