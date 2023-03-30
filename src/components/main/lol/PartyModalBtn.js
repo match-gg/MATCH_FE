@@ -20,6 +20,7 @@ const PartyModalBtn = props => {
     winRate: 70,
     mostChampion: ['lux', 'aatrox', 'shen'],
     voice: 'Y',
+    matchCount: 67,
     likeCount: 50,
     dislikeCount: 12
   };

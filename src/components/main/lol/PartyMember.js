@@ -1,11 +1,14 @@
-import { Typography, Box, ImageList, Collapse } from '@mui/material';
+import { Fragment, useState } from 'react';
+
+import { Typography, Box, ImageList, Collapse, IconButton } from '@mui/material';
 
 import { PieChart } from 'react-minimal-pie-chart';
 
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
-import { Fragment, useState } from 'react';
 import ViewDetail from './ViewDetail';
 
 const PartyInfo = ({data}) => {
@@ -26,11 +29,10 @@ const PartyInfo = ({data}) => {
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-          px: 2,
+          pl: 2,
           height: 88,
           width: '100%'
-        }}
-        onClick={viewDetailHandler}>
+        }}>
         <Box sx={{ flexBasis: 64 }}>
           <PieChart
             data={[{ value: `${winRate}`, color: '#5383e8', name: 'winRate' }]}
@@ -58,7 +60,9 @@ const PartyInfo = ({data}) => {
             justifyContent: 'center'
           }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-            <Typography>{tier} {rank}</Typography>
+            <Typography>
+              {tier} {rank}
+            </Typography>
             <Typography sx={{ ml: 2 }}>{position}</Typography>
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -86,9 +90,12 @@ const PartyInfo = ({data}) => {
             />
           ))}
         </ImageList>
+        <IconButton size='small' onClick={viewDetailHandler} sx={{ ml: 1 }}>
+          {viewDetail ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+        </IconButton>
       </Box>
       <Collapse in={viewDetail} timeout='auto' sx={{ width: '100%' }}>
-        {viewDetail && <ViewDetail data={data} />}
+        <ViewDetail data={data} />
       </Collapse>
     </Fragment>
   );

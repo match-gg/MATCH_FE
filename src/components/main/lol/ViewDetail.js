@@ -3,7 +3,6 @@ import {
   Button,
   Divider,
   Box,
-  Collapse,
 } from '@mui/material';
 
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
