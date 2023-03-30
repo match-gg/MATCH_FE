@@ -31,9 +31,19 @@ const ViewDetail = ({ data }) => {
             fontSize: 18,
             overflow: 'hidden',
             textOverflow: 'ellipsis',
+            pr: 1
+          }}>
+          {name}
+        </Typography>
+        <Typography
+          sx={{
+            fontSize: 12,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            pt: 0.6,
             pr: 3
           }}>
-          {name} 님이 받은 평가
+          님이 받은 평가
         </Typography>
         <Box
           sx={{
