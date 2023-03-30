@@ -6,6 +6,8 @@ import PartyMember from './PartyMember';
 import Recruitment from './Recruitment';
 
 import CloseIcon from '@mui/icons-material/Close';
+import BackspaceIcon from '@mui/icons-material/Backspace';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 const PartyModalBtn = props => {
   //Modal 관련 state와 함수
@@ -33,7 +35,7 @@ const PartyModalBtn = props => {
             width: '40%',
             maxHeight: '700px',
             bgcolor: 'white',
-            padding: '16px',
+            p: 2,
             borderRadius: 4
           }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -65,9 +67,11 @@ const PartyModalBtn = props => {
                 }
               }}
               onClick={closeModalHandler}>
+              <BackspaceIcon fontSize='small' sx={{ mr: 1 }} />
               뒤로가기
             </Button>
             <Button variant='contained' size='small' sx={{ p: 1 }}>
+              <GroupsIcon fontSize='small' sx={{ mr: 1 }} />
               참여하기
             </Button>
           </Box>

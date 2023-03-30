@@ -1,4 +1,4 @@
-import { Typography, Box, ImageList } from '@mui/material';
+import { Typography, Box, ImageList, Collapse } from '@mui/material';
 
 import { PieChart } from 'react-minimal-pie-chart';
 
@@ -9,11 +9,13 @@ import { Fragment, useState } from 'react';
 import ViewDetail from './ViewDetail';
 
 const PartyInfo = props => {
+  // 상세보기 관련 state와 함수
   const [viewDetail, setViewDetail] = useState(false);
   const viewDetailHandler = () => {
     setViewDetail((prev) => !prev)
   }
 
+  // 파티원 정보 임시값
   const winRate = 70;
   const tier = 'Platinum 4';
   const line = 'SPT';
@@ -24,7 +26,14 @@ const PartyInfo = props => {
   return (
     <Fragment>
       <Box
-        sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', p: '0 16px', height: '88px', width: '100%' }}
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          px: 2,
+          height: 88,
+          width: '100%'
+        }}
         onClick={viewDetailHandler}>
         <Box sx={{ flexBasis: 72 }}>
           <PieChart
@@ -82,7 +91,9 @@ const PartyInfo = props => {
           ))}
         </ImageList>
       </Box>
-      {viewDetail && <ViewDetail nickname={nickname}/>}
+      <Collapse in={viewDetail} timeout='auto' sx={{ width: '100%' }}>
+        {viewDetail && <ViewDetail nickname={nickname} />}
+      </Collapse>
     </Fragment>
   );
 };

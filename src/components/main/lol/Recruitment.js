@@ -11,7 +11,7 @@ const Recruitment = props => {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '88px',
+        height: 88,
         width: '100%',
         pt: 3,
         pb: 3
