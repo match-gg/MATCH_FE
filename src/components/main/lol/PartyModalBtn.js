@@ -10,6 +10,20 @@ import BackspaceIcon from '@mui/icons-material/Backspace';
 import GroupsIcon from '@mui/icons-material/Groups';
 
 const PartyModalBtn = props => {
+  // 파티원 임시 데이터
+  const data = {
+    id: 1,
+    name: '완도수산새우도둑',
+    tier: 'Platinum',
+    rank : 'I',
+    position: 'SPT',
+    winRate: 70,
+    mostChampion: ['lux', 'aatrox', 'shen'],
+    voice: 'Y',
+    likeCount: 50,
+    dislikeCount: 12
+  };
+
   //Modal 관련 state와 함수
   const [open, setOpen] = useState(false);
   const openModalHandler = () => setOpen(true);
@@ -48,8 +62,9 @@ const PartyModalBtn = props => {
           </Box>
           <Divider sx={{ mt: 1 }} />
           <Stack alignItems='center' divider={<Divider flexItem />} sx={{ overflow: 'auto' }}>
-            <PartyMember />
-            <PartyMember />
+            {/* 파티원 임시 정보 넘겨줌 */}
+            <PartyMember data={data}/> 
+            <PartyMember data={data}/>
             <Recruitment />
             <Recruitment />
             <Recruitment />

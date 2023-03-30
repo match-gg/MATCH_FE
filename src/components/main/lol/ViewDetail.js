@@ -11,13 +11,9 @@ import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { Fragment } from 'react';
 
-const ViewDetail = props => {
-  // 파티원 닉네임
-  const { nickname } = props;
-
-  // 파티원 평가 정보 임시 값
-  const likeCount = 50;
-  const dislikeCount = 12;
+const ViewDetail = ({ data }) => {
+  // 파티원 상세보기에서 쓸 임시 데이터 (닉네임, 좋아요 수, 싫어요 수)
+  const { name, likeCount, dislikeCount } = data;
 
   return (
     <Fragment>
@@ -38,7 +34,7 @@ const ViewDetail = props => {
             textOverflow: 'ellipsis',
             pr: 3
           }}>
-          {nickname} 님이 받은 평가
+          {name} 님이 받은 평가
         </Typography>
         <Box
           sx={{
@@ -72,6 +68,6 @@ const ViewDetail = props => {
       </Box>
     </Fragment>
   );
-}
+};
 
 export default ViewDetail;

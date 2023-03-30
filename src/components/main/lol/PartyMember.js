@@ -8,20 +8,15 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import { Fragment, useState } from 'react';
 import ViewDetail from './ViewDetail';
 
-const PartyInfo = props => {
+const PartyInfo = ({data}) => {
   // 상세보기 관련 state와 함수
   const [viewDetail, setViewDetail] = useState(false);
   const viewDetailHandler = () => {
     setViewDetail((prev) => !prev)
   }
 
-  // 파티원 정보 임시값
-  const winRate = 70;
-  const tier = 'Platinum 4';
-  const line = 'SPT';
-  const nickname = '완도수산새우도둑';
-  const mic = false;
-  const most3 = ['Lux', 'Aatrox', 'Shen'];
+  // 파티원 정보에서 쓸 임시값 (이름, 티어, 랭크, 포지션, 승률, 모스트3, 보이스)
+  const {name, tier, rank, position, winRate, mostChampion, voice} = data;
 
   return (
     <Fragment>
@@ -30,6 +25,7 @@ const PartyInfo = props => {
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'center',
+          alignItems: 'center',
           px: 2,
           height: 88,
           width: '100%'
@@ -62,8 +58,8 @@ const PartyInfo = props => {
             justifyContent: 'center'
           }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-            <Typography>{tier}</Typography>
-            <Typography sx={{ ml: 2 }}>{line}</Typography>
+            <Typography>{tier} {rank}</Typography>
+            <Typography sx={{ ml: 2 }}>{position}</Typography>
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             <Typography
@@ -74,16 +70,16 @@ const PartyInfo = props => {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis'
               }}>
-              {nickname}
+              {name}
             </Typography>
-            <Box sx={{ pr: 1 }}>{mic ? <MicIcon /> : <MicOffIcon />}</Box>
+            <Box sx={{ pr: 1 }}>{voice === 'Y' ? <MicIcon /> : <MicOffIcon />}</Box>
           </Box>
         </Box>
         <ImageList sx={{ flexBasis: 160 }} cols={3}>
-          {most3.map(item => (
+          {mostChampion.map(item => (
             <Box
               component='img'
-              src={`https://opgg-static.akamaized.net/meta/images/lol/champion/${item}.png?image=c_crop,h_103,w_103,x_9,y_9/q_auto,f_webp,w_48`}
+              src={`https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/${item}.jpg?`}
               alt={item}
               loading='lazy'
               sx={{ width: '100%', borderRadius: 2, objectFit: 'contain' }}
@@ -92,7 +88,7 @@ const PartyInfo = props => {
         </ImageList>
       </Box>
       <Collapse in={viewDetail} timeout='auto' sx={{ width: '100%' }}>
-        {viewDetail && <ViewDetail nickname={nickname} />}
+        {viewDetail && <ViewDetail data={data} />}
       </Collapse>
     </Fragment>
   );
