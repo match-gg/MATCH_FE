@@ -24,6 +24,7 @@ import BackspaceIcon from '@mui/icons-material/Backspace';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import CloseIcon from '@mui/icons-material/Close';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 const typeData = [
   {
@@ -158,7 +159,7 @@ const CreateCardBtn = (props) => {
   });
 
   const handleName = (e) => {
-    setUserInput({ ...userInput, name: e.target.value.replaceAll(" ", "") });
+    setUserInput({ ...userInput, name: e.target.value.replaceAll(' ', '') });
     setIsChanged(true);
   };
 
@@ -227,7 +228,7 @@ const CreateCardBtn = (props) => {
   const [useExistNickname, setUseExistNickname] = useState(props.name !== '' ? true : false);
 
   const handleSwitch = (_e) => {
-    setUseExistNickname(prevState => !prevState);
+    setUseExistNickname((prevState) => !prevState);
     setIsChanged(true);
   };
 
@@ -367,7 +368,7 @@ const CreateCardBtn = (props) => {
               disabled={props.name !== '' ? false : true}
             />
             <Typography
-            color={useExistNickname ? 'primary' : 'grey'}
+              color={useExistNickname ? 'primary' : 'grey'}
               sx={{
                 fontSize: '16px',
                 fontWeight: 'bold',
@@ -610,11 +611,23 @@ const CreateCardBtn = (props) => {
               onChange={handleContent}
               fullWidth
               multiline
-              minRows={4} // 이거 어떻게 처리하지...
+              minRows={4}
               maxRows={4}
               placeholder='140자 이내로 원하는 파티원에 대한 설명이나, 자신을 소개해 보세요.'
               inputProps={{ maxLength: 140 }}
             />
+
+            <Box sx={{ display: 'flex', alignItems: 'center', color: 'grey', mt: 1 }}>
+              <HelpOutlineIcon />
+              <Typography
+                sx={{
+                  color: 'grey',
+                  pl:1
+                }}
+              >
+                20자 이상 작성해야 합니다.
+              </Typography>
+            </Box>
           </Box>
           <Divider sx={{ mt: 2 }} />
           <Box
@@ -646,7 +659,15 @@ const CreateCardBtn = (props) => {
               startIcon={<EditIcon />}
               variant='contained'
               size='large'
-              disabled={(useExistNickname ? false : (isIdChecked ? false : true))}
+              disabled={
+                userInput.content.length < 20
+                  ? true
+                  : useExistNickname
+                  ? false
+                  : isIdChecked
+                  ? false
+                  : true
+              }
             >
               작성하기
             </Button>
