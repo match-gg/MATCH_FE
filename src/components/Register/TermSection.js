@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Checkbox, Typography, Container } from '@mui/material';
+import { Box, Checkbox, Typography, Container, FormControlLabel } from '@mui/material';
 
 const TermSection = (props) => {
   const { title, termContents, term, termHandler } = props;
@@ -32,7 +32,7 @@ const TermSection = (props) => {
       >
         {termContents}
       </Box>
-      <Container
+      <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -40,11 +40,11 @@ const TermSection = (props) => {
           marginBottom: '30px',
         }}
       >
-        <Box>
-          <Checkbox checked={term} onChange={termHandler}/>
-          {`위의 ${title}을 읽었으며, 위 사항에 동의합니다.`}
-        </Box>
-      </Container>
+        <FormControlLabel
+          control={<Checkbox checked={term} onChange={termHandler} />}
+          label={`위의 내용을 읽었으며, 위 사항에 동의합니다.`}
+        />
+      </Box>
     </Box>
   );
 };
