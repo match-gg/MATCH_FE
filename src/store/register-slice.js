@@ -11,6 +11,13 @@ const initialState = {
     lostark: '',
     maplestory: '',
   },
+  gamesCheck: {
+    lol: true,
+    pubg: true,
+    overwatch: true,
+    lostark: true,
+    maplestory: true,
+  },
 };
 
 const registerSlice = createSlice({
@@ -31,6 +38,10 @@ const registerSlice = createSlice({
     },
     SET_GAMES_WITH_ID: (state, action) => {
       state.games[action.payload.id] = action.payload.value;
+      state.gamesCheck[action.payload.id] = false;
+    },
+    SET_GAMESCHECK_WITH_ID: (state, action) => {
+      state.gamesCheck[action.payload.id] = true;
     },
     DELETE_REGISTER: (state, _action) => {
       state.representative = '';
@@ -40,6 +51,13 @@ const registerSlice = createSlice({
         overwatch: '',
         lostark: '',
         maplestory: '',
+      };
+      state.gamesCheck = {
+        lol: true,
+        pubg: true,
+        overwatch: true,
+        lostark: true,
+        maplestory: true,
       };
     },
   },
