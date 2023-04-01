@@ -7,8 +7,8 @@ const GameIcon = ({ gameIcon, altMessage, gameName, selected, onClickHandler }) 
     <Button
       id={gameName}
       sx={{
-        width: 150,
-        height: 150,
+        width: 120,
+        height: 120,
         padding: '5px',
         marginX: 2,
         display: 'flex',
