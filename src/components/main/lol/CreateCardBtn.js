@@ -1,5 +1,7 @@
 import React, { Fragment, useState } from 'react';
-import { useSelector } from  'react-redux';
+import { useSelector } from 'react-redux';
+
+import { api } from '../../../api/api';
 
 import {
   Button,
@@ -22,8 +24,6 @@ import BackspaceIcon from '@mui/icons-material/Backspace';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import CloseIcon from '@mui/icons-material/Close';
-
-import { api } from '../../../api/api';
 
 const typeData = [
   {
@@ -142,7 +142,6 @@ const expireData = [
 ];
 
 const CreateCardBtn = (props) => {
-
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 
@@ -159,7 +158,7 @@ const CreateCardBtn = (props) => {
   });
 
   const handleName = (e) => {
-    setUserInput({ ...userInput, name: e.target.value });
+    setUserInput({ ...userInput, name: e.target.value.replaceAll(" ", "") });
     setIsChanged(true);
   };
 
@@ -196,13 +195,13 @@ const CreateCardBtn = (props) => {
     setIsChanged(true);
   };
 
-  const handleTier = (e, newValue) => {
+  const handleTier = (_e, newValue) => {
     if (newValue === null) return;
     setUserInput({ ...userInput, tier: newValue });
     setIsChanged(true);
   };
 
-  const handlePosition = (e, newValue) => {
+  const handlePosition = (_e, newValue) => {
     if (newValue === null) return;
     setUserInput({ ...userInput, position: newValue });
     setIsChanged(true);
@@ -213,7 +212,7 @@ const CreateCardBtn = (props) => {
     setIsChanged(true);
   };
 
-  const handleVoice = (e, newValue) => {
+  const handleVoice = (_e, newValue) => {
     if (newValue === null) return;
     setUserInput({ ...userInput, voice: newValue });
     setIsChanged(true);
@@ -224,19 +223,30 @@ const CreateCardBtn = (props) => {
     setIsChanged(true);
   };
 
-  //연결된 아이디 Switch 컴포넌트에 사용할 state와 함수
-  const [idConnected, setIdConnected] = useState(userInput.length ? true : false);
-  const handleSwitch = (e) => {
-    setIdConnected(!idConnected);
+  // 사용자 계정에 연결된 닉네임 사용 여부.
+  const [useExistNickname, setUseExistNickname] = useState(props.name !== '' ? true : false);
+
+  const handleSwitch = (_e) => {
+    setUseExistNickname(prevState => !prevState);
     setIsChanged(true);
   };
 
   //아이디 인증에 사용할 state와 함수
-  const [certyfiedId, setCertifiedId] = useState(false);
-  const certifyNickname = () => {
-    //나중에 서버로 nickname 보내서 인증받는 유효성 검사 추가해야함
-    //일단은 true로 바꾸게 작성해놈
-    setCertifiedId(true);
+  const [isIdChecked, setIsIdChecked] = useState(false);
+
+  const certifyNickname = async () => {
+    await api
+      .get(`/api/lol/user/exist/${userInput.name}`)
+      .then((response) => {
+        if (response.data === true) {
+          setIsIdChecked(true);
+        } else {
+          setIsIdChecked(false);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     setIsChanged(true);
   };
 
@@ -264,7 +274,8 @@ const CreateCardBtn = (props) => {
       expire: 'FIFTEEN_M',
       content: '',
     });
-    setCertifiedId(false);
+    setIsIdChecked(false);
+    setUseExistNickname(props.name !== '' ? true : false);
   };
 
   //모달 창 외부 클릭 시 나가지는 동작을 막는 함수
@@ -351,12 +362,12 @@ const CreateCardBtn = (props) => {
             }}
           >
             <Switch
-              defaultChecked={props.name ? true : false}
+              defaultChecked={props.name !== '' ? true : false}
               onChange={handleSwitch}
-              disabled={props.name ? false : true}
+              disabled={props.name !== '' ? false : true}
             />
             <Typography
-              color={idConnected ? 'primary' : 'grey'}
+            color={useExistNickname ? 'primary' : 'grey'}
               sx={{
                 fontSize: '16px',
                 fontWeight: 'bold',
@@ -379,14 +390,14 @@ const CreateCardBtn = (props) => {
             <OutlinedInput
               size='small'
               placeholder='리그오브레전드 소환사 명을 입력하세요.'
-              disabled={idConnected}
+              disabled={useExistNickname}
               onChange={handleName}
               endAdornment={
                 <Button
                   position='end'
                   sx={{ whiteSpace: 'nowrap' }}
                   onClick={certifyNickname}
-                  disabled={idConnected}
+                  disabled={useExistNickname}
                 >
                   인증하기
                 </Button>
@@ -540,7 +551,11 @@ const CreateCardBtn = (props) => {
               파티찾기 지속시간
             </Typography>
             <FormControl sx={{ width: 240 }}>
-              <Select value={userInput.expire} onChange={handleExpire} sx={{ color: 'grey', height: 40 }}>
+              <Select
+                value={userInput.expire}
+                onChange={handleExpire}
+                sx={{ color: 'grey', height: 40 }}
+              >
                 {expireData.map((data, idx) => {
                   return (
                     <MenuItem key={idx} value={data.value} sx={{ color: 'grey' }}>
@@ -631,7 +646,7 @@ const CreateCardBtn = (props) => {
               startIcon={<EditIcon />}
               variant='contained'
               size='large'
-              disabled={!(idConnected || certyfiedId)}
+              disabled={(useExistNickname ? false : (isIdChecked ? false : true))}
             >
               작성하기
             </Button>
