@@ -6,7 +6,7 @@ import { GameDatas } from './datas/Game.data';
 import { Box } from '@mui/material';
 
 const RegisterGames = () => {
-  
+
   return (
     <Box sx={{
       height: '100%',
