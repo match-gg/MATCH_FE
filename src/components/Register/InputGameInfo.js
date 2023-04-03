@@ -34,7 +34,6 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName, helperText }
     await api
       .get(`/api/${gameName}/exist/${games[gameName]}`)
       .then((response) => {
-        console.log(response.data);
         if (JSON.stringify(response.data).indexOf('true') !== -1) {
           dispatch(registerActions.SET_GAMESCHECK_WITH_ID({ id: gameName }));
           setWarning(false);
