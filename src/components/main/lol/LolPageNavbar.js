@@ -209,9 +209,13 @@ const LolPageNavbar = () => {
                     fontWeight: '500',
                   }}
                 >
-                  {nickname ? nickname : 'kakaoNickname'}
+                  {nickname ? nickname : '카카오닉네임'}
                 </Typography>
-                <Avatar sx={{ width: 40, height: 40, marginLeft: 1 }} />
+                <Box
+                  component='img'
+                  src={imageUrl || 'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg'}
+                  sx={{ width: 40, height: 40, marginLeft: 1, borderRadius: '50%' }}
+                />
               </IconButton>
             </Tooltip>
           </Box>

@@ -32,7 +32,7 @@ const Sidebar = (props) => {
       >
         <Box
           component='img'
-          src='https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg'
+          src={userInfo.imageUrl || 'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg'}
           sx={{ width: '50%', aspectRatio: '1 / 1', borderRadius: '50%', mt: 2 }}
         />
         <Typography
@@ -42,7 +42,7 @@ const Sidebar = (props) => {
             mt: 1,
           }}
         >
-          {userInfo.nickname}
+          {userInfo.nickname || '카카오닉네임' }
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'end' }}>
           {/* <Typography
