@@ -15,9 +15,18 @@ const RegisterFooter = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { phase, increasePhase, decreasePhase } = props;
+  const { phase, increasePhase, decreasePhase} = props;
 
-  const { firstTerm, secondTerm, games, representative } = useSelector((state) => state.register);
+  const { firstTerm, secondTerm, games, gamesCheck, representative } = useSelector(
+    (state) => state.register
+  );
+
+  const phaseOneNextBtn =
+    gamesCheck.lol &&
+    gamesCheck.lostark &&
+    gamesCheck.maplestory &&
+    gamesCheck.pubg &&
+    gamesCheck.overwatch;
 
   const signUpHandler = async () => {
     // 1. 인가코드 가져오기
@@ -112,7 +121,7 @@ const RegisterFooter = (props) => {
         이전으로
       </Button>
       <Button
-        disabled={!firstTerm || !secondTerm}
+        disabled={phase === 0 ? !firstTerm || !secondTerm : phase === 1 ? !phaseOneNextBtn : false}
         onClick={() => {
           if (phase === 2) {
             signUpHandler();
