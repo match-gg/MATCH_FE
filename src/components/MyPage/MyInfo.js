@@ -16,10 +16,12 @@ import CircleIcon from '@mui/icons-material/Circle';
 import { PieChart } from 'react-minimal-pie-chart';
 
 const MyInfo = ({ userInfo }) => {
-
   const { matchCount, likeCount, dislikeCount, lol, overwatch, pubg, maplestory, lostark } = userInfo;
 
+  // calculate the winning ratio
   const likeRate = matchCount === 0 ? 0 : Math.floor((likeCount / (likeCount + dislikeCount)) * 100);
+
+  
 
   return (
     <Box
@@ -30,6 +32,7 @@ const MyInfo = ({ userInfo }) => {
         flexDirection: 'column',
         paddingLeft: 4
       }}>
+      
       <Box
         sx={{
           display: 'flex',
