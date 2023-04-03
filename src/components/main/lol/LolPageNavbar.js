@@ -20,6 +20,7 @@ import {
   Button,
   ListItemText,
   Grid,
+  Link,
 } from '@mui/material';
 
 import Card from './Card';
@@ -36,7 +37,7 @@ const LolPageNavbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { nickname, imageUrl } = useSelector((state) => state.user);
+  const { nickname, imageUrl, representative } = useSelector((state) => state.user);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -55,6 +56,11 @@ const LolPageNavbar = () => {
   };
   const handleClose2 = () => {
     setAnchorEl2(null);
+  };
+
+  // logoClickHandler
+  const logoClickHandler = () => {
+    navigate(`/lol`);
   };
 
   // logout
@@ -90,17 +96,19 @@ const LolPageNavbar = () => {
     >
       <Container maxWidth='lg'>
         <Toolbar>
-          <Typography
-            component='h1'
-            variant='h3'
+          <Link
+            href={`${representative || 'lol'}`}
+            underline='none'
+            color='white'
             sx={{
               fontStyle: 'italic',
               fontSize: { xs: 35, sm: 45 },
               fontWeight: '700',
             }}
+            onClick={logoClickHandler}
           >
             Match.GG
-          </Typography>
+          </Link>
           <Box sx={{ flexGrow: 1 }}>
             <Stack
               direction='row'
@@ -147,20 +155,19 @@ const LolPageNavbar = () => {
                   horizontal: 'left',
                 }}
               >
-                <MenuItem onClick={handleClose2}>
+                <MenuItem
+                  onClick={() => {
+                    navigate('/lol');
+                  }}
+                >
                   <ListItemText style={{ textAlign: 'center' }}>리그오브레전드</ListItemText>
                 </MenuItem>
-                <MenuItem onClick={handleClose2}>
-                  <ListItemText style={{ textAlign: 'center' }}>배틀그라운드</ListItemText>
-                </MenuItem>
-                <MenuItem onClick={handleClose2}>
-                  <ListItemText style={{ textAlign: 'center' }}>로스트아크</ListItemText>
-                </MenuItem>
-                <MenuItem onClick={handleClose2}>
-                  <ListItemText style={{ textAlign: 'center' }}>오버워치II</ListItemText>
-                </MenuItem>
-                <MenuItem onClick={handleClose2}>
-                  <ListItemText style={{ textAlign: 'center' }}>메이플스토리</ListItemText>
+                <MenuItem
+                  onClick={() => {
+                    navigate('/valorant');
+                  }}
+                >
+                  <ListItemText style={{ textAlign: 'center' }}>발로란트</ListItemText>
                 </MenuItem>
               </Menu>
               <Typography
@@ -171,7 +178,7 @@ const LolPageNavbar = () => {
                   fontWeight: 600,
                 }}
               >
-                파티찾기
+                파티원 모집
               </Typography>
               <Typography
                 sx={{
@@ -181,17 +188,7 @@ const LolPageNavbar = () => {
                   fontWeight: 600,
                 }}
               >
-                기능1
-              </Typography>
-              <Typography
-                sx={{
-                  marginLeft: 5,
-                  fontSize: 15,
-                  color: 'white',
-                  fontWeight: 600,
-                }}
-              >
-                기능2
+                게시판(임시)
               </Typography>
             </Stack>
           </Box>
