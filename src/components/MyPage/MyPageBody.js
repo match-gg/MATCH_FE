@@ -20,7 +20,7 @@ import FollowList from './FollowList';
 import Withdraw from './Withdraw';
 import GamesInfo from './GamesInfo';
 
-const MyPageLayout = () => {
+const MyPageBody = () => {
   const navigate = useNavigate();
 
   // state for menu switch
@@ -83,63 +83,75 @@ const MyPageLayout = () => {
   }, []);
 
   return (
-    <Container maxWidth='lg' sx={{ height: 'calc(100vh - 128px)', backgroundColor: '#f3f3f3' }}>
-      <Dialog
-        maxWidth='sm'
-        fullWidth
-        open={openDialog}
-        onClose={DialogCloseHandler}
-        PaperProps={{
-          backdrop: {
-            onClick: (e) => {
-              e.stopPropagation();
+    <Box
+      sx={{
+        pt: 16,
+        height: '100%',
+        backgroundColor: '#f3f3f3',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <Container maxWidth='lg' sx={{ height: 'calc(100vh - 128px)', backgroundColor: '#f3f3f3' }}>
+        <Dialog
+          maxWidth='sm'
+          fullWidth
+          open={openDialog}
+          onClose={DialogCloseHandler}
+          PaperProps={{
+            backdrop: {
+              onClick: (e) => {
+                e.stopPropagation();
+              },
             },
-          },
-        }}
-      >
-        <DialogTitle>사용자 정보 조회 오류</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            사용자 정보를 불러오는 과정에서 문제가 발생했습니다.
-          </DialogContentText>
-          <DialogContentText>잠시 후, 다시 시도해주시기 바랍니다.</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={DialogCloseHandler}>이전페이지로 돌아갑니다.</Button>
-        </DialogActions>
-      </Dialog>
-      <Box sx={{
-        mt: 5,
-      }}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            height: '100%',
-
           }}
         >
-          <Sidebar onChangeMenu={chooseMenuHandler} menu={menu} userInfo={userInfo} />
+          <DialogTitle>사용자 정보 조회 오류</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              사용자 정보를 불러오는 과정에서 문제가 발생했습니다.
+            </DialogContentText>
+            <DialogContentText>잠시 후, 다시 시도해주시기 바랍니다.</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={DialogCloseHandler}>이전페이지로 돌아갑니다.</Button>
+          </DialogActions>
+        </Dialog>
+        <Box
+          sx={{
+            mt: 5,
+          }}
+        >
           <Box
             sx={{
-              height: 640,
-              width: '75%',
-              backgroundColor: 'white',
-              boxShadow: '-4px 0px 8px -6px grey',
-              borderTopRightRadius: '8px',
-              borderBottomRightRadius: '8px',
-              zIndex: 1
+              display: 'flex',
+              flexDirection: 'row',
+              height: '100%',
             }}
           >
-            {menu === 'my_info' && <MyInfo userInfo={userInfo} />}
-            {menu === 'games_info' && <GamesInfo userInfo={userInfo} />}
-            {menu === 'follow_list' && <FollowList />}
-            {menu === 'withdraw' && <Withdraw />}
+            <Sidebar onChangeMenu={chooseMenuHandler} menu={menu} userInfo={userInfo} />
+            <Box
+              sx={{
+                height: 640,
+                width: '75%',
+                backgroundColor: 'white',
+                boxShadow: '-4px 0px 8px -6px grey',
+                borderTopRightRadius: '8px',
+                borderBottomRightRadius: '8px',
+                zIndex: 1,
+              }}
+            >
+              {menu === 'my_info' && <MyInfo userInfo={userInfo} />}
+              {menu === 'games_info' && <GamesInfo userInfo={userInfo} />}
+              {menu === 'follow_list' && <FollowList />}
+              {menu === 'withdraw' && <Withdraw />}
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 
-export default MyPageLayout;
+export default MyPageBody;
