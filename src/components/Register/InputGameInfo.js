@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Box, TextField, Button } from '@mui/material';
@@ -7,8 +7,10 @@ import { registerActions } from '../../store/register-slice';
 import GameIcon from './GameIcon';
 import { api } from '../../api/api';
 
-const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName }) => {
+const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName, helperText }) => {
   const { games } = useSelector((state) => state.register);
+
+  const [warning, setWarning] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -21,12 +23,28 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName }) => {
     );
   };
 
+  useEffect(() => {
+    if (games[gameName] === '') {
+      dispatch(registerActions.SET_GAMESCHECK_WITH_ID({ id: gameName }));
+      setWarning(false);
+    }
+  }, [dispatch, gameName, games]);
+
   const verifyingNickname = async () => {
-    await api.get(`/api/${gameName}/exist/${games[gameName]}`).then((response) => {
-      if (response.data === true) {
-        dispatch(registerActions.SET_GAMESCHECK_WITH_ID({ id: gameName }));
-      }
-    });
+    await api
+      .get(`/api/${gameName}/exist/${games[gameName]}`)
+      .then((response) => {
+        console.log(response.data);
+        if (JSON.stringify(response.data).indexOf('true') !== -1) {
+          dispatch(registerActions.SET_GAMESCHECK_WITH_ID({ id: gameName }));
+          setWarning(false);
+        } else {
+          setWarning(true);
+        }
+      })
+      .catch((error) => {
+        setWarning(true);
+      });
   };
 
   return (
@@ -55,6 +73,8 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName }) => {
           id={gameName}
           fullWidth
           label={labelText}
+          error={warning ? true : false}
+          helperText={warning && helperText}
           variant='outlined'
           onChange={changeTextField}
           defaultValue={games[gameName]}

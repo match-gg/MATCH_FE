@@ -25,6 +25,7 @@ const RegisterGames = () => {
             labelText={content.labelText}
             altMessage={content.altMessage}
             gameName={content.gameName}
+            helperText={content.helperText}
           />
         );
       })}
