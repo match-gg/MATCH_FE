@@ -75,7 +75,7 @@ const MyPageLayout = () => {
           setUserInfo(res.data);
         })
         .catch((error) => {
-          // setOpenDialog(true);
+          setOpenDialog(true);
         });
     };
 
