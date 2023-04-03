@@ -159,7 +159,7 @@ const CreateCardBtn = (props) => {
   });
 
   const handleName = (e) => {
-    setUserInput({ ...userInput, name: e.target.value.replaceAll(' ', '') });
+    setUserInput({ ...userInput, name: e.target.value.trim() });
     setIsChanged(true);
   };
 
@@ -622,7 +622,7 @@ const CreateCardBtn = (props) => {
               <Typography
                 sx={{
                   color: 'grey',
-                  pl:1
+                  pl: 1,
                 }}
               >
                 20자 이상 작성해야 합니다.

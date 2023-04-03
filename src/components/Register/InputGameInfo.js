@@ -18,7 +18,7 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName, helperText }
     dispatch(
       registerActions.SET_GAMES_WITH_ID({
         id: e.target.id,
-        value: e.target.value.replaceAll(' ', ''),
+        value: e.target.value.trim(),
       })
     );
   };
