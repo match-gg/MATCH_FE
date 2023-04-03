@@ -1,3 +1,14 @@
+---
+
+name: Refactor request
+about: 리팩토링
+title: 제목 작성
+labels: 'refactor'
+assignees: ''
+
+---
+
+
 ## What?
 <!-- 무엇을 리팩토링 하는지 작성하기 -->
 
