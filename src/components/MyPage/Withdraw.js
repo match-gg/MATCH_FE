@@ -29,6 +29,7 @@ const Withdraw = () => {
             sx={{
               color: 'black',
               fontWeight: '600',
+              fontSize: 32
             }}
           >
             정말 탈퇴하시겠습니까?
@@ -36,7 +37,7 @@ const Withdraw = () => {
           <Typography
             sx={{
               paddingTop: 2,
-              fontSize: 'small',
+              fontSize: 24,
               fontWeight: '600',
               color: '#9E9E9E',
             }}
@@ -45,7 +46,7 @@ const Withdraw = () => {
           </Typography>
           <Typography
             sx={{
-              fontSize: 'small',
+              fontSize: 20,
               fontWeight: '600',
               color: '#9E9E9E',
             }}
@@ -55,8 +56,9 @@ const Withdraw = () => {
           <Button
             variant='outlined'
             color='error'
+            size="large"
             sx={{
-              marginTop: 2,
+              marginTop: 4,
               fontWeight: '800',
             }}
           >
