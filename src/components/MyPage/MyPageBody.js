@@ -135,7 +135,7 @@ const MyPageBody = () => {
                 height: 640,
                 width: '75%',
                 backgroundColor: 'white',
-                boxShadow: '-4px 0px 8px -6px grey',
+                boxShadow: '-2px 5px 10px 0px grey',
                 borderTopRightRadius: '8px',
                 borderBottomRightRadius: '8px',
                 zIndex: 1,

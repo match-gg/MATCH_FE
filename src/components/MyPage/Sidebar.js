@@ -16,7 +16,7 @@ const Sidebar = (props) => {
         height: 640,
         flexDirection: 'column',
         backgroundColor: '#e8e8e8',
-        boxShadow: '-4px 0px 8px -8px grey',
+        boxShadow: '-5px 5px 10px 0px grey',
         borderTopLeftRadius: '8px',
         borderBottomLeftRadius: '8px',
       }}
@@ -42,7 +42,7 @@ const Sidebar = (props) => {
             mt: 1,
           }}
         >
-          {userInfo.nickname || '카카오닉네임' }
+          {userInfo.nickname || '카카오닉네임'}
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'end' }}>
           {/* <Typography
@@ -73,6 +73,7 @@ const Sidebar = (props) => {
             backgroundColor: menu === 'my_info' ? 'white' : 'inherit',
             zIndex: menu === 'my_info' ? 2 : 0,
             width: '100%',
+            boxShadow: menu === 'my_info' ? '-5px 5px 5px 0px grey' : 'none',
           }}
         >
           <Button
@@ -93,6 +94,7 @@ const Sidebar = (props) => {
             backgroundColor: menu === 'games_info' ? 'white' : 'inherit',
             zIndex: menu === 'games_info' ? 2 : 0,
             width: '100%',
+            boxShadow: menu === 'games_info' ? '-5px 5px 5px 0px grey' : 'none',
           }}
         >
           <Button
@@ -113,6 +115,8 @@ const Sidebar = (props) => {
             backgroundColor: menu === 'follow_list' ? 'white' : 'inherit',
             zIndex: menu === 'follow_list' ? 2 : 0,
             width: '100%',
+            boxShadow: menu === 'follow_list' ? '-5px 5px 5px 0px grey' : 'none',
+
           }}
         >
           <Button
@@ -133,6 +137,8 @@ const Sidebar = (props) => {
             backgroundColor: menu === 'withdraw' ? 'white' : 'inherit',
             zIndex: menu === 'withdraw' ? 2 : 0,
             width: '100%',
+            boxShadow: menu === 'withdraw' ? '-5px 5px 5px 0px grey' : 'none',
+
           }}
         >
           <Button
