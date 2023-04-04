@@ -18,7 +18,7 @@ import Sidebar from './Sidebar';
 import MyInfo from './MyInfo';
 import FollowList from './FollowList';
 import Withdraw from './Withdraw';
-import GamesInfo from './GamesInfo';
+import GamesSetting from './GamesSetting';
 
 const MyPageBody = () => {
   const navigate = useNavigate();
@@ -30,19 +30,19 @@ const MyPageBody = () => {
   const [userInfo, setUserInfo] = useState({
     id: -1,
     oauth2Id: '',
-    nickname: '',
-    email: '',
-    imageUrl: '',
-    representative: '',
-    lol: '',
+    nickname: 'user_temp',
+    email: 'user@mail.com',
+    imageUrl: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg',
+    representative: 'valorant',
+    lol: '완도수산새우도둑',
     valorant: '',
     overwatch: '',
     pubg: '',
     lostark: '',
-    likeCount: 0,
-    dislikeCount: 0,
-    matchCount: 0,
-    created: '',
+    likeCount: 145,
+    dislikeCount: 49,
+    matchCount: 160,
+    created: '2023-03-25 19:03:37',
   });
 
   // state for open/close dialog
@@ -142,7 +142,7 @@ const MyPageBody = () => {
               }}
             >
               {menu === 'my_info' && <MyInfo userInfo={userInfo} />}
-              {menu === 'games_info' && <GamesInfo userInfo={userInfo} />}
+              {menu === 'games_info' && <GamesSetting userInfo={userInfo} setUserInfo={setUserInfo} />}
               {menu === 'follow_list' && <FollowList />}
               {menu === 'withdraw' && <Withdraw />}
             </Box>

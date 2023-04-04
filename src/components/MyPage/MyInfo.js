@@ -13,9 +13,9 @@ import { PieChart } from 'react-minimal-pie-chart';
 const MyInfo = ({ userInfo }) => {
   const { matchCount, likeCount, dislikeCount, email, created } = userInfo;
 
-  // calculate the winning ratio
-  const likeRate =
-    matchCount === 0 ? 0 : Math.floor((likeCount / (likeCount + dislikeCount)) * 100);
+  // 받은 평가 중 좋아요 비율
+  const totalRated = likeCount + dislikeCount;
+  const likeRate = (100 * (likeCount / totalRated)).toFixed(1);
 
   return (
     <Box
@@ -49,21 +49,23 @@ const MyInfo = ({ userInfo }) => {
           }}
         >
           <Box sx={{ flexBasis: 96 }}>
-            <PieChart
-              data={[{ value: `${likeRate}`, color: '#5383e8', name: 'likeRate' }]}
-              reveal={likeRate} // 퍼센트 치수
-              lineWidth={30} // 두께
-              startAngle={270}
-              background='#E84057'
-              animate
-              label={({ dataEntry }) => dataEntry.value + '%'}
-              labelStyle={{
-                fontSize: 18,
-                fontWeight: 700,
-                fill: '#5383e8',
-              }}
-              labelPosition={0}
-            />
+            {likeCount && dislikeCount && (
+              <PieChart
+                data={[{ value: `${likeRate}`, color: '#5383e8', name: 'likeRate' }]}
+                reveal={parseInt(likeRate)} // 퍼센트 치수
+                lineWidth={30} // 두께
+                startAngle={270}
+                background='#E84057'
+                animate
+                label={({ dataEntry }) => dataEntry.value + '%'}
+                labelStyle={{
+                  fontSize: 18,
+                  fontWeight: 700,
+                  fill: '#5383e8',
+                }}
+                labelPosition={0}
+              />
+            )}
           </Box>
           <Box
             sx={{
@@ -113,7 +115,6 @@ const MyInfo = ({ userInfo }) => {
             justifyContent: 'center',
             alignItems: 'center',
             paddingTop: 4,
-            
           }}
         >
           <Typography
