@@ -49,7 +49,7 @@ const MyInfo = ({ userInfo }) => {
           }}
         >
           <Box sx={{ flexBasis: 96 }}>
-            {likeCount && dislikeCount && (
+            {likeCount + dislikeCount === 0 ? '받은 평가 없음' : (
               <PieChart
                 data={[{ value: `${likeRate}`, color: '#5383e8', name: 'likeRate' }]}
                 reveal={parseInt(likeRate)} // 퍼센트 치수
