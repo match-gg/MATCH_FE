@@ -30,19 +30,19 @@ const MyPageBody = () => {
   const [userInfo, setUserInfo] = useState({
     id: -1,
     oauth2Id: '',
-    nickname: 'user_temp',
-    email: 'user@mail.com',
+    nickname: 'kakaoName',
+    email: '',
     imageUrl: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg',
-    representative: 'valorant',
-    lol: '완도수산새우도둑',
+    representative: '',
+    lol: '',
     valorant: '',
     overwatch: '',
     pubg: '',
     lostark: '',
-    likeCount: 145,
-    dislikeCount: 49,
-    matchCount: 160,
-    created: '2023-03-25 19:03:37',
+    likeCount: 0,
+    dislikeCount: 0,
+    matchCount: 0,
+    created: '2023-03-00 00:00:00',
   });
 
   // state for open/close dialog
