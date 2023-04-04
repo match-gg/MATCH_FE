@@ -105,7 +105,7 @@ const MyInfo = ({ userInfo }) => {
       >
         <Box>
           <Typography variant='h6' sx={{ color: 'black', fontWeight: '600' }}>
-            이메일 및 가입일자
+            이메일 및 가입 일자
           </Typography>
         </Box>
         <Box
