@@ -13,10 +13,13 @@ const GamesSetting = ({ userInfo }) => {
   const dispatch = useDispatch();
   const { representative } = useSelector((state) => state.user);
 
-  const [games, setGames] = useState({
-    lol: userInfo.lol,
-    valorant: userInfo.valorant,
-  });
+  const gamesInitialState = {};
+
+  gameList.map((aGame, _index) => {
+    return gamesInitialState[aGame.id] = userInfo[aGame.id];
+  })
+
+  const [games, setGames] = useState(gamesInitialState);
 
   const gamesHandler = (e) => {
     console.log(e.target);
@@ -62,10 +65,11 @@ const GamesSetting = ({ userInfo }) => {
           pl: 4,
         }}
       >
-        {gameList.map((aGame, index) => {
+        {gameList.map((aGame, _index) => {
           return (
             <GameInfo
               id={aGame.id}
+              key={aGame.id}
               game={games[aGame.id]}
               gameKor={aGame.gameKor}
               onChangeHandler={gamesHandler}
