@@ -25,7 +25,8 @@ const GamesSetting = ({ userInfo }) => {
 
   const updateDBGames = (e) => {
     // DB의 사용자 닉네임 업데이트 하는 동작
-    console.log(e.target.id);
+    // e.target.id 가 업데이트 할 게임
+    // console.log(e.target.id);
   };
 
   const changeRepresentative = async (e) => {
@@ -39,7 +40,7 @@ const GamesSetting = ({ userInfo }) => {
     <Box
       sx={{
         display: 'flex',
-        height: '65%',
+        height: '100%',
         width: '100%',
         flexDirection: 'column',
         paddingTop: 2,
