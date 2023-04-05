@@ -17,6 +17,9 @@ const userSlice = createSlice({
       state.representative = action.payload.representative;
       state.isLogin = true;
     },
+    SET_REPRESENTATIVE: (state, action) => {
+      state.representative = action.payload.representative;
+    },
     DELETE_USER : (state, action) => {
       state.nickname = '';
       state.profile_imageUrl = '';
