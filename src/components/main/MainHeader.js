@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { api } from '../../api/api';
@@ -23,17 +23,17 @@ import {
   SwipeableDrawer,
 } from '@mui/material';
 
-import Card from './lol/Card';
-
 import Logout from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MenuIcon from '@mui/icons-material/Menu';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../store/user-slice';
 import { tokenActions } from '../../store/token-slice';
+import { GameList } from './datas/GameList.d';
 
-const MainHeader = () => {
+const MainHeader = ({ game }) => {
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 
@@ -61,11 +61,6 @@ const MainHeader = () => {
   };
   const handleClose2 = () => {
     setAnchorEl2(null);
-  };
-
-  // logoClickHandler
-  const logoClickHandler = () => {
-    navigate(`/lol`);
   };
 
   // logout
@@ -99,6 +94,9 @@ const MainHeader = () => {
     setIsDrawerOpen(false);
   };
 
+  // menu list
+  const CurrentGame = GameList.find((elem) => elem.id === game).fullName_Kor;
+
   return (
     <AppBar
       component='nav'
@@ -129,8 +127,73 @@ const MainHeader = () => {
             onClose={handleDrawerClose}
             onOpen={handleDrawerOpen}
           >
-            <Box sx={{ minWidth: 280 }}>
-              
+            <Box
+              sx={{
+                minWidth: 320,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'start',
+                justifyContent: ' center',
+              }}
+            >
+              <Box
+                sx={{
+                  width: '100%',
+                  height: 72,
+                  backgroundColor: '#3d3939',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  px: 3,
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: 'white',
+                    fontStyle: 'italic',
+                    fontSize: { xs: 32, md: 36 },
+                    fontWeight: '700',
+                  }}
+                >
+                  Match.GG
+                </Typography>
+                <Button
+                  onClick={handleDrawerClose}
+                  sx={{
+                    display: { xs: 'flex', md: 'none' },
+                    p: 0,
+                    minWidth: 0,
+                    minHeight: 0,
+                  }}
+                >
+                  <ArrowBackIosNewIcon
+                    sx={{
+                      color: '#f3f3f3',
+                      fontSize: { xs: 28 },
+                    }}
+                  />
+                </Button>
+              </Box>
+              <Box
+                sx={{
+                  width: '100%',
+                  height: 'calc(100vh - 72px)',
+                  pl: 4,
+                  pt: 4,
+                  backgroundColor: '#f3f3f3',
+                }}
+              >
+                {GameList.map((aGame, _index) => {
+                  return (
+                    <Fragment>
+                      <Typography sx={{ fontSize: 24, fontWeight: 600 }}>
+                        {aGame.fullName_Kor}
+                      </Typography>
+                      <Divider sx={{ my: 1 }} />
+                    </Fragment>
+                  );
+                })}
+              </Box>
             </Box>
           </SwipeableDrawer>
           <Link
@@ -142,7 +205,6 @@ const MainHeader = () => {
               fontSize: { xs: 32, md: 36 },
               fontWeight: '700',
             }}
-            onClick={logoClickHandler}
           >
             Match.GG
           </Link>
@@ -169,7 +231,7 @@ const MainHeader = () => {
                   fontWeight: 600,
                 }}
               >
-                리그오브레전드
+                {CurrentGame}
                 <KeyboardArrowDownIcon />
               </Button>
               <Menu
@@ -192,20 +254,19 @@ const MainHeader = () => {
                   horizontal: 'left',
                 }}
               >
-                <MenuItem
-                  onClick={() => {
-                    navigate('/lol');
-                  }}
-                >
-                  <ListItemText style={{ textAlign: 'center' }}>리그오브레전드</ListItemText>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    navigate('/valorant');
-                  }}
-                >
-                  <ListItemText style={{ textAlign: 'center' }}>발로란트</ListItemText>
-                </MenuItem>
+                {GameList.map((aGame, index) => {
+                  return (
+                    <MenuItem
+                      onClick={() => {
+                        navigate(`/${aGame.id}`);
+                      }}
+                    >
+                      <ListItemText style={{ textAlign: 'center' }}>
+                        {aGame.fullName_Kor}
+                      </ListItemText>
+                    </MenuItem>
+                  );
+                })}
               </Menu>
               <Typography
                 sx={{
