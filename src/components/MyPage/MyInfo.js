@@ -1,25 +1,21 @@
 import {
   Box,
   Typography,
-  Stack,
-  Divider,
-  Button,
-  TextField,
   TableContainer,
   Table,
   TableHead,
   TableBody,
   TableCell,
-  TableRow
+  TableRow,
 } from '@mui/material';
-import CircleIcon from '@mui/icons-material/Circle';
 import { PieChart } from 'react-minimal-pie-chart';
 
-const MyInfo = props => {
-  const matchNumber = 64;
-  const like = 50;
-  const dislike = 12;
-  const likeRate = Math.floor((like / (like + dislike)) * 100);
+const MyInfo = ({ userInfo }) => {
+  const { matchCount, likeCount, dislikeCount, email, created } = userInfo;
+
+  // 받은 평가 중 좋아요 비율
+  const totalRated = likeCount + dislikeCount;
+  const likeRate = (100 * (likeCount / totalRated)).toFixed(1);
 
   return (
     <Box
@@ -28,15 +24,18 @@ const MyInfo = props => {
         width: '100%',
         height: '100%',
         flexDirection: 'column',
-        paddingLeft: 4
-      }}>
+        paddingLeft: 4,
+      }}
+    >
       <Box
         sx={{
           display: 'flex',
           height: '35%',
           flexDirection: 'column',
-          paddingTop: 2
-        }}>
+          paddingTop: 2,
+          width: '90%',
+        }}
+      >
         <Typography variant='h6' sx={{ color: 'black', fontWeight: '600' }}>
           받은 평가
         </Typography>
@@ -46,31 +45,35 @@ const MyInfo = props => {
             flexDirection: 'row',
             justifyContent: 'space-evenly',
             alignItems: 'center',
-            height: '100%'
-          }}>
+            height: '100%',
+          }}
+        >
           <Box sx={{ flexBasis: 96 }}>
-            <PieChart
-              data={[{ value: `${likeRate}`, color: '#5383e8', name: 'likeRate' }]}
-              reveal={likeRate} // 퍼센트 치수
-              lineWidth={30} // 두께
-              startAngle={270}
-              background='#E84057'
-              animate
-              label={({ dataEntry }) => dataEntry.value + '%'}
-              labelStyle={{
-                fontSize: 18,
-                fontWeight: 700,
-                fill: '#5383e8'
-              }}
-              labelPosition={0}
-            />
+            {likeCount + dislikeCount === 0 ? '받은 평가 없음' : (
+              <PieChart
+                data={[{ value: `${likeRate}`, color: '#5383e8', name: 'likeRate' }]}
+                reveal={parseInt(likeRate)} // 퍼센트 치수
+                lineWidth={30} // 두께
+                startAngle={270}
+                background='#E84057'
+                animate
+                label={({ dataEntry }) => dataEntry.value + '%'}
+                labelStyle={{
+                  fontSize: 18,
+                  fontWeight: 700,
+                  fill: '#5383e8',
+                }}
+                labelPosition={0}
+              />
+            )}
           </Box>
           <Box
             sx={{
               display: 'flex',
               height: '100%',
-              alignItems: 'center'
-            }}>
+              alignItems: 'center',
+            }}
+          >
             <TableContainer>
               <Table>
                 <TableHead>
@@ -81,9 +84,11 @@ const MyInfo = props => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableCell align='center'>{matchNumber}</TableCell>
-                  <TableCell align='center'>{like}</TableCell>
-                  <TableCell align='center'>{dislike}</TableCell>
+                  <TableRow>
+                    <TableCell align='center'>{matchCount}</TableCell>
+                    <TableCell align='center'>{likeCount}</TableCell>
+                    <TableCell align='center'>{dislikeCount}</TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
@@ -93,181 +98,86 @@ const MyInfo = props => {
       <Box
         sx={{
           display: 'flex',
-          height: '65%',
-          width: '100%',
           flexDirection: 'column',
-          paddingTop: 2
-        }}>
-        <Typography variant='h6' sx={{ color: 'black', fontWeight: '600' }}>
-          게임 캐릭터 연결
-        </Typography>
-        <Stack
-          spacing={1}
-          divider={<Divider orientation='horizontal' flexItem />}
+          mt: 8,
+          width: '90%',
+        }}
+      >
+        <Box>
+          <Typography variant='h6' sx={{ color: 'black', fontWeight: '600' }}>
+            이메일 및 가입 일자
+          </Typography>
+        </Box>
+        <Box
           sx={{
             display: 'flex',
-            alignItems: 'center',
+            flexDirection: 'row',
             justifyContent: 'center',
-            width: '100%',
-            overflow: 'auto',
-            padding: 4
-          }}>
-          <Box
+            alignItems: 'center',
+            paddingTop: 4,
+          }}
+        >
+          <Typography
+            variant='h7'
             sx={{
               display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: '100%'
-            }}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: 184,
-                paddingLeft: 1
-              }}>
-              <CircleIcon
-                sx={{
-                  color: `${props.name ? '#80EE9F' : '#D9D9D9'}`,
-                  fontSize: { xs: 'medium', sm: 'large' }
-                }}
-              />
-              <Typography sx={{ paddingLeft: 1 }}>League Of Legends</Typography>
-            </Box>
-            <TextField
-              id='standard-basic'
-              variant='standard'
-              defaultValue='밍꾸라지'
-              sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
-            />
-            <Button>변경하기</Button>
-          </Box>
-          <Box
+              justifyContent: 'center',
+              color: 'black',
+              fontWeight: '700',
+              width: 120,
+            }}
+          >
+            이메일
+          </Typography>
+          <Typography
+            sx={{
+              width: 360,
+              textAlign: 'center',
+              background: '#D9D9D9',
+              fontWeight: '600',
+              borderRadius: 2,
+              padding: 1,
+              marginLeft: 1,
+            }}
+          >
+            {email || '이메일 정보제공 미동의'}
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 2,
+          }}
+        >
+          <Typography
+            variant='h7'
             sx={{
               display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: '100%'
-            }}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: 184,
-                paddingLeft: 1
-              }}>
-              <CircleIcon
-                sx={{
-                  color: `${props.name ? '#80EE9F' : '#D9D9D9'}`,
-                  fontSize: { xs: 'medium', sm: 'large' }
-                }}
-              />
-              <Typography sx={{ paddingLeft: 1 }}>OverWatch 2</Typography>
-            </Box>
-            <TextField
-              id='standard-basic'
-              variant='standard'
-              defaultValue='밍꾸라지'
-              sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
-            />
-            <Button>변경하기</Button>
-          </Box>
-          <Box
+              justifyContent: 'center',
+              color: 'black',
+              fontWeight: '700',
+              width: 120,
+            }}
+          >
+            가입 일자
+          </Typography>
+          <Typography
             sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: '100%'
-            }}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: 184,
-                paddingLeft: 1
-              }}>
-              <CircleIcon
-                sx={{
-                  color: `${props.name ? '#80EE9F' : '#D9D9D9'}`,
-                  fontSize: { xs: 'medium', sm: 'large' }
-                }}
-              />
-              <Typography sx={{ paddingLeft: 1 }}>Battle Ground</Typography>
-            </Box>
-            <TextField
-              id='standard-basic'
-              variant='standard'
-              defaultValue='밍꾸라지'
-              sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
-            />
-            <Button>변경하기</Button>
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: '100%'
-            }}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: 184,
-                paddingLeft: 1
-              }}>
-              <CircleIcon
-                sx={{
-                  color: `${props.name ? '#80EE9F' : '#D9D9D9'}`,
-                  fontSize: { xs: 'medium', sm: 'large' }
-                }}
-              />
-              <Typography sx={{ paddingLeft: 1 }}>Maple Story</Typography>
-            </Box>
-            <TextField
-              id='standard-basic'
-              variant='standard'
-              defaultValue='밍꾸라지'
-              sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
-            />
-            <Button>변경하기</Button>
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: '100%'
-            }}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: 184,
-                paddingLeft: 1
-              }}>
-              <CircleIcon
-                sx={{
-                  color: `${props.name ? '#80EE9F' : '#D9D9D9'}`,
-                  fontSize: { xs: 'medium', sm: 'large' }
-                }}
-              />
-              <Typography sx={{ paddingLeft: 1 }}>Lost Ark</Typography>
-            </Box>
-            <TextField
-              id='standard-basic'
-              variant='standard'
-              defaultValue='밍꾸라지'
-              sx={{ marginLeft: 2, marginRight: 2, width: 184 }}
-            />
-            <Button>변경하기</Button>
-          </Box>
-        </Stack>
+              width: 360,
+              textAlign: 'center',
+              background: '#B5D0F5',
+              fontWeight: '600',
+              borderRadius: 2,
+              padding: 1,
+              marginLeft: 1,
+            }}
+          >
+            {created || '가입 일자'}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

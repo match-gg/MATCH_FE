@@ -1,7 +1,7 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { api } from '../../../api/api';
+import { api } from '../../api/api';
 
 import {
   AppBar,
@@ -19,21 +19,24 @@ import {
   Stack,
   Button,
   ListItemText,
-  Grid,
   Link,
+  SwipeableDrawer,
 } from '@mui/material';
 
-import Card from './Card';
+import Card from './lol/Card';
 
 import Logout from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useNavigate } from 'react-router-dom';
-import { userActions } from '../../../store/user-slice';
-import { tokenActions } from '../../../store/token-slice';
+import MenuIcon from '@mui/icons-material/Menu';
 
-const LolPageNavbar = () => {
+import { useNavigate } from 'react-router-dom';
+import { userActions } from '../../store/user-slice';
+import { tokenActions } from '../../store/token-slice';
+
+const MainHeader = () => {
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -41,6 +44,7 @@ const LolPageNavbar = () => {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -51,6 +55,7 @@ const LolPageNavbar = () => {
 
   const [anchorEl2, setAnchorEl2] = useState(null);
   const open2 = Boolean(anchorEl2);
+
   const handleClick2 = (event) => {
     setAnchorEl2(event.currentTarget);
   };
@@ -83,6 +88,17 @@ const LolPageNavbar = () => {
       });
   };
 
+  // xs ~ md 간 좌측 Drawer 설정
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const handleDrawerOpen = () => {
+    setIsDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setIsDrawerOpen(false);
+  };
+
   return (
     <AppBar
       component='nav'
@@ -90,19 +106,40 @@ const LolPageNavbar = () => {
       sx={{
         backgroundColor: '#3d3939',
         color: 'white',
-        height: 80,
+        height: 72,
         justifyContent: 'center',
       }}
     >
       <Container maxWidth='lg'>
-        <Toolbar>
+        <Toolbar disableGutters>
+          <Button
+            onClick={handleDrawerOpen}
+            sx={{ display: { xs: 'flex', md: 'none' }, p: 0, minWidth: 0, minHeight: 0, mr: 2 }}
+          >
+            <MenuIcon
+              sx={{
+                color: '#f3f3f3',
+                fontSize: { xs: 28 },
+              }}
+            />
+          </Button>
+          <SwipeableDrawer
+            anchor='left'
+            open={isDrawerOpen}
+            onClose={handleDrawerClose}
+            onOpen={handleDrawerOpen}
+          >
+            <Box sx={{ minWidth: 280 }}>
+              
+            </Box>
+          </SwipeableDrawer>
           <Link
             href={`${representative || 'lol'}`}
             underline='none'
             color='white'
             sx={{
               fontStyle: 'italic',
-              fontSize: { xs: 35, sm: 45 },
+              fontSize: { xs: 32, md: 36 },
               fontWeight: '700',
             }}
             onClick={logoClickHandler}
@@ -114,7 +151,7 @@ const LolPageNavbar = () => {
               direction='row'
               spacing={4}
               sx={{
-                display: 'flex',
+                display: { xs: 'none', md: 'flex' },
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
@@ -204,8 +241,9 @@ const LolPageNavbar = () => {
               >
                 <Typography
                   sx={{
+                    display: { xs: 'none', sm: 'flex' },
                     color: 'white',
-                    fontSize: { xs: 15, sm: 20 },
+                    fontSize: { xs: 16, sm: 20 },
                     fontWeight: '500',
                   }}
                 >
@@ -214,7 +252,12 @@ const LolPageNavbar = () => {
                 <Box
                   component='img'
                   src={imageUrl || 'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg'}
-                  sx={{ width: 40, height: 40, marginLeft: 1, borderRadius: '50%' }}
+                  sx={{
+                    width: { xs: 32, sm: 40 },
+                    height: { xs: 32, sm: 40 },
+                    marginLeft: 1,
+                    borderRadius: '50%',
+                  }}
                 />
               </IconButton>
             </Tooltip>
@@ -283,4 +326,4 @@ const LolPageNavbar = () => {
   );
 };
 
-export default LolPageNavbar;
+export default MainHeader;

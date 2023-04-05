@@ -9,15 +9,17 @@ const FollowList = () => {
         width: '100%',
         height: '100%',
         flexDirection: 'column',
-        paddingLeft: 4
-      }}>
+        paddingLeft: 4,
+      }}
+    >
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          paddingTop: 2
-        }}>
+          paddingTop: 2,
+        }}
+      >
         <Typography variant='h6' sx={{ color: 'black', fontWeight: '600' }}>
           팔로우 목록
         </Typography>
@@ -31,41 +33,11 @@ const FollowList = () => {
             overflow: 'auto',
             gap: 2,
             height: '100%',
-            marginTop: 2,
-            background: '#f8f8f8',
-            borderRadius: 4,
-            pt: 2
-          }}>
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
-          <FollowItem />
+            my: 4,
+            pr: 4,
+          }}
+        >
+          
         </Box>
       </Box>
     </Box>

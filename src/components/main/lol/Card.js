@@ -1,12 +1,4 @@
-import {
-  Card as MuiCard,
-  CardContent,
-  Typography,
-  Box,
-  ImageList,
-  ImageListItem,
-  Button,
-} from '@mui/material';
+import { Card as MuiCard, CardContent, Typography, Box, ImageList, Button } from '@mui/material';
 
 import { PieChart } from 'react-minimal-pie-chart';
 
@@ -14,14 +6,41 @@ import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import PartyModalBtn from './PartyModalBtn';
 
-const Card = (props) => {
-  const winRate = 70;
-  const tier = 'Platinum 4';
-  const line = 'SPT';
-  const nickname = '완도수산새우도둑';
-  const mic = false;
-  const most3 = ['Lux', 'Aatrox', 'Shen'];
-  const itemText = '골드 2이상 공격적인 원딜러 구합니다. 디코 가능한 유저 환영입니다.';
+import { lanes, rank_emblems, expiredTime } from './transform.data';
+
+const Card = ({ item }) => {
+  const { author, content, expire, created, voice, mostLane = 'SPT' } = item;
+
+  const totalPlayed = author.wins + author.losses;
+  const winRate = Math.round((author.wins / totalPlayed) * 100);
+
+  // date parsing
+  const year = created.substring(0, 4);
+  const month = created.substring(5, 7);
+  const day = created.substring(8, 10);
+  const hour = created.substring(11, 13);
+  const minute = created.substring(14, 16);
+  const second = created.substring(17, 19);
+
+  const createdDate = new Date(year, month - 1, day, hour, minute, second);
+
+  const elapsedMSec = new Date(Date.now()) - createdDate;
+  const elapsedSec = Math.floor(elapsedMSec / 1000);
+  const elapsedMin = Math.floor(elapsedSec / 60);
+  const elapsedHour = Math.floor(elapsedMin / 60);
+  const elapsedDay = Math.floor(elapsedHour / 24);
+
+  const duration = expiredTime[expire];
+
+  const endTime = duration + createdDate.getTime();
+
+  const isExpired = Date.now() - endTime > 0 ? true : false;
+  const remainingTime = !isExpired ? endTime - Date.now() : 0;
+
+  const remainingTimeSec = Math.floor(remainingTime / 1000);
+  const remainingTimeMin = Math.floor(remainingTimeSec / 60);
+  const remainingTimeHour = Math.floor(remainingTimeMin / 60);
+  const remainingTimeDay = Math.floor(remainingTimeHour / 24);
 
   return (
     <MuiCard
@@ -51,10 +70,23 @@ const Card = (props) => {
           }}
         >
           <Box sx={{ flexBasis: 24, display: 'flex', flexDirection: 'row' }}>
-            <Typography sx={{ color: 'skyblue', fontSize: 15, fontWeight: 700 }}>3분 전</Typography>
+            <Typography sx={{ color: 'skyblue', fontSize: 15, fontWeight: 700 }}>
+              {elapsedDay
+                ? elapsedDay + '일 전'
+                : elapsedHour
+                ? elapsedHour + '시간 전'
+                : elapsedMin
+                ? elapsedMin + '분 전'
+                : '방금 전'}
+            </Typography>
             <Typography sx={{ marginLeft: 1, color: 'grey', fontSize: 15, fontWeight: 700 }}>
-              12분 후 만료
-              {/* 나중에 데이터 값 받아서 집어넣기 */}
+              {isExpired ? '만료됨' : remainingTimeDay
+                ? remainingTimeDay + '일 후 만료'
+                : remainingTimeHour
+                ? remainingTimeHour + '시간 후 만료'
+                : remainingTimeMin
+                ? remainingTimeMin + '분 후 만료'
+                : '잠시 후 만료'}
             </Typography>
           </Box>
           <Box sx={{ flexBasis: 88, display: 'flex', flexDirection: 'row' }}>
@@ -85,8 +117,24 @@ const Card = (props) => {
               }}
             >
               <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Typography>{tier}</Typography>
-                <Typography sx={{ ml: 2 }}>{line}</Typography>
+                <Box
+                  component='img'
+                  src={lanes[mostLane]}
+                  loading='lazy'
+                  alt={mostLane}
+                  sx={{ height: 24, mr: 2, filter: 'grayscale(70%)' }}
+                ></Box>
+                <Box
+                  component='img'
+                  src={rank_emblems[author.tier]}
+                  loading='lazy'
+                  alt={author.tier}
+                  sx={{ width: 36, mr: 1 }}
+                ></Box>
+                <Typography sx={{ mr: 1, fontWeight: 500, fontSize: 16 }}>{author.rank}</Typography>
+                <Typography sx={{ fontWeight: 500, fontSize: 16 }}>
+                  {author.leaguePoints}LP
+                </Typography>
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <Typography
@@ -99,19 +147,27 @@ const Card = (props) => {
                     textOverflow: 'ellipsis',
                   }}
                 >
-                  {nickname}
+                  {author.summonerName}
                 </Typography>
-                <Box sx={{ pr: 1 }}>{mic ? <MicIcon /> : <MicOffIcon />}</Box>
+                <Box sx={{ pr: 1 }}>{voice === 'y' ? <MicIcon /> : <MicOffIcon />}</Box>
               </Box>
             </Box>
             <ImageList sx={{ flexBasis: 144 }} cols={3}>
-              {most3.map((item) => (
+              {author.mostChampion.map((item, index) => (
                 <Box
+                  key={index}
                   component='img'
-                  src={`https://opgg-static.akamaized.net/meta/images/lol/champion/${item}.png?image=c_crop,h_103,w_103,x_9,y_9/q_auto,f_webp,w_48`}
-                  alt={item}
+                  src={`https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/${item}.jpg?`}
+                  alt={item.name}
                   loading='lazy'
-                  sx={{ width: '100%', borderRadius: 2, objectFit: 'contain' }}
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: 1,
+                    objectFit: 'cover',
+                    border: '1px solid #dddddd',
+                    // transform: 'scale(1.2)',
+                  }}
                 />
               ))}
             </ImageList>
@@ -126,12 +182,14 @@ const Card = (props) => {
               }}
             >
               <Typography
+                align='left'
                 sx={{
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: 600,
+                  pr: 1,
                 }}
               >
-                {itemText}
+                {content}
               </Typography>
             </Box>
             <Box
@@ -142,13 +200,12 @@ const Card = (props) => {
                 justifyContent: 'center',
               }}
             >
-              <PartyModalBtn />
+
             </Box>
           </Box>
           <Box sx={{ flexBasis: 24 }}>
             <Typography sx={{ color: 'grey', fontSize: 15, fontWeight: 700 }}>
-              모집현황 [ 3 / 5 ]
-              {/* 나중에 데이터 값 받아서 집어넣기 */}
+              모집현황 [ 3 / 5 ]{/* 나중에 데이터 값 받아서 집어넣기 */}
             </Typography>
           </Box>
         </Box>

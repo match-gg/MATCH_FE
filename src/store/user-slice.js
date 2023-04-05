@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  username: '',
   nickname: '',
+  profile_imageUrl: '',
+  representative: '',
   isLogin: false,
 };
 
@@ -11,13 +12,18 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     SET_USER :(state, action) => {
-      state.username = action.payload.username;
       state.nickname = action.payload.nickname;
+      state.profile_imageUrl = action.payload.profile_imageUrl;
+      state.representative = action.payload.representative;
       state.isLogin = true;
     },
+    SET_REPRESENTATIVE: (state, action) => {
+      state.representative = action.payload.representative;
+    },
     DELETE_USER : (state, action) => {
-      state.username = '';
       state.nickname = '';
+      state.profile_imageUrl = '';
+      state.representative = '';
       state.isLogin = false;
     }
   },

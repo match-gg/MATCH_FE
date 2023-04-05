@@ -1,11 +1,16 @@
-import { Box } from '@mui/material';
-import MyPageLayout from '../components/MyPage/MyPageLayout';
+import { Fragment } from 'react';
+
+import { Box, Typography } from '@mui/material';
+
+import MyPageBody from '../components/MyPage/MyPageBody';
+import LolPageNavbar from '../components/main/lol/LolPageNavbar';
 
 const MyPage = () => {
   return (
-    <Box sx={{ height: '100vh' }}>
-      <MyPageLayout />
-    </Box>
+    <Fragment>
+      <LolPageNavbar />
+      <MyPageBody />
+    </Fragment>
   );
 };
 

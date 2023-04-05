@@ -17,8 +17,8 @@ const Navbar = () => {
       position='fixed'
       sx={{
         backgroundColor: 'white',
-        color: '#000000',
-        height: '5rem',
+        color: '#3d3939',
+        height: 80,
         justifyContent: 'center',
       }}
     >
@@ -27,39 +27,26 @@ const Navbar = () => {
           <Typography
             component={RouterLink}
             to='/'
-            variant='h4'
             sx={{
               flexGrow: 1,
+              fontSize: 40,
+              fontWeight: '700',
+              fontStyle: 'italic',
+              color: '#3d3939',
               textDecoration: 'none',
-              color: 'black',
             }}
           >
             Match.GG
           </Typography>
           <Stack direction='row' spacing={2}>
-            {/* <Button
-              component={RouterLink}
-              to='/aboutus'
-              variant='text'
-              color='inherit'
-              sx={{
-                marginRight: '1rem',
-                '&:hover': {
-                  borderRadius: '0',
-                  color: 'black',
-                  backgroundColor:'white',
-                  borderBottom: '3px solid black',
-                },
-              }}
-            >
-              About US
-            </Button> */}
             <Button
               component={RouterLink}
               to='/login'
               variant='text'
               color='inherit'
               sx={{
+                fontSize: 16,
+                fontWeight: '600',
                 '&:hover': {
                   borderRadius: '0',
                   color: 'black',
