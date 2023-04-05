@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Box, Typography, Link as MuiLink } from '@mui/material';
 
-const Footer = () => {
+const MainFooter = () => {
   return (
     <Box sx={{ height: '100%', width: '100%', backgroundColor: '#f3f3f3', pt: 4 }}>
       <Container
@@ -12,10 +12,10 @@ const Footer = () => {
           <MuiLink href='https://github.com/match-gg' color='#3d3939'>
             GitHub
           </MuiLink>
-          <MuiLink href='#' color='#3d3939'>
+          <MuiLink href='' color='#3d3939'>
             Notion
           </MuiLink>
-          <MuiLink href='#' color='#3d3939'>
+          <MuiLink href='' color='#3d3939'>
             Discord
           </MuiLink>
         </Box>
@@ -39,4 +39,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default MainFooter;
