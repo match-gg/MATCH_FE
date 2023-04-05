@@ -200,7 +200,7 @@ const Card = ({ item }) => {
                 justifyContent: 'center',
               }}
             >
-
+              <PartyModalBtn />
             </Box>
           </Box>
           <Box sx={{ flexBasis: 24 }}>
