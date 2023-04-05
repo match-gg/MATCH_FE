@@ -1,18 +1,35 @@
-import {
-  Typography,
-  Button,
-  Divider,
-  Box,
-} from '@mui/material';
-
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { Fragment } from 'react';
 
+import { Typography, Button, Box } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import ProgressBar from '@ramonak/react-progress-bar';
+
+import React from 'react';
+
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+
+
 const ViewDetail = ({ data }) => {
-  // 파티원 상세보기에서 쓸 임시 데이터 (닉네임, 좋아요 수, 싫어요 수)
-  const { name, likeCount, dislikeCount } = data;
+  // 파티원 상세보기에서 쓸 임시 데이터 (닉네임, 좋아요 수)
+  const { matchCount, likeCount, dislikeCount } = data;
+
+  // 매칭 수 대비 좋아요 비율
+  const likeRate = ((likeCount / (likeCount + dislikeCount)) * 100).toFixed(1);
+
+  // 매칭 수 100 단위로 내림해서 저장 ex) 127 -> 100 , 298 -> 200
+  const matchCountMask = Math.floor(matchCount / 100) * 100;
+
+  const theme = createTheme({
+    palette: {
+      follow: {
+        main: 'rgba(60, 57, 57, 0.7)',
+        contrastText: 'rgba(60, 57, 57, 0.7)',
+      },
+    },
+  });
 
   return (
     <Fragment>
@@ -23,57 +40,87 @@ const ViewDetail = ({ data }) => {
           justifyContent: 'center',
           alignItems: 'center',
           width: '100%',
-          p: 1,
-          bgcolor: '#f1f1f1'
+          height: 64,
+          pl: 4,
         }}>
-        <Typography
+        <Box
           sx={{
-            fontSize: 18,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            pr: 1
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '70%',
+            px: 2
           }}>
-          {name}
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: 12,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            pt: 0.6,
-            pr: 3
-          }}>
-          님이 받은 평가
-        </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+              px: 1
+            }}>
+            <Typography
+              sx={{
+                fontSize: 14,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}>
+              총 매칭 수 : {matchCount >= 100 ? `${matchCountMask} + ` : '100 -'}
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                color: `${likeRate > 50 ? '#00C73C' : '#ff7f00'}`
+              }}>
+              {likeRate > 50 ? <SentimentSatisfiedAltIcon /> : <SentimentVeryDissatisfiedIcon />}
+              <Typography sx={{ fontSize: 16, overflow: 'hidden', textOverflow: 'ellipsis', pl: 1 }}>
+                {likeRate}%
+              </Typography>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              width: '100%',
+              m: 1
+            }}>
+            {likeRate > 50 ? (
+              <ProgressBar
+                completed={likeRate}
+                baseBgColor='#e0e0de'
+                bgColor='#00C73C'
+                height='15px'
+                isLabelVisible={false}
+              />
+            ) : (
+              <ProgressBar
+                completed={likeRate}
+                baseBgColor='#e0e0de'
+                bgColor='#ff7f00'
+                height='15px'
+                isLabelVisible={false}
+              />
+            )}
+          </Box>
+        </Box>
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'center',
-            mr: 4
+            alignItems: 'center',
+            width: '30%'
           }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', p: 1 }}>
-            <ThumbUpOffAltIcon sx={{ mr: 1 }} />
-            <Typography>{likeCount}</Typography>
-          </Box>
-          <Divider orientation='vertical' flexItem />
-          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', p: 1 }}>
-            <ThumbDownOffAltIcon sx={{ mr: 1 }} />
-            <Typography>{dislikeCount}</Typography>
-          </Box>
+          <ThemeProvider theme={theme}>
+            <Button variant='text' size='small' color='follow'>
+              <PersonAddAltIcon fontSize='small' sx={{ mr: 1 }} />
+              팔로우
+            </Button>
+          </ThemeProvider>
         </Box>
-        <Button
-          variant='contained'
-          size='small'
-          sx={{
-            bgcolor: 'rgba(60, 57, 57, 0.7)',
-            '&:hover': {
-              bgcolor: 'rgba(60, 57, 57, 0.9)'
-            }
-          }}>
-          <PersonAddAltIcon fontSize='small' sx={{ mr: 1 }} />
-          팔로우
-        </Button>
       </Box>
     </Fragment>
   );
