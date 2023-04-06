@@ -4,6 +4,7 @@ import { PieChart } from 'react-minimal-pie-chart';
 
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
+import PartyModalBtn from './PartyModalBtn';
 
 import { lanes, rank_emblems, expiredTime } from './transform.data';
 
@@ -199,9 +200,7 @@ const Card = ({ item }) => {
                 justifyContent: 'center',
               }}
             >
-              <Button variant='contained' sx={{ borderRadius: 4 }} disabled={isExpired}>
-                <Typography>더보기</Typography>
-              </Button>
+              <PartyModalBtn />
             </Box>
           </Box>
           <Box sx={{ flexBasis: 24 }}>
