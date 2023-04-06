@@ -18,7 +18,7 @@ import Card from './Card';
 import LolPageNavbar from './LolPageNavbar';
 import { api } from '../../../api/api';
 import CreateCardBtn from './CreateCardBtn';
-import Footer from '../Footer';
+import MainFooter from '../MainFooter';
 
 const LolPage = () => {
   const [boards, setBoards] = useState([]); // 전체 게시글 저장
@@ -216,7 +216,7 @@ const LolPage = () => {
           더 불러오기
         </Button>
       </Box>
-      <Footer />
+      <MainFooter />
     </Fragment>
   );
 };
