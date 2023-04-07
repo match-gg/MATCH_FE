@@ -48,7 +48,7 @@ const PartyModalBtn = props => {
           alignItems='stretch'
           sx={{
             width: '40%',
-            maxHeight: '700px',
+            maxHeight: 700,
             bgcolor: 'white',
             p: 2,
             borderRadius: 4
@@ -65,6 +65,8 @@ const PartyModalBtn = props => {
           <Stack alignItems='center' divider={<Divider flexItem />} sx={{ overflow: 'auto' }}>
             {/* 파티원 임시 정보 넘겨줌 */}
             <PartyMember data={data}/> 
+            <PartyMember data={data}/>
+            <PartyMember data={data}/>
             <PartyMember data={data}/>
             <Recruitment />
             <Recruitment />

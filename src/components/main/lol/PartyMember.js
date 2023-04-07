@@ -94,9 +94,11 @@ const PartyInfo = ({data}) => {
           {viewDetail ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
         </IconButton>
       </Box>
-      <Collapse in={viewDetail} timeout='auto' sx={{ width: '100%' }}>
-        <ViewDetail data={data} />
-      </Collapse>
+      <Box sx={{width: '100%'}}>
+        <Collapse in={viewDetail} timeout='auto'>
+          <ViewDetail data={data} />
+        </Collapse>
+      </Box>
     </Fragment>
   );
 };
