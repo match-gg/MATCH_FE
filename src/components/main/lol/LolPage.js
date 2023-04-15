@@ -19,6 +19,9 @@ import LolPageNavbar from './LolPageNavbar';
 import { api } from '../../../api/api';
 import CreateCardBtn from './CreateCardBtn';
 import MainFooter from '../MainFooter';
+import ChatButton from '../../../chat/ChatBtn';
+import ChatToggleBtn from '../../../chat/ChatToggleBtn';
+import CreateChatroomBtn from '../../../chat/CreateChatroomBtn';
 
 const LolPage = () => {
   const [boards, setBoards] = useState([]); // 전체 게시글 저장
@@ -49,7 +52,13 @@ const LolPage = () => {
   const moreBoards = async () => {
     await api
       .get('/api/lol/board', {
-        params: { size: 12, page: pageNumber, position: line, type: queueType, tier },
+        params: {
+          size: 12,
+          page: pageNumber,
+          position: line,
+          type: queueType,
+          tier,
+        },
       })
       .then((res) => {
         setBoards([...boards, ...res.data.content]);
@@ -135,7 +144,11 @@ const LolPage = () => {
             }}
           >
             <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
-              <Select id='queue-type-select' value={queueType} onChange={handleQueueType}>
+              <Select
+                id='queue-type-select'
+                value={queueType}
+                onChange={handleQueueType}
+              >
                 <MenuItem value={'ALL'}>모든 큐</MenuItem>
                 <MenuItem value={'DUO_RANK'}>솔로랭크</MenuItem>
                 <MenuItem value={'FREE_RANK'}>자유랭크</MenuItem>
@@ -150,7 +163,9 @@ const LolPage = () => {
             >
               <Select id='tier-select' value={tier} onChange={handleTier}>
                 <MenuItem value={'ALL'}>모든 티어</MenuItem>
-                {!(queueType === 'DUO_RANK') && <MenuItem value={'MASTER'}>Master+</MenuItem>}
+                {!(queueType === 'DUO_RANK') && (
+                  <MenuItem value={'MASTER'}>Master+</MenuItem>
+                )}
                 <MenuItem value={'DIAMOND'}>Diamond+</MenuItem>
                 <MenuItem value={'PLATINUM'}>Platinum+</MenuItem>
                 <MenuItem value={'GOLD'}>Gold+</MenuItem>
@@ -191,6 +206,7 @@ const LolPage = () => {
               새로고침
               <RefreshIcon />
             </Button>
+            <CreateChatroomBtn />
           </Box>
         </Box>
         <Container maxWidth='xl' sx={{ mt: 5 }}>
@@ -217,6 +233,8 @@ const LolPage = () => {
         </Button>
       </Box>
       <MainFooter />
+      {/* <ChatButton /> */}
+      <ChatToggleBtn />
     </Fragment>
   );
 };

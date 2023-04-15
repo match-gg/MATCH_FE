@@ -10,6 +10,8 @@ import { CssBaseline } from '@mui/material';
 import App from './App';
 import store from './store/index';
 
+import app from './firebase';
+
 const persistor = persistStore(store);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

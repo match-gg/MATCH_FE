@@ -1,13 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialChatroomState = {
-  currentChatroom: null,
-  // createdBy: {
-  //   id: '',
-  //   name: '',
-  // },
-  // roomId: '',
-  // timestamp: null,
+  currentChatRoom: null,
 };
 
 const chatRoomSlice = createSlice({
@@ -15,7 +9,7 @@ const chatRoomSlice = createSlice({
   initialState: initialChatroomState,
   reducers: {
     SET_CURRENT_CHATROOM: (state, action) => {
-      state.currentChatroom = action.payload;
+      state.currentChatRoom = action.payload;
     },
   },
 });
