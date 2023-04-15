@@ -13,13 +13,6 @@ const firebaseConfig = {
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  // apiKey: 'AIzaSyAHBQRY5-45s3J0cyi4CnXkrMgRiRKgOmc',
-  // authDomain: 'react-firebase-chat-1606c.firebaseapp.com',
-  // projectId: 'react-firebase-chat-1606c',
-  // storageBucket: 'react-firebase-chat-1606c.appspot.com',
-  // messagingSenderId: '287834165303',
-  // appId: '1:287834165303:web:6e418cdcfdd64b97112fb2',
-  // measurementId: 'G-15RXB91MYB',
 };
 
 // Initialize Firebase
