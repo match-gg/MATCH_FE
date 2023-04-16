@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Box, OutlinedInput, Tooltip, Alert } from '@mui/material';
+import { Box, OutlinedInput, Tooltip } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 // import ChatEnter from './ChatEnter';
 import ChatMessage from './ChatMessage';
@@ -48,11 +48,17 @@ const ChatRoom = () => {
     setTooltip(false);
   };
 
+  //메세지 전송중 state
+  const [messageSending, setMessageSending] = useState(false);
+
   //메세지 인풋 state
   const [content, setContent] = useState('');
   const handleContent = (e) => {
     setContent(e.target.value);
   };
+
+  //메세지 입력창에 포커스 되도록 Ref
+  const inputRef = useRef();
 
   const createMessage = () => {
     const message = {
@@ -65,6 +71,7 @@ const ChatRoom = () => {
   };
 
   const postMessage = async () => {
+    setMessageSending(true);
     if (!content) {
       handleTooltipOpen();
       return;
@@ -72,6 +79,8 @@ const ChatRoom = () => {
     try {
       await set(push(child(messagesRef, chatRoom.roomId)), createMessage());
       setContent('');
+      setMessageSending(false);
+      inputRef.current.focus();
     } catch (error) {
       console.log(error);
     }
@@ -82,6 +91,7 @@ const ChatRoom = () => {
     }
   };
 
+  //자동으로 하단으로 스크롤 되도록 Ref
   const scrollRef = useRef();
   useEffect(() => {
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -114,14 +124,14 @@ const ChatRoom = () => {
           justifyContent: 'flex-start',
           alignItems: 'center',
           maxHeight: '460px',
-          overflowY: 'scroll',
+          overflowY: 'auto',
         }}
       >
         {/* {members.map((member, idx) => {
           return <ChatEnter key={idx} name={member} />;
         })} */}
         {messages.map((message, idx) => {
-          return <ChatMessage id={idx} user={user} message={message} />;
+          return <ChatMessage key={idx} user={user} message={message} />;
         })}
       </Box>
       {/* 입력 영역 */}
@@ -139,6 +149,9 @@ const ChatRoom = () => {
           size='small'
           autoComplete='off'
           placeholder='메세지를 입력해주세요.'
+          disabled={messageSending}
+          ref={inputRef}
+          autoFocus
           sx={{
             position: 'absolute',
             bottom: '30px',

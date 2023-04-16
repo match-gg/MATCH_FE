@@ -10,7 +10,8 @@ const ChatMessage = (props) => {
   };
 
   const isMessageMine = (message, user) => {
-    return message.name === user.nickname;
+    // return message.name === user.nickname;
+    return message.name === 'testUser';
   };
 
   return (
@@ -23,7 +24,7 @@ const ChatMessage = (props) => {
         borderRadius: '20px',
         padding: '5px',
         position: isMessageMine(message, user) && 'relative',
-        left: isMessageMine(message, user) && '80px',
+        left: isMessageMine(message, user) && '60px',
       }}
     >
       <Typography textAlign='center' sx={{ fontSize: 'small' }}>

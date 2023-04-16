@@ -4,10 +4,11 @@ import { Button } from '@mui/material';
 import { getDatabase, ref, push, update, child } from 'firebase/database';
 // import fdb from '../firebase';
 
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { chatRoomActions } from '../store/chatRoom-slice';
 
 const CreateChatroomBtn = () => {
-  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const createChatroom = async () => {
     const chatroomRef = ref(getDatabase(), 'chatrooms');
@@ -18,7 +19,6 @@ const CreateChatroomBtn = () => {
       createdBy: 'testUser3',
       timestamp: new Date(),
       game: 'lol',
-      members: ['testUser3, testUser4'],
     };
     try {
       await update(child(chatroomRef, key), newChatroom);
@@ -28,9 +28,13 @@ const CreateChatroomBtn = () => {
     }
   };
 
+  const joinChatRoom = () => {
+    dispatch(chatRoomActions.ADD_JOINED_CHATROOM('-NT9iLlCfHtYX6VnE3MR'));
+  };
+
   return (
-    <Button variant='outlined' onClick={createChatroom}>
-      채팅방만들기
+    <Button variant='outlined' onClick={joinChatRoom}>
+      채팅방 입장
     </Button>
   );
 };

@@ -1,21 +1,33 @@
 import React from 'react';
 
-import { Box, Button, Divider, Stack, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import ChatIcon from '@mui/icons-material/Chat';
-import { useDispatch, useSelector } from 'react-redux';
-import { getDatabase, ref } from 'firebase/database';
+import { useDispatch } from 'react-redux';
 import { chatRoomActions } from '../store/chatRoom-slice';
 
-const ChatCard = (props) => {
-  const dispatch = useDispatch();
+import lolImg from '../components/Register/logo_images/LoL_Icon_Flat_BLACK.png';
+import pubgImg from '../components/Register/logo_images/Pubg_Logo.png';
+import lostarkImg from '../components/Register/logo_images/lost_Ark_Logo.png';
+import overwatchImg from '../components/Register/logo_images/overwatch_logo.png';
+import maplestoryImg from '../components/Register/logo_images/maplestory_logo.png';
 
+const gameImg = {
+  lol: lolImg,
+  pubg: pubgImg,
+  maplestory: maplestoryImg,
+  overwatch: overwatchImg,
+  lostark: lostarkImg,
+};
+
+const ChatCard = (props) => {
+  const { maxNum, curNum, handleChatOpen, chatRoomInfo } = props;
+
+  const dispatch = useDispatch();
   //채팅방에 입장 버튼을 눌러 리덕스 변경
   const changeChatRoom = (room) => {
     dispatch(chatRoomActions.SET_CURRENT_CHATROOM(room));
   };
 
-  //기존 코드
-  const { icon, name, maxNum, curNum, handleChatOpen, chatRoomInfo } = props;
   return (
     // 테두리
     <Box
@@ -58,17 +70,16 @@ const ChatCard = (props) => {
           >
             <Box
               component='img'
-              src={icon}
-              alt='lol_icon'
+              src={gameImg[chatRoomInfo.game]}
+              alt='game_icon'
               sx={{
-                height: '100%',
-                maxHeight: '40px',
-                maxWidth: '45px',
+                maxHeight: '30px',
+                maxWidth: '35px',
                 marginRight: '5px',
               }}
             />
             <Typography variant='subtitle1'>
-              <strong>{name}</strong>님의 파티
+              <strong>{chatRoomInfo.createdBy}</strong>님의 파티
             </Typography>
           </Box>
           <Typography
@@ -105,7 +116,7 @@ const ChatCard = (props) => {
           </Button>
           <Button
             onClick={() => {
-              handleChatOpen(name);
+              handleChatOpen(chatRoomInfo.createdBy);
               changeChatRoom(chatRoomInfo);
             }}
             variant='contained'

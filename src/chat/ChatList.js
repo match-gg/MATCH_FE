@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 
-import { Box, CircularProgress, Typography, Zoom } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  Skeleton,
+  Stack,
+  Typography,
+  Zoom,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
@@ -12,7 +19,9 @@ import { getDatabase, off, onChildAdded, ref } from 'firebase/database';
 import { chatRoomActions } from '../store/chatRoom-slice';
 
 const ChatList = (props) => {
-  const chatRoom = useSelector((state) => state.chatRoom.currentChatRoom);
+  const joinedChatRooms = useSelector(
+    (state) => state.chatRoom.joinedChatRooms
+  );
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(true);
@@ -32,7 +41,6 @@ const ChatList = (props) => {
       setLoading(false);
     });
   };
-
   //컴포넌트 렌더링 시 리스너 연결, 컴포넌트 사라질 때 연결 종료
   useEffect(() => {
     addChatRoomsListener();
@@ -41,7 +49,6 @@ const ChatList = (props) => {
     };
   }, []);
 
-  //기존 코드
   const { open, handleOpen } = props;
 
   const [chatOpen, setChatOpen] = useState(false);
@@ -140,22 +147,31 @@ const ChatList = (props) => {
                 justifyContent: 'flex-start',
                 alignItems: 'center',
                 maxHeight: '530px',
-                overflowY: 'scroll',
+                overflowY: 'auto',
               }}
             >
               {!loading ? (
-                chatRooms.map((chatRoom, idx) => {
-                  return (
-                    <ChatCard
-                      chatRoomInfo={chatRoom}
-                      key={idx}
-                      name={chatRoom.createdBy}
-                      handleChatOpen={handleChatOpen}
-                    />
-                  );
-                })
+                chatRooms
+                  .filter((chatroom) =>
+                    joinedChatRooms.includes(chatroom.roomId)
+                  )
+                  .map((filteredChatRoom, idx) => {
+                    return (
+                      <ChatCard
+                        chatRoomInfo={filteredChatRoom}
+                        key={idx}
+                        name={filteredChatRoom.createdBy}
+                        handleChatOpen={handleChatOpen}
+                      />
+                    );
+                  })
               ) : (
-                <CircularProgress sx={{ overflow: 'none' }} />
+                <Stack spacing={1}>
+                  <Skeleton variant='rounded' width={250} height={80} />
+                  <Skeleton variant='rounded' width={250} height={80} />
+                  <Skeleton variant='rounded' width={250} height={80} />
+                  <Skeleton variant='rounded' width={250} height={80} />
+                </Stack>
               )}
             </Box>
           )}
