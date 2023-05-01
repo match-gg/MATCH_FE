@@ -1,10 +1,10 @@
-export const lanes = {
-  TOP: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/TOP.png',
-  JUG: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/JUG.png',
-  MID: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/MID.png',
-  ADC: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ADC.png',
-  SPT: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/SUP.png',
-};
+export const lanes = [
+  { id : 'TOP', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/TOP.png', kor: '탑' },
+  { id : 'JUG', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/JUG.png', kor: '정글' },
+  { id : 'MID', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/MID.png', kor: '미드' },
+  { id : 'ADC', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ADC.png', kor: '원딜' },
+  { id : 'SPT', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/SUP.png', kor: '서포터' },
+];
 
 export const rank_emblems = {
   CHALLENGER: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/ranked_emblems/challenger.png',
