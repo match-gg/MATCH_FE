@@ -119,7 +119,7 @@ const Card = ({ item }) => {
                   [{tierInfo.find((elem) => elem.id === tier).kor}]
                 </Typography>
                 <Typography component='span' sx={{ fontSize: 16, fontWeight: 600 }}>
-                  {content}
+                  {' ' + content}
                 </Typography>
               </p>
             </Box>
