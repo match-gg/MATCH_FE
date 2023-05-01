@@ -308,7 +308,6 @@ const CreateCardBtn = (props) => {
         variant='outlined'
         sx={{
           height: 40,
-          mr: 1,
           borderColor: '#dddddd',
           color: 'black',
           '&:hover': {
