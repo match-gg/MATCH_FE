@@ -17,10 +17,10 @@ import CheckIcon from '@mui/icons-material/Check';
 
 import PartyModalBtn from './PartyModalBtn';
 
-import { lanes, rank_emblems, expiredTime } from './transform.data';
+import { lanes, rank_emblems, expiredTime, tierInfo } from './transform.d';
 
 const Card = ({ item }) => {
-  const { author, content, expire, created, voice, mostLane = 'ADC', tier, position } = item;
+  const { author, content, expire, created, voice, tier, position } = item;
 
   const totalMemberNums = 5;
   const currentMemberNums = 2;
@@ -106,16 +106,18 @@ const Card = ({ item }) => {
                 alt={position}
                 sx={{ height: 40, width: 40, mr: 1, mixBlendMode: 'exclusion' }}
               />
-              <Typography></Typography>
-              <Typography
-                align='left'
-                sx={{
-                  fontSize: 16,
-                  fontWeight: 600,
-                }}
-              >
-                {content}
-              </Typography>
+              <p>
+                <Typography
+                  component='span'
+                  color={tierInfo.find((elem) => elem.id === tier).color}
+                  sx={{ display: 'inline-block', fontSize: 16, fontWeight: 700 }}
+                >
+                  [{tierInfo.find((elem) => elem.id === tier).kor}]
+                </Typography>
+                <Typography component='span' sx={{ fontSize: 16, fontWeight: 600 }}>
+                  {content}
+                </Typography>
+              </p>
             </Box>
           </Box>
           <Box
@@ -282,7 +284,10 @@ const Card = ({ item }) => {
                     ml: 1,
                   }}
                 >
-                  <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+                  <Typography
+                    sx={{ fontSize: 14, fontWeight: 500 }}
+                    color={tierInfo.find((elem) => elem.id === author.tier).color}
+                  >
                     {author.tier.slice(0, 1)}
                     {author.rank === 'I'
                       ? 1
