@@ -25,7 +25,7 @@ const LolBody = () => {
 			"name": "수유욱",
 			"type": "DUO_RANK",
 			"tier": "SILVER",
-			"position": "JUG",
+			"position": "ADC",
 			"voice": "Y",
 			"content": "실버이상 팟 구합니다실버이상 팟 구합니다실버이상 팟 구합니다",
 			"expire": "FIFTEEN_M",
@@ -38,7 +38,9 @@ const LolBody = () => {
 				"leaguePoints": 37,
 				"wins": 19,
 				"losses": 20,
-				"mostChampion":["garen", "galio", "lux"]
+				"mostChampion":["garen", "galio", "lux"],
+        "mostLane":'JUG'
+
 			}
 		},
 		{
@@ -46,7 +48,7 @@ const LolBody = () => {
 			"name": "시샘달 사흘",
 			"type": "DUO_RANK",
 			"tier": "SILVER",
-			"position": "JUG",
+			"position": "TOP",
 			"voice": "Y",
 			"content": "실버이상 팟 구합니다",
 			"expire": "FIFTEEN_M",
@@ -59,14 +61,15 @@ const LolBody = () => {
 				"leaguePoints": 5,
 				"wins": 38,
 				"losses": 48,
-				"mostChampion":["garen", "galio", "lux"]
+				"mostChampion":["garen", "galio", "lux"],
+        "mostLane":'ADC'
 			}
 		}, {
 			"id": 3,
 			"name": "완도수산새우도둑",
 			"type": "DUO_RANK",
 			"tier": "SILVER",
-			"position": "JUG",
+			"position": "ADC",
 			"voice": "Y",
 			"content": "실버이상 팟 구합니다",
 			"expire": "FIFTEEN_M",
@@ -79,7 +82,8 @@ const LolBody = () => {
 				"leaguePoints": 37,
 				"wins": 19,
 				"losses": 20,
-				"mostChampion":["garen", "galio", "lux"]
+				"mostChampion":["garen", "galio", "lux"],
+        "mostLane":'SPT'
 			}
 		},
 		{
@@ -100,7 +104,8 @@ const LolBody = () => {
 				"leaguePoints": 5,
 				"wins": 38,
 				"losses": 48,
-				"mostChampion":["garen", "galio", "lux"]
+				"mostChampion":["garen", "galio", "lux"],
+        "mostLane":'ADC'
 			}
 		}
   ]); // 전체 게시글 저장

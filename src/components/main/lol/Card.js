@@ -1,15 +1,29 @@
-import { Card as MuiCard, CardContent, Typography, Box, ImageList, Button } from '@mui/material';
+import {
+  Card as MuiCard,
+  CardContent,
+  Typography,
+  Box,
+  ImageList,
+  Button,
+  Divider,
+  ImageListItem,
+} from '@mui/material';
 
 import { PieChart } from 'react-minimal-pie-chart';
 
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
+import CheckIcon from '@mui/icons-material/Check';
+
 import PartyModalBtn from './PartyModalBtn';
 
 import { lanes, rank_emblems, expiredTime } from './transform.data';
 
 const Card = ({ item }) => {
-  const { author, content, expire, created, voice, mostLane = 'SPT' } = item;
+  const { author, content, expire, created, voice, mostLane = 'ADC', tier, position } = item;
+
+  const totalMemberNums = 5;
+  const currentMemberNums = 2;
 
   const totalPlayed = author.wins + author.losses;
   const winRate = Math.round((author.wins / totalPlayed) * 100);
@@ -45,42 +59,148 @@ const Card = ({ item }) => {
   return (
     <MuiCard
       sx={{
-        width: 464,
-        height: 250,
+        width: 376,
         borderRadius: '8px',
         boxShadow: 'none',
         border: '1px solid #dddddd',
-        mr: 3,
-        mb: 3,
+        mr: 1,
+        mb: 1,
       }}
     >
       <CardContent
         sx={{
           width: '100%',
           height: '100%',
+          p: 2,
         }}
       >
         <Box
           sx={{
-            px: 2,
             width: '100%',
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
           }}
         >
-          <Box sx={{ flexBasis: 24, display: 'flex', flexDirection: 'row' }}>
-            <Typography sx={{ color: 'skyblue', fontSize: 15, fontWeight: 700 }}>
-              {elapsedDay
-                ? elapsedDay + '일 전'
-                : elapsedHour
-                ? elapsedHour + '시간 전'
-                : elapsedMin
-                ? elapsedMin + '분 전'
-                : '방금 전'}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Box
+              sx={{
+                height: 48,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+              }}
+            >
+              <Box
+                component='img'
+                src={lanes[position]}
+                loading='lazy'
+                alt={position}
+                sx={{ height: 40, width: 40, mr: 1, mixBlendMode: 'exclusion' }}
+              />
+              <Typography></Typography>
+              <Typography
+                align='left'
+                sx={{
+                  fontSize: 16,
+                  fontWeight: 600,
+                }}
+              >
+                {content}
+              </Typography>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              height: 20,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              marginLeft: 6,
+              marginTop: 0.5,
+            }}
+          >
+            <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 700, mr: 1.5 }}>
+              모집 현황
             </Typography>
-            <Typography sx={{ marginLeft: 1, color: 'grey', fontSize: 15, fontWeight: 700 }}>
-              {isExpired ? '만료됨' : remainingTimeDay
+            <Box
+              sx={{
+                width: '16px',
+                height: '16px',
+                borderRadius: '50%',
+                backgroundColor: '#5383e8',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 0.5,
+              }}
+            >
+              <CheckIcon sx={{ color: 'white', fontSize: 12 }} />
+            </Box>
+            <Box
+              sx={{
+                width: '16px',
+                height: '16px',
+                borderRadius: '50%',
+                backgroundColor: '#5383e8',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 0.5,
+              }}
+            >
+              <CheckIcon sx={{ color: 'white', fontSize: 12 }} />
+            </Box>
+            <Box
+              sx={{
+                width: '16px',
+                height: '16px',
+                borderRadius: '50%',
+                backgroundColor: '#D9D9D9',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 0.5,
+              }}
+            />
+            <Box
+              sx={{
+                width: '16px',
+                height: '16px',
+                borderRadius: '50%',
+                backgroundColor: '#D9D9D9',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 0.5,
+              }}
+            />
+            <Box
+              sx={{
+                width: '16px',
+                height: '16px',
+                borderRadius: '50%',
+                backgroundColor: '#D9D9D9',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 0.5,
+              }}
+            />
+
+            <Typography sx={{ marginLeft: 10, color: '#5383e8', fontSize: 14, fontWeight: 700 }}>
+              {isExpired
+                ? '만료됨'
+                : remainingTimeDay
                 ? remainingTimeDay + '일 후 만료'
                 : remainingTimeHour
                 ? remainingTimeHour + '시간 후 만료'
@@ -89,124 +209,121 @@ const Card = ({ item }) => {
                 : '잠시 후 만료'}
             </Typography>
           </Box>
-          <Box sx={{ flexBasis: 88, display: 'flex', flexDirection: 'row' }}>
-            <Box sx={{ flexBasis: 64 }}>
-              <PieChart
-                data={[{ value: `${winRate}`, color: '#5383e8', name: 'winRate' }]}
-                reveal={winRate} // 퍼센트 치수
-                lineWidth={30} // 두께
-                startAngle={270}
-                background='#E84057'
-                animate
-                label={({ dataEntry }) => dataEntry.value + '%'}
-                labelStyle={{
-                  fontSize: 18,
-                  fontWeight: 700,
-                  fill: '#5383e8',
-                }}
-                labelPosition={0}
-              />
-            </Box>
+          <Divider sx={{ my: 1 }} />
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'row',
+            }}
+          >
             <Box
               sx={{
-                flexGrow: 1,
+                width: 160,
                 display: 'flex',
                 flexDirection: 'column',
-                pl: 1,
-                justifyContent: 'center',
               }}
             >
-              <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+              <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>작성자</Typography>
+              <Typography sx={{ fontSize: 16, fontWeight: 700 }}>{author.summonerName}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+                주 포지션
+              </Typography>
+              <Typography sx={{ fontSize: 16, fontWeight: 700 }}>{author.mostLane}</Typography>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              mwidth: '100%',
+              display: 'flex',
+              flexDirection: 'row',
+            }}
+          >
+            <Box
+              sx={{
+                width: 160,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>티어</Typography>
+              <Box sx={{ display: 'flex' }}>
                 <Box
-                  component='img'
-                  src={lanes[mostLane]}
-                  loading='lazy'
-                  alt={mostLane}
-                  sx={{ height: 24, mr: 2, filter: 'grayscale(70%)' }}
-                ></Box>
-                <Box
-                  component='img'
-                  src={rank_emblems[author.tier]}
-                  loading='lazy'
-                  alt={author.tier}
-                  sx={{ width: 36, mr: 1 }}
-                ></Box>
-                <Typography sx={{ mr: 1, fontWeight: 500, fontSize: 16 }}>{author.rank}</Typography>
-                <Typography sx={{ fontWeight: 500, fontSize: 16 }}>
-                  {author.leaguePoints}LP
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Typography
-                  noWrap
                   sx={{
-                    width: 160,
-                    fontSize: 18,
-                    fontWeight: 800,
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
+                    height: 48,
+                    width: 48,
+                    borderRadius: '50%',
+                    backgroundColor: '#eeeeee',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
-                  {author.summonerName}
-                </Typography>
-                <Box sx={{ pr: 1 }}>{voice === 'y' ? <MicIcon /> : <MicOffIcon />}</Box>
+                  <Box
+                    component='img'
+                    src={rank_emblems[author.tier]}
+                    loading='lazy'
+                    alt={author.tier}
+                    sx={{
+                      transform: 'scale(0.11)',
+                    }}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    height: '100%',
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    ml: 1,
+                  }}
+                >
+                  <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+                    {author.tier.slice(0, 1)}
+                    {author.rank === 'I'
+                      ? 1
+                      : author.rank === 'II'
+                      ? 2
+                      : author.rank === 'III'
+                      ? 3
+                      : author.rank === 'IV'
+                      ? 4
+                      : ''}
+                    -{author.leaguePoints}LP
+                  </Typography>
+                  <Typography sx={{ fontSize: 12, fontWeight: 500 }}>
+                    {author.wins}승 {author.losses}패
+                  </Typography>
+                </Box>
               </Box>
             </Box>
-            <ImageList sx={{ flexBasis: 144 }} cols={3}>
-              {author.mostChampion.map((item, index) => (
-                <Box
-                  key={index}
-                  component='img'
-                  src={`https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/${item}.jpg?`}
-                  alt={item.name}
-                  loading='lazy'
-                  sx={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: 1,
-                    objectFit: 'cover',
-                    border: '1px solid #dddddd',
-                    // transform: 'scale(1.2)',
-                  }}
-                />
-              ))}
-            </ImageList>
-          </Box>
-          <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row' }}>
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography
-                align='left'
-                sx={{
-                  fontSize: 18,
-                  fontWeight: 600,
-                  pr: 1,
-                }}
-              >
-                {content}
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+                모스트 챔피언
               </Typography>
+              <ImageList sx={{ m: 0, p: 0 }} cols={3} gap={2}>
+                {author.mostChampion.map((item, index) => (
+                  <Box
+                    key={index}
+                    component='img'
+                    src={`https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/${item}.jpg?`}
+                    alt={item.name}
+                    loading='lazy'
+                    sx={{
+                      width: '100%',
+                      height: '48px',
+                      borderRadius: 1,
+                      objectFit: 'cover',
+                      border: '1px solid #dddddd',
+                    }}
+                  />
+                ))}
+              </ImageList>
             </Box>
-            <Box
-              sx={{
-                flex: '0 0 80px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <PartyModalBtn />
-            </Box>
-          </Box>
-          <Box sx={{ flexBasis: 24 }}>
-            <Typography sx={{ color: 'grey', fontSize: 15, fontWeight: 700 }}>
-              모집현황 [ 3 / 5 ]{/* 나중에 데이터 값 받아서 집어넣기 */}
-            </Typography>
           </Box>
         </Box>
       </CardContent>
