@@ -223,16 +223,18 @@ const Card = ({ item }) => {
                     width: 171,
                   }}
                 >
-                  <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
-                    작성자
-                  </Typography>
+                  <FlexRow>
+                    <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+                      작성자
+                    </Typography>
+                  </FlexRow>
                   <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <Typography component='span' sx={{ fontSize: 16, fontWeight: 700 }}>
                       {author.summonerName}
                     </Typography>
-                    {voice === 'Y' ? (
+                    {voice.toUpperCase() === 'Y' ? (
                       <span>
-                        <MicIcon sx={{ fontSize: 16 }} />
+                        <MicIcon sx={{ fontSize: 16, transform: 'translateY(2px)' }} />
                       </span>
                     ) : null}
                   </Box>
@@ -242,11 +244,11 @@ const Card = ({ item }) => {
                     width: 171,
                   }}
                 >
-                  <Box sx={{ display: 'flex' }}>
+                  <FlexRow>
                     <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
                       주 포지션
                     </Typography>
-                  </Box>
+                  </FlexRow>
                   <Box
                     sx={{
                       display: 'flex',
@@ -283,9 +285,11 @@ const Card = ({ item }) => {
                     width: 171,
                   }}
                 >
-                  <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
-                    티어
-                  </Typography>
+                  <FlexRow>
+                    <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+                      티어
+                    </Typography>
+                  </FlexRow>
                   <Box sx={{ display: 'flex' }}>
                     <Box
                       sx={{
@@ -347,29 +351,33 @@ const Card = ({ item }) => {
                     </Box>
                   </Box>
                 </FlexCol>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
-                    모스트 챔피언
-                  </Typography>
-                  <ImageList sx={{ m: 0, p: 0 }} cols={3} gap={2}>
-                    {author.mostChampion.map((item, index) => (
-                      <Box
-                        key={index}
-                        component='img'
-                        src={`https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/${item}.jpg?`}
-                        alt={item.name}
-                        loading='lazy'
-                        sx={{
-                          width: '40px',
-                          height: '48px',
-                          borderRadius: 1,
-                          objectFit: 'cover',
-                          border: '1px solid #dddddd',
-                        }}
-                      />
-                    ))}
-                  </ImageList>
-                </Box>
+                <FlexCol sx={{ width: 171 }}>
+                  <FlexRow>
+                    <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+                      모스트 챔피언
+                    </Typography>
+                  </FlexRow>
+                  <FlexRow>
+                    <ImageList sx={{ m: 0, p: 0 }} cols={3} gap={1}>
+                      {author.mostChampion.map((item, index) => (
+                        <Box
+                          key={index}
+                          component='img'
+                          src={`https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/${item}.jpg?`}
+                          alt={item.name}
+                          loading='lazy'
+                          sx={{
+                            width: '40px',
+                            height: '48px',
+                            borderRadius: 1,
+                            objectFit: 'cover',
+                            border: '1px solid #dddddd',
+                          }}
+                        />
+                      ))}
+                    </ImageList>
+                  </FlexRow>
+                </FlexCol>
               </FlexRow>
             </FlexCol>
           </CardContent>
