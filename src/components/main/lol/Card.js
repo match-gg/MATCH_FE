@@ -72,7 +72,7 @@ const Card = ({ item }) => {
 
   return (
     <div onMouseOver={() => setIsHovering(true)} onMouseOut={() => setIsHovering(false)}>
-      <PartyModalBtn>
+      <PartyModalBtn {...item}>
         <BaseCard>
           <CardContent
             sx={{

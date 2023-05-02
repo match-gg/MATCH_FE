@@ -99,7 +99,7 @@ const positionData = [
   },
   {
     value: 'SUP',
-    text: '서폿',
+    text: '서포터',
   },
   {
     value: 'ALL',

@@ -135,7 +135,7 @@ const LolBody = () => {
             sx={{
               height: 40,
               '& > *': {
-                width: 50,
+                p: '0',
               },
             }}
             disabled={queueType === 'ARAM' ? true : false}
@@ -145,7 +145,7 @@ const LolBody = () => {
             <ToggleButton value='JUG'>정글</ToggleButton>
             <ToggleButton value='MID'>미드</ToggleButton>
             <ToggleButton value='ADC'>원딜</ToggleButton>
-            <ToggleButton value='SPT'>서폿</ToggleButton>
+            <ToggleButton value='SPT'>서포터</ToggleButton>
           </ToggleButtonGroup>
         </Grid>
         <Grid
