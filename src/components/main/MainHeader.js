@@ -304,7 +304,7 @@ const MainHeader = ({ game }) => {
                   fontWeight: 600,
                 }}
               >
-                게시판(임시)
+                자유게시판
               </Typography>
             </Stack>
           </Box>

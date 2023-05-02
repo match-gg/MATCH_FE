@@ -4,6 +4,7 @@ export const lanes = [
   { id : 'MID', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/MID.png', kor: '미드' },
   { id : 'ADC', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ADC.png', kor: '원딜' },
   { id : 'SPT', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/SUP.png', kor: '서포터' },
+  { id : 'ALL', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ALL1.png', kor: '상관없음' },
 ];
 
 export const rank_emblems = {
@@ -39,4 +40,5 @@ export const tierInfo = [
   { id: 'MASTER', color: '#9A4EB0', kor: '마스터' },
   { id: 'GRANDMASTER', color: '#CD4545', kor: '그랜드마스터' },
   { id: 'CHALLENGER', color: '#F4C875', kor: '챌린저' },
+  { id: 'ALL', color: '#000000', kor: '상관없음' },
 ];
