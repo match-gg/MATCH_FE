@@ -8,22 +8,47 @@ import {
   Divider,
   ImageListItem,
 } from '@mui/material';
-
-import { PieChart } from 'react-minimal-pie-chart';
-
+import { styled } from '@mui/material/styles';
 import MicIcon from '@mui/icons-material/Mic';
-import MicOffIcon from '@mui/icons-material/MicOff';
 import CheckIcon from '@mui/icons-material/Check';
 
 import PartyModalBtn from './PartyModalBtn';
 
 import { lanes, rank_emblems, expiredTime, tierInfo } from './transform.d';
 
+const BaseCard = styled(MuiCard)(({ theme }) => ({
+  width: 376,
+  borderRadius: '8px',
+  boxShadow: 'none',
+  border: '1px solid #dddddd',
+  marginRight: 8,
+  marginBottom: 8,
+  '&:hover': {
+    border: '1px solid grey',
+    boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)',
+  },
+}));
+
+const FlexRow = styled(Box)(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'row',
+}));
+
+const FlexCol = styled(Box)(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
 const Card = ({ item }) => {
   const { author, content, expire, created, voice, tier, position } = item;
 
-  const totalMemberNums = 5;
-  const currentMemberNums = 2;
+  // 방에 대한 정보가 구현 되면 아래 변수 적용
+  // const totalMemberNums = 5;
+  // const currentMemberNums = 2;
 
   const totalPlayed = author.wins + author.losses;
   const winRate = Math.round((author.wins / totalPlayed) * 100);
@@ -38,39 +63,20 @@ const Card = ({ item }) => {
 
   const createdDate = new Date(year, month - 1, day, hour, minute, second);
 
-  const elapsedMSec = new Date(Date.now()) - createdDate;
-  const elapsedSec = Math.floor(elapsedMSec / 1000);
-  const elapsedMin = Math.floor(elapsedSec / 60);
-  const elapsedHour = Math.floor(elapsedMin / 60);
-  const elapsedDay = Math.floor(elapsedHour / 24);
-
   const duration = expiredTime[expire];
-
   const endTime = duration + createdDate.getTime();
 
+  // 만료 여부
   const isExpired = Date.now() - endTime > 0 ? true : false;
-  const remainingTime = !isExpired ? endTime - Date.now() : 0;
 
+  const remainingTime = !isExpired ? endTime - Date.now() : 0;
   const remainingTimeSec = Math.floor(remainingTime / 1000);
   const remainingTimeMin = Math.floor(remainingTimeSec / 60);
   const remainingTimeHour = Math.floor(remainingTimeMin / 60);
   const remainingTimeDay = Math.floor(remainingTimeHour / 24);
 
   return (
-    <MuiCard
-      sx={{
-        width: 376,
-        borderRadius: '8px',
-        boxShadow: 'none',
-        border: '1px solid #dddddd',
-        mr: 1,
-        mb: 1,
-        '&:hover': {
-          border: '1px solid grey',
-          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)',
-        }
-      }}
-    >
+    <BaseCard>
       <CardContent
         sx={{
           width: '100%',
@@ -78,27 +84,16 @@ const Card = ({ item }) => {
           p: 2,
         }}
       >
-        <Box
-          sx={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <Box
+        <FlexCol>
+          <FlexRow
             sx={{
-              display: 'flex',
-              flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
           >
-            <Box
+            <FlexRow
               sx={{
                 height: 48,
-                display: 'flex',
-                flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'flex-start',
               }}
@@ -122,16 +117,14 @@ const Card = ({ item }) => {
                   {' ' + content}
                 </Typography>
               </p>
-            </Box>
-          </Box>
-          <Box
+            </FlexRow>
+          </FlexRow>
+          <FlexRow
             sx={{
               height: 20,
-              display: 'flex',
-              flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginLeft: 6,
+              pl: 6,
               marginTop: 0.5,
             }}
           >
@@ -205,7 +198,7 @@ const Card = ({ item }) => {
               />
             </Box>
             <Box sx={{ display: 'flex' }}>
-              <Typography sx={{ marginLeft: 1, color: '#5383e8', fontSize: 14, fontWeight: 700 }}>
+              <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>
                 {isExpired
                   ? '만료됨'
                   : remainingTimeDay
@@ -217,21 +210,12 @@ const Card = ({ item }) => {
                   : '잠시 후 만료'}
               </Typography>
             </Box>
-          </Box>
+          </FlexRow>
           <Divider sx={{ my: 1 }} />
-          <Box
-            sx={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'row',
-            }}
-          >
-            <Box
+          <FlexRow>
+            <FlexCol
               sx={{
-                width: 160,
-                display: 'flex',
-                flexDirection: 'column',
+                width: 171,
               }}
             >
               <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>작성자</Typography>
@@ -245,8 +229,12 @@ const Card = ({ item }) => {
                   </span>
                 ) : null}
               </Box>
-            </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            </FlexCol>
+            <FlexCol
+              sx={{
+                width: 171,
+              }}
+            >
               <Box sx={{ display: 'flex' }}>
                 <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
                   주 포지션
@@ -276,21 +264,16 @@ const Card = ({ item }) => {
                   {lanes.find((elem) => elem.id === author.mostLane).kor}
                 </Typography>
               </Box>
-            </Box>
-          </Box>
-          <Box
+            </FlexCol>
+          </FlexRow>
+          <FlexRow
             sx={{
-              mwidth: '100%',
-              display: 'flex',
-              flexDirection: 'row',
               pt: 1,
             }}
           >
-            <Box
+            <FlexCol
               sx={{
-                width: 160,
-                display: 'flex',
-                flexDirection: 'column',
+                width: 171,
               }}
             >
               <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>티어</Typography>
@@ -354,7 +337,7 @@ const Card = ({ item }) => {
                   </Typography>
                 </Box>
               </Box>
-            </Box>
+            </FlexCol>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
                 모스트 챔피언
@@ -378,10 +361,10 @@ const Card = ({ item }) => {
                 ))}
               </ImageList>
             </Box>
-          </Box>
-        </Box>
+          </FlexRow>
+        </FlexCol>
       </CardContent>
-    </MuiCard>
+    </BaseCard>
   );
 };
 
