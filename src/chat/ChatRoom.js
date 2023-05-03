@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Box, OutlinedInput, Tooltip } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
@@ -12,6 +12,7 @@ import {
   child,
   set,
   push,
+  serverTimestamp,
 } from 'firebase/database';
 
 const ChatRoom = () => {
@@ -62,9 +63,9 @@ const ChatRoom = () => {
 
   const createMessage = () => {
     const message = {
+      timestamp: serverTimestamp(),
       name: user.nickname,
       content: content,
-      timestamp: new Date(),
     };
     return message;
   };

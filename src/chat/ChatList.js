@@ -1,13 +1,6 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import {
-  Box,
-  CircularProgress,
-  Skeleton,
-  Stack,
-  Typography,
-  Zoom,
-} from '@mui/material';
+import { Box, Skeleton, Stack, Typography, Zoom } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
