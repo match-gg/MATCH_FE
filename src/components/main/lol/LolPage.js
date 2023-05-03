@@ -201,12 +201,12 @@ const LolPage = () => {
             }}
           ></Box>
           <Box>
-            <CreateCardBtn />
+            <CreateCardBtn game={'lol'} />
             <Button sx={{ height: 40, color: '#3d3939' }}>
               새로고침
               <RefreshIcon />
             </Button>
-            <CreateChatroomBtn />
+            {/* <CreateChatroomBtn /> */}
           </Box>
         </Box>
         <Container maxWidth='xl' sx={{ mt: 5 }}>

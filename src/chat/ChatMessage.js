@@ -3,15 +3,13 @@ import moment from 'moment';
 
 const ChatMessage = (props) => {
   const { user, message } = props;
-  // console.log(user);
 
   const timeFromNow = (timestamp) => {
     return moment(timestamp).fromNow();
   };
 
   const isMessageMine = (message, user) => {
-    // return message.name === user.nickname;
-    return message.name === 'testUser';
+    return message.name === user.nickname;
   };
 
   return (

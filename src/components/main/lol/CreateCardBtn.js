@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { api } from '../../../api/api';
+import { getDatabase, ref, push, update, child } from 'firebase/database';
 
 import {
   Button,
@@ -144,6 +145,7 @@ const expireData = [
 
 const CreateCardBtn = (props) => {
   const { accessToken } = useSelector((state) => state.token);
+  const user = useSelector((state) => state.user);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 
   const [isChanged, setIsChanged] = useState(false);
@@ -182,7 +184,9 @@ const CreateCardBtn = (props) => {
       });
     } else if (
       newValue === 'DUO_RANK' &&
-      (userInput.tier === 'MASTER' || userInput.tier === 'ALL' || userInput.position === 'ALL')
+      (userInput.tier === 'MASTER' ||
+        userInput.tier === 'ALL' ||
+        userInput.position === 'ALL')
     ) {
       setUserInput({
         ...userInput,
@@ -225,7 +229,9 @@ const CreateCardBtn = (props) => {
   };
 
   // 사용자 계정에 연결된 닉네임 사용 여부.
-  const [useExistNickname, setUseExistNickname] = useState(props.name !== '' ? true : false);
+  const [useExistNickname, setUseExistNickname] = useState(
+    props.name !== '' ? true : false
+  );
 
   const handleSwitch = (_e) => {
     setUseExistNickname((prevState) => !prevState);
@@ -256,7 +262,11 @@ const CreateCardBtn = (props) => {
   const openModal = () => setOpen(true);
   const closeModalConfirm = () => {
     if (isChanged) {
-      if (window.confirm('현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'))
+      if (
+        window.confirm(
+          '현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'
+        )
+      )
         closeModal();
     } else {
       closeModal();
@@ -284,6 +294,24 @@ const CreateCardBtn = (props) => {
     e.stopPropagation();
   };
 
+  //채팅방 생성 함수
+  const createChatroom = async () => {
+    const chatroomRef = ref(getDatabase(), 'chatrooms');
+    const key = push(chatroomRef).key;
+    const newChatroom = {
+      roomId: key,
+      createdBy: user.nickname,
+      timestamp: new Date(),
+      //해당 게임으로 수정해야함
+      game: props.game,
+    };
+    try {
+      await update(child(chatroomRef, key), newChatroom);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //글 작성 완료시 서버로 데이터 전송
   const postModalInfo = async () => {
     await api
@@ -298,7 +326,10 @@ const CreateCardBtn = (props) => {
         console.log(error);
       })
       .then((_res) => {
+        //모달 닫기
         closeModal();
+        //채팅방 개설
+        createChatroom();
       });
   };
 
@@ -346,12 +377,21 @@ const CreateCardBtn = (props) => {
           }}
         >
           <Box
-            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mb: 1,
+            }}
           >
             <Typography component='h1' sx={{ fontSize: 28, ml: 1 }}>
               새 게시글 등록
             </Typography>
-            <CloseIcon color='primary' onClick={closeModalConfirm} sx={{ mr: 1 }} />
+            <CloseIcon
+              color='primary'
+              onClick={closeModalConfirm}
+              sx={{ mr: 1 }}
+            />
           </Box>
           <Divider sx={{ mb: 1 }} />
           <Box
@@ -374,10 +414,17 @@ const CreateCardBtn = (props) => {
                 fontWeight: 'bold',
               }}
             >
-              이 아이디 사용하기 : {props.name ? props.name : '연결된 소환사명 없음'}
+              이 아이디 사용하기 :{' '}
+              {props.name ? props.name : '연결된 소환사명 없음'}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
             <Typography
               component='h2'
               sx={{
@@ -407,7 +454,12 @@ const CreateCardBtn = (props) => {
             />
           </Box>
           <Box
-            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mt: 2,
+            }}
           >
             <Typography
               component='h2'
@@ -444,7 +496,12 @@ const CreateCardBtn = (props) => {
             </ToggleButtonGroup>
           </Box>
           <Box
-            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mt: 2,
+            }}
           >
             <Typography
               component='h2'
@@ -501,7 +558,12 @@ const CreateCardBtn = (props) => {
           </Box>
 
           <Box
-            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mt: 2,
+            }}
           >
             <Typography
               component='h2'
@@ -539,7 +601,12 @@ const CreateCardBtn = (props) => {
             </ToggleButtonGroup>
           </Box>
           <Box
-            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mt: 2,
+            }}
           >
             <Typography
               component='h2'
@@ -559,7 +626,11 @@ const CreateCardBtn = (props) => {
               >
                 {expireData.map((data, idx) => {
                   return (
-                    <MenuItem key={idx} value={data.value} sx={{ color: 'grey' }}>
+                    <MenuItem
+                      key={idx}
+                      value={data.value}
+                      sx={{ color: 'grey' }}
+                    >
                       {data.text}
                     </MenuItem>
                   );
@@ -568,7 +639,12 @@ const CreateCardBtn = (props) => {
             </FormControl>
           </Box>
           <Box
-            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mt: 2,
+            }}
           >
             <Typography
               component='h2'
@@ -617,7 +693,14 @@ const CreateCardBtn = (props) => {
               inputProps={{ maxLength: 140 }}
             />
 
-            <Box sx={{ display: 'flex', alignItems: 'center', color: 'grey', mt: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                color: 'grey',
+                mt: 1,
+              }}
+            >
               <HelpOutlineIcon />
               <Typography
                 sx={{
