@@ -15,19 +15,36 @@ const ChatMessage = (props) => {
   return (
     <Box
       sx={{
-        // width: '200px',
         maxWidth: '200px',
         backgroundColor: '#e2e2e2',
         marginTop: '14px',
-        borderRadius: '20px',
+        borderRadius: '12px',
         padding: '5px',
         position: isMessageMine(message, user) && 'relative',
         left: isMessageMine(message, user) && '60px',
       }}
     >
-      <Typography textAlign='center' sx={{ fontSize: 'small' }}>
-        <strong>{message.name}</strong> 님
-      </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'end',
+        }}
+      >
+        <Typography sx={{ fontSize: 'small', textAlign: 'start' }}>
+          <strong>{message.name}</strong> 님
+        </Typography>
+        <Typography
+          sx={{
+            fontSize: '4px',
+            marginLeft: '12px',
+            textAlign: 'end',
+          }}
+        >
+          {timeFromNow(message.timestamp)}
+        </Typography>
+      </Box>
       <Box
         sx={{
           padding: '5px ',

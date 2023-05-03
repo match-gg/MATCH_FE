@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { Box, OutlinedInput, Tooltip } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
@@ -58,35 +58,44 @@ const ChatRoom = () => {
   };
 
   //메세지 입력창에 포커스 되도록 Ref
-  const inputRef = useRef();
+  const inputRef = useRef(null);
 
   const createMessage = () => {
     const message = {
-      // name : user.nickname,
-      name: 'testUser',
+      name: user.nickname,
       content: content,
       timestamp: new Date(),
     };
     return message;
   };
-
+  //메세지 전송
   const postMessage = async () => {
+    inputRef.current.querySelector('input').focus();
+
     setMessageSending(true);
     if (!content) {
       handleTooltipOpen();
+      setTimeout(() => {
+        handleTooltipClose();
+        inputRef.current.querySelector('input').focus();
+      }, 2000);
+      setMessageSending(false);
       return;
     }
     try {
       await set(push(child(messagesRef, chatRoom.roomId)), createMessage());
       setContent('');
       setMessageSending(false);
-      inputRef.current.focus();
+      setTimeout(() => {
+        inputRef.current.querySelector('input').focus();
+      }, 0);
     } catch (error) {
       console.log(error);
     }
   };
-  const postMessageByEnter = (e) => {
-    if (e.key === 'Enter' || e.isComposing) {
+  //엔터키로 메세지 전송
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
       postMessage();
     }
   };
@@ -127,6 +136,7 @@ const ChatRoom = () => {
           overflowY: 'auto',
         }}
       >
+        {/* 채팅방 입장 메세지 */}
         {/* {members.map((member, idx) => {
           return <ChatEnter key={idx} name={member} />;
         })} */}
@@ -145,13 +155,13 @@ const ChatRoom = () => {
         <OutlinedInput
           value={content}
           onChange={handleContent}
-          onKeyPress={postMessageByEnter}
+          onKeyDown={handleKeyDown}
           size='small'
           autoComplete='off'
           placeholder='메세지를 입력해주세요.'
           disabled={messageSending}
-          ref={inputRef}
           autoFocus
+          ref={inputRef}
           sx={{
             position: 'absolute',
             bottom: '30px',

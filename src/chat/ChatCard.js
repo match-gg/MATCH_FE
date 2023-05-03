@@ -82,12 +82,12 @@ const ChatCard = (props) => {
               <strong>{chatRoomInfo.createdBy}</strong>님의 파티
             </Typography>
           </Box>
-          <Typography
+          {/* <Typography
             variant='subtitle2'
             sx={{ fontWeight: 'bold', position: 'absolute', right: '5px' }}
           >
             모집현황 [{curNum}/{maxNum}]
-          </Typography>
+          </Typography> */}
         </Box>
         <Box
           sx={{
