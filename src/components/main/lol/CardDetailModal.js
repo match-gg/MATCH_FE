@@ -9,7 +9,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import GroupsIcon from '@mui/icons-material/Groups';
 
-const PartyModalBtn = (props) => {
+const CardDetailModal = (props) => {
+  
   // 파티원 임시 데이터
   const data = {
     id: 1,
@@ -115,4 +116,4 @@ const PartyModalBtn = (props) => {
   );
 };
 
-export default PartyModalBtn;
+export default CardDetailModal;

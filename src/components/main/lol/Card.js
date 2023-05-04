@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import MicIcon from '@mui/icons-material/Mic';
 import CheckIcon from '@mui/icons-material/Check';
 
-import PartyModalBtn from './PartyModalBtn';
+import CardDetailModal from './CardDetailModal';
 
 import { lanes, rank_emblems, expiredTime, tierInfo } from './transform.d';
 
@@ -68,7 +68,7 @@ const Card = ({ item }) => {
 
   return (
     <div onMouseOver={() => setIsHovering(true)} onMouseOut={() => setIsHovering(false)}>
-      <PartyModalBtn {...item}>
+      <CardDetailModal {...item}>
         <BaseCard
           sx={{
             '&:hover': {
@@ -385,7 +385,7 @@ const Card = ({ item }) => {
             </FlexCol>
           </CardContent>
         </BaseCard>
-      </PartyModalBtn>
+      </CardDetailModal>
     </div>
   );
 };
