@@ -50,7 +50,7 @@ const CardDetailModal = (props) => {
           alignItems='stretch'
           sx={{
             width: '40%',
-            maxHeight: '700px',
+            maxHeight: 700,
             bgcolor: 'white',
             p: 2,
             borderRadius: 4,
