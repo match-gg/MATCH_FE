@@ -6,17 +6,19 @@ import { persistReducer } from 'redux-persist';
 import userSlice from './user-slice';
 import tokenSlice from './token-slice';
 import registerSlice from './register-slice';
+import chatRoomSlice from './chatRoom-slice';
 
 const reducers = combineReducers({
   user: userSlice.reducer,
   token: tokenSlice.reducer,
   register: registerSlice.reducer,
+  chatRoom: chatRoomSlice.reducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'token'],
+  whitelist: ['user', 'token', 'chatRoom'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

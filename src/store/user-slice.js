@@ -11,7 +11,7 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    SET_USER :(state, action) => {
+    SET_USER: (state, action) => {
       state.nickname = action.payload.nickname;
       state.profile_imageUrl = action.payload.profile_imageUrl;
       state.representative = action.payload.representative;
@@ -20,12 +20,12 @@ const userSlice = createSlice({
     SET_REPRESENTATIVE: (state, action) => {
       state.representative = action.payload.representative;
     },
-    DELETE_USER : (state, action) => {
+    DELETE_USER: (state, action) => {
       state.nickname = '';
       state.profile_imageUrl = '';
       state.representative = '';
       state.isLogin = false;
-    }
+    },
   },
 });
 
