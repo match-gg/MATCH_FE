@@ -16,10 +16,6 @@ const BaseCard = styled(MuiCard)(({ theme }) => ({
   border: '1px solid #dddddd',
   marginRight: 8,
   marginBottom: 8,
-  '&:hover': {
-    border: '1px solid grey',
-    boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)',
-  },
 }));
 
 const FlexRow = styled(Box)(({ theme }) => ({
@@ -73,7 +69,14 @@ const Card = ({ item }) => {
   return (
     <div onMouseOver={() => setIsHovering(true)} onMouseOut={() => setIsHovering(false)}>
       <PartyModalBtn {...item}>
-        <BaseCard>
+        <BaseCard
+          sx={{
+            '&:hover': {
+              border: `1px solid ${tierInfo.find((elem) => elem.id === tier).color}`,
+              boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)',
+            },
+          }}
+        >
           <CardContent
             sx={{
               width: '100%',
