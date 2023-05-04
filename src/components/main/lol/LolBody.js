@@ -19,6 +19,7 @@ import CreateCardBtn from './CreateCardBtn';
 import Card from './Card';
 
 import { dummyBoards } from './boards.tmp';
+import ChatToggleBtn from '../../../chat/ChatToggleBtn';
 
 const LolBody = () => {
   const [boards, setBoards] = useState(dummyBoards); // 전체 게시글 저장
@@ -187,6 +188,7 @@ const LolBody = () => {
       <Button sx={{ mb: 4, color: '#3d3939' }} onClick={moreBoards}>
         더 불러오기
       </Button>
+      <ChatToggleBtn />
     </Fragment>
   );
 };
