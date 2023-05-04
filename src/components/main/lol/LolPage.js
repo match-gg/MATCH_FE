@@ -167,7 +167,8 @@ const LolPage = () => {
                 ml: 1,
                 height: 40,
                 '& > *': {
-                  width: 50,
+                  height: 40,
+                  p: 0,
                 },
               }}
               disabled={queueType === 'ARAM' ? true : false}
@@ -177,7 +178,7 @@ const LolPage = () => {
               <ToggleButton value='JUG'>정글</ToggleButton>
               <ToggleButton value='MID'>미드</ToggleButton>
               <ToggleButton value='ADC'>원딜</ToggleButton>
-              <ToggleButton value='SPT'>서폿</ToggleButton>
+              <ToggleButton value='SPT'>서포터</ToggleButton>
             </ToggleButtonGroup>
           </Box>
           <Box

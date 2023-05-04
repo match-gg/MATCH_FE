@@ -135,7 +135,7 @@ const LolBody = () => {
             sx={{
               height: 40,
               '& > *': {
-                p: '0',
+                p: '0px',
               },
             }}
             disabled={queueType === 'ARAM' ? true : false}
