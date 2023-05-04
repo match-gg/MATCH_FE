@@ -1,106 +1,142 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 
 import { Typography, Box, ImageList, Collapse, IconButton } from '@mui/material';
 
-import { PieChart } from 'react-minimal-pie-chart';
-
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+// import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
-import ViewDetail from './ViewDetail';
+// import ViewDetail from './ViewDetail';
 
-const PartyInfo = ({data}) => {
+import { lanes, rank_emblems, tierInfo } from './transform.d';
+
+const PartyMember = ({data}) => {
   // 상세보기 관련 state와 함수
-  const [viewDetail, setViewDetail] = useState(false);
-  const viewDetailHandler = () => {
-    setViewDetail((prev) => !prev)
-  }
+  // const [viewDetail, setViewDetail] = useState(false);
+  // const viewDetailHandler = () => {
+  //   setViewDetail((prev) => !prev)
+  // }
 
   // 파티원 정보에서 쓸 임시값 (이름, 티어, 랭크, 포지션, 승률, 모스트3, 보이스)
-  const {name, tier, rank, position, winRate, mostChampion, voice} = data;
+  const nickname = '민우야플레가자'
+  const voice = 'Y'
+  const position = 'SPT'
+  const tier = 'PLATINUM'
+  const rank = 'IV'
+  const leaguePoints = 37
+  const wins = 36
+  const losses = 54
+  const totalPlayed = wins + losses;
+  const winRate = Math.round((wins / totalPlayed) * 100);
+  const mostChampion = ["garen", "galio", "lux"]
 
   return (
-    <Fragment>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          pl: 2,
-          height: 88,
-          width: '100%'
-        }}>
-        <Box sx={{ flexBasis: 64 }}>
-          <PieChart
-            data={[{ value: `${winRate}`, color: '#5383e8', name: 'winRate' }]}
-            reveal={winRate} // 퍼센트 치수
-            lineWidth={30} // 두께
-            startAngle={270}
-            background='#E84057'
-            animate
-            label={({ dataEntry }) => dataEntry.value + '%'}
-            labelStyle={{
-              fontSize: 18,
-              fontWeight: 700,
-              fill: '#5383e8'
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 520,
+        height: 80,
+        border: '1px solid black',
+        borderRadius: 2,
+        px: 2
+      }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
+        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>닉네임</Typography>
+        <Typography component='span' sx={{ fontSize: 16, fontWeight: 700 }}>
+          {nickname}
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+          <Box
+            component='img'
+            src={lanes.find(elem => elem.id === 'SPT').image}
+            loading='lazy'
+            alt={position}
+            sx={{
+              height: 24,
+              width: 24,
+              mr: 1,
+              mixBlendMode: 'exclusion'
             }}
-            labelPosition={0}
           />
+          <Box>{voice === 'Y' ? <MicIcon /> : <MicOffIcon />}</Box>
         </Box>
-        <Box
-          sx={{
-            flexGrow: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            pl: 1,
-            ml: 1,
-            justifyContent: 'center'
-          }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-            <Typography>
-              {tier} {rank}
-            </Typography>
-            <Typography sx={{ ml: 2 }}>{position}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-            <Typography
-              noWrap
-              sx={{
-                width: 160,
-                fontSize: 18,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}>
-              {name}
-            </Typography>
-            <Box sx={{ pr: 1 }}>{voice === 'Y' ? <MicIcon /> : <MicOffIcon />}</Box>
-          </Box>
-        </Box>
-        <ImageList sx={{ flexBasis: 160 }} cols={3}>
-          {mostChampion.map(item => (
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
+        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>티어</Typography>
+        <Box sx={{ display: 'flex' }}>
+          <Box
+            sx={{
+              height: 48,
+              width: 48,
+              borderRadius: '50%',
+              backgroundColor: '#eeeeee',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
             <Box
               component='img'
-              src={`https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/${item}.jpg?`}
-              alt={item}
+              src={rank_emblems[tier]}
               loading='lazy'
-              sx={{ width: '100%', borderRadius: 2, objectFit: 'contain' }}
+              alt={tier}
+              sx={{
+                transform: 'scale(0.11)'
+              }}
             />
-          ))}
-        </ImageList>
-        <IconButton size='small' onClick={viewDetailHandler} sx={{ ml: 1 }}>
-          {viewDetail ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-        </IconButton>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              ml: 1
+            }}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }} color={tierInfo.find(elem => elem.id === tier).color}>
+              {tier.slice(0, 1)}
+              {rank === 'I' ? 1 : rank === 'II' ? 2 : rank === 'III' ? 3 : rank === 'IV' ? 4 : ''}-{leaguePoints}LP
+            </Typography>
+            <Typography sx={{ fontSize: 12, fontWeight: 500 }}>
+              {wins}승 {losses}패
+              <Typography
+                component='span'
+                sx={{ fontSize: 12, fontWeight: 700, ml: 0.5 }}
+                color={winRate >= 50 ? '#5383e8' : '#D64E5B'}>
+                ({winRate}%)
+              </Typography>
+            </Typography>
+          </Box>
+        </Box>
       </Box>
-      <Box sx={{width: '100%'}}>
-        <Collapse in={viewDetail} timeout='auto'>
-          <ViewDetail data={data} />
-        </Collapse>
+      <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
+        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>모스트 챔피언</Typography>
+        <Box sx={{display: 'flex'}}>
+          <ImageList sx={{ m: 0, p: 0 }} cols={3} gap={1}>
+            {mostChampion.map((item, index) => (
+              <Box
+                key={index}
+                component='img'
+                src={`https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/${item}.jpg?`}
+                alt={item.name}
+                loading='lazy'
+                sx={{
+                  width: '40px',
+                  height: '48px',
+                  borderRadius: 1,
+                  objectFit: 'cover',
+                  border: '1px solid #dddddd'
+                }}
+              />
+            ))}
+          </ImageList>
+        </Box>
       </Box>
-    </Fragment>
+    </Box>
   );
 };
 
-export default PartyInfo;
+export default PartyMember;
