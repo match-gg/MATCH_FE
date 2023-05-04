@@ -2,7 +2,14 @@ import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { api } from '../../../api/api';
-import { getDatabase, ref, push, update, child } from 'firebase/database';
+import {
+  getDatabase,
+  ref,
+  push,
+  update,
+  child,
+  serverTimestamp,
+} from 'firebase/database';
 
 import {
   Button,
@@ -301,7 +308,7 @@ const CreateCardBtn = (props) => {
     const newChatroom = {
       roomId: key,
       createdBy: user.nickname,
-      timestamp: new Date(),
+      timestamp: serverTimestamp(),
       //해당 게임으로 수정해야함
       game: props.game,
     };

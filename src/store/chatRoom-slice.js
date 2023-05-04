@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialChatroomState = {
   currentChatRoom: null,
+  //로그인 성공 시  서버에서 가입되어있는 채팅방에 대한 정보를 가져와야함
   joinedChatRooms: ['-NT4hkTqGn02tAzZtFjx'],
 };
 

@@ -20,7 +20,7 @@ const gameImg = {
 };
 
 const ChatCard = (props) => {
-  const { maxNum, curNum, handleChatOpen, chatRoomInfo } = props;
+  const { handleChatOpen, chatRoomInfo } = props;
 
   const dispatch = useDispatch();
   //채팅방에 입장 버튼을 눌러 리덕스 변경
@@ -55,7 +55,7 @@ const ChatCard = (props) => {
             height: '40px',
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'flex-start',
+            justifyContent: 'center',
             alignItems: 'center',
             position: 'relative',
           }}
@@ -64,7 +64,7 @@ const ChatCard = (props) => {
             sx={{
               display: 'flex',
               flexDirection: 'row',
-              justifyContent: 'flex-start',
+              justifyContent: 'center',
               alignItems: 'center',
             }}
           >
@@ -78,7 +78,7 @@ const ChatCard = (props) => {
                 marginRight: '5px',
               }}
             />
-            <Typography variant='subtitle1'>
+            <Typography variant='subtitle1' textAlign='center'>
               <strong>{chatRoomInfo.createdBy}</strong>님의 파티
             </Typography>
           </Box>
