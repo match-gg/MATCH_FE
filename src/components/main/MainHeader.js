@@ -31,7 +31,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../store/user-slice';
 import { tokenActions } from '../../store/token-slice';
-import { GameList } from './datas/GameList.d';
+import { GameList } from './GameList.d';
 
 const MainHeader = ({ game }) => {
   const { accessToken } = useSelector((state) => state.token);
@@ -186,9 +186,27 @@ const MainHeader = ({ game }) => {
                 {GameList.map((aGame, _index) => {
                   return (
                     <Fragment>
-                      <Typography sx={{ fontSize: 24, fontWeight: 600 }}>
-                        {aGame.fullName_Kor}
-                      </Typography>
+                      <Button
+                        onClick={() => {
+                          if (game === aGame.id) {
+                            handleDrawerClose();
+                          } else {
+                            navigate(`/${aGame.id}`);
+                          }
+                        }}
+                        sx={{
+                          textDecoration: 'none',
+                          color: '#3d3939',
+                          '&:hover' :{
+                            transform: 'scale(1.1) translateX(10px)',
+                            backgroundColor: '#f3f3f3'
+                          }
+                        }}
+                      >
+                        <Typography sx={{ fontSize: 24, fontWeight: 600 }}>
+                          {aGame.fullName_Kor}
+                        </Typography>
+                      </Button>
                       <Divider sx={{ my: 1 }} />
                     </Fragment>
                   );
@@ -286,7 +304,7 @@ const MainHeader = ({ game }) => {
                   fontWeight: 600,
                 }}
               >
-                게시판(임시)
+                자유게시판
               </Typography>
             </Stack>
           </Box>

@@ -3,7 +3,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material';
 
-import { GameList } from './datas/GameList.d';
+import { GameList } from './GameList.d';
 
 const BodyWrapper = styled(Box)(({ theme }) => ({
   paddingTop: '90px',

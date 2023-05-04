@@ -99,7 +99,7 @@ const positionData = [
   },
   {
     value: 'SUP',
-    text: '서폿',
+    text: '서포터',
   },
   {
     value: 'ALL',
@@ -308,7 +308,6 @@ const CreateCardBtn = (props) => {
         variant='outlined'
         sx={{
           height: 40,
-          mr: 1,
           borderColor: '#dddddd',
           color: 'black',
           '&:hover': {
