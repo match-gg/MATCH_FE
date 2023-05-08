@@ -57,13 +57,13 @@ const PartyMember = ({data}) => {
             loading='lazy'
             alt={position}
             sx={{
-              height: 24,
-              width: 24,
+              height: 20,
+              width: 20,
               mr: 1,
               mixBlendMode: 'exclusion'
             }}
           />
-          <Box>{voice === 'Y' ? <MicIcon /> : <MicOffIcon />}</Box>
+          {voice.toUpperCase() === 'Y' ? <MicIcon sx={{ fontSize: 20 }} /> : null}
         </Box>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
@@ -115,7 +115,7 @@ const PartyMember = ({data}) => {
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
         <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>모스트 챔피언</Typography>
-        <Box sx={{display: 'flex'}}>
+        <Box sx={{ display: 'flex' }}>
           <ImageList sx={{ m: 0, p: 0 }} cols={3} gap={1}>
             {mostChampion.map((item, index) => (
               <Box
