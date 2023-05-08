@@ -113,7 +113,7 @@ const PartyMember = ({data}) => {
           </Box>
         </Box>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160, pl: 4 }}>
         <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>모스트 챔피언</Typography>
         <Box sx={{ display: 'flex' }}>
           <ImageList sx={{ m: 0, p: 0 }} cols={3} gap={1}>
