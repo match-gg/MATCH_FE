@@ -1,9 +1,8 @@
 import { useState } from 'react';
 
-import { Typography, Box, ImageList, Collapse, IconButton } from '@mui/material';
+import { Typography, Box, ImageList } from '@mui/material';
 
 import MicIcon from '@mui/icons-material/Mic';
-import MicOffIcon from '@mui/icons-material/MicOff';
 // import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 // import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
@@ -53,7 +52,7 @@ const PartyMember = ({data}) => {
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
           <Box
             component='img'
-            src={lanes.find(elem => elem.id === 'SPT').image}
+            src={lanes.find(elem => elem.id === position).image}
             loading='lazy'
             alt={position}
             sx={{
