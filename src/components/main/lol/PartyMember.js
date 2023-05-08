@@ -39,10 +39,11 @@ const PartyMember = ({data}) => {
         justifyContent: 'center',
         alignItems: 'center',
         width: 520,
-        height: 80,
-        border: '1px solid black',
+        minHeight: 80,
+        border: '1px solid #CCCCCC',
         borderRadius: 2,
-        px: 2
+        p: 1,
+        mb: 1
       }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
         <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>닉네임</Typography>

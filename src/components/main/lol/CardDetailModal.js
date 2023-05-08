@@ -1,30 +1,23 @@
-import { Button, Typography, Stack, Divider, IconButton, Box, Modal } from '@mui/material';
+import { Button, Typography, Box, Modal } from '@mui/material';
 
 import { Fragment, useState } from 'react';
 
 import PartyMember from './PartyMember';
 import Recruitment from './Recruitment';
 
-import CloseIcon from '@mui/icons-material/Close';
-import BackspaceIcon from '@mui/icons-material/Backspace';
-import GroupsIcon from '@mui/icons-material/Groups';
-
 const CardDetailModal = (props) => {
-  
-  // 파티원 임시 데이터
-  const data = {
-    id: 1,
-    name: '완도수산새우도둑',
-    tier: 'Platinum',
-    rank: 'I',
-    position: 'SPT',
-    winRate: 70,
-    mostChampion: ['lux', 'aatrox', 'shen'],
-    voice: 'Y',
-    matchCount: 67,
-    likeCount: 50,
-    dislikeCount: 12,
-  };
+  const { author, content, created } = props.item;
+
+  // 방에 대한 인원 수 정보
+  const totalMember = 5;
+  const currentMember = 3;
+
+  // 방이 만들어진 시간 계산
+  const year = created.substring(0, 4);
+  const month = created.substring(5, 7);
+  const day = created.substring(8, 10);
+  const hour = created.substring(11, 13);
+  const minute = created.substring(14, 16);
 
   //Modal 관련 state와 함수
   const [open, setOpen] = useState(false);
@@ -42,75 +35,66 @@ const CardDetailModal = (props) => {
         open={open}
         onClose={closeModalHandler}
         disableEnforceFocus
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      >
-        <Stack
-          direction='column'
-          justifyContent='center'
-          alignItems='stretch'
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Box
           sx={{
-            width: '40%',
-            maxHeight: 700,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
             bgcolor: 'white',
             p: 2,
-            borderRadius: 4,
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Typography component='h1' sx={{ fontSize: 24, fontWeight: 600, ml: 1 }}>
-              파티 정보 상세보기
-            </Typography>
-            <IconButton size='small' onClick={closeModalHandler}>
-              <CloseIcon fontSize='inherit' />
-            </IconButton>
+            borderRadius: 1
+          }}>
+          <Typography component='h1' sx={{ fontSize: 22, fontWeight: 700, pb: 2 }}>
+            {author.summonerName}님의 파티
+          </Typography>
+          <Box sx={{ display: 'flex', pb: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', width: 320 }}>
+              <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}>모집 내용</Typography>
+              <Typography sx={{ fontSize: 14, fontWeight: 600 }}>{content}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', width: 200 }}>
+              <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}>마감일시</Typography>
+              <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 600 }}>{props.expiredTime}</Typography>
+              <Typography sx={{ fontSize: 14, fontWeight: 600 }}>{year}년 {month}월 {day}일 {hour}시 {minute}분</Typography>
+            </Box>
           </Box>
-          <Divider sx={{ mt: 1 }} />
-          <Stack alignItems='center' divider={<Divider flexItem />} sx={{ overflow: 'auto' }}>
-            {/* 파티원 임시 정보 넘겨줌 */}
-            <PartyMember data={data} />
-            <PartyMember data={data} />
-            <Recruitment />
-            <Recruitment />
-            <Recruitment />
-          </Stack>
-          <Divider />
+          <Box sx={{ display: 'flex', flexDirection: 'column', pb: 1 }}>
+            <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600 }}>
+              참여자 목록 ( {currentMember} / {totalMember} )
+            </Typography>
+          </Box>
           <Box
             sx={{
               display: 'flex',
+              flexDirection: 'column',
               justifyContent: 'space-between',
-              alignItems: 'center',
+              height: 440,
+              overflow: 'auto'
+            }}>
+            <PartyMember />
+            <PartyMember />
+            <PartyMember />
+            <Recruitment />
+            <Recruitment />
+          </Box>
+          <Button
+            variant='outlined'
+            size='small'
+            sx={{
               p: 1,
               mt: 1,
-            }}
-          >
-            <Button
-              variant='contained'
-              size='small'
-              sx={{
-                p: 1,
-                bgcolor: '#808080',
-                ':hover': {
-                  bgcolor: '#a0a0a0',
-                },
-              }}
-              onClick={closeModalHandler}
-            >
-              <BackspaceIcon fontSize='small' sx={{ mr: 1 }} />
-              뒤로가기
-            </Button>
-            <Button variant='contained' size='small' sx={{ p: 1 }}>
-              <GroupsIcon fontSize='small' sx={{ mr: 1 }} />
-              참여하기
-            </Button>
-          </Box>
-        </Stack>
+              borderColor: '#CCCCCC',
+              color: '#5C5C5C',
+              fontWeight: 600,
+              ':hover': {
+                borderColor: '#dddddd',
+                backgroundColor: '#f3f3f3'
+              }
+            }}>
+            파티에 참여하기
+          </Button>
+        </Box>
       </Modal>
     </Fragment>
   );

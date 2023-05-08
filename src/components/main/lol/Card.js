@@ -64,11 +64,21 @@ const Card = ({ item }) => {
   const remainingTimeHour = Math.floor(remainingTimeMin / 60);
   const remainingTimeDay = Math.floor(remainingTimeHour / 24);
 
+  const expiredTimeString = isExpired
+    ? '만료됨'
+    : remainingTimeDay
+    ? remainingTimeDay + '일 후 만료'
+    : remainingTimeHour
+    ? remainingTimeHour + '시간 후 만료'
+    : remainingTimeMin
+    ? remainingTimeMin + '분 후 만료'
+    : '잠시 후 만료';
+
   const [isHovering, setIsHovering] = useState(false);
 
   return (
     <div onMouseOver={() => setIsHovering(true)} onMouseOut={() => setIsHovering(false)}>
-      <CardDetailModal {...item}>
+      <CardDetailModal item={item} expiredTime={expiredTimeString}>
         <BaseCard
           sx={{
             '&:hover': {
@@ -206,15 +216,7 @@ const Card = ({ item }) => {
                   </Box>
                   <Box sx={{ display: 'flex' }}>
                     <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>
-                      {isExpired
-                        ? '만료됨'
-                        : remainingTimeDay
-                        ? remainingTimeDay + '일 후 만료'
-                        : remainingTimeHour
-                        ? remainingTimeHour + '시간 후 만료'
-                        : remainingTimeMin
-                        ? remainingTimeMin + '분 후 만료'
-                        : '잠시 후 만료'}
+                      {expiredTimeString}
                     </Typography>
                   </Box>
                 </FlexRow>
