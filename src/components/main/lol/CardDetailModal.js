@@ -1,4 +1,5 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState,  } from 'react';
+import { useSelector } from 'react-redux'
 
 import { Button, Typography, Box, Modal, IconButton } from '@mui/material';
 
@@ -11,6 +12,8 @@ import Recruitment from './Recruitment';
 import { tierInfo, typeInfo } from './Card.d';
 
 const CardDetailModal = (props) => {
+  const { isLogin } = useSelector(state => state.user);
+
   const { author, content, expire, created, tier, type } = props;
 
   // 방에 대한 인원 수 정보
@@ -97,22 +100,24 @@ const CardDetailModal = (props) => {
             <PartyMember />
             {Array(totalMember - currentMember).fill(<Recruitment />)}
           </Box>
-          <Button
-            variant='outlined'
-            size='small'
-            sx={{
-              p: 1,
-              mt: 1,
-              borderColor: '#CCCCCC',
-              color: '#5C5C5C',
-              fontWeight: 700,
-              ':hover': {
-                borderColor: '#dddddd',
-                backgroundColor: '#f3f3f3'
-              }
-            }}>
-            파티에 참여하기
-          </Button>
+          {isLogin && (
+            <Button
+              variant='outlined'
+              size='small'
+              sx={{
+                p: 1,
+                mt: 1,
+                borderColor: '#CCCCCC',
+                color: '#5C5C5C',
+                fontWeight: 700,
+                ':hover': {
+                  borderColor: '#dddddd',
+                  backgroundColor: '#f3f3f3'
+                }
+              }}>
+              파티에 참여하기
+            </Button>
+          )}
         </Box>
       </Modal>
     </Fragment>
