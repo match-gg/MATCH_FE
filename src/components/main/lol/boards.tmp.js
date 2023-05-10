@@ -8,7 +8,7 @@ export const dummyBoards = [
     "voice": "y",
     "content": "골드2 이상 캐리되는 원딜 구합니다! 디코 가능한 유저 환영입니다.!",
     "expire": "FIFTEEN_M",
-    "created": "2023-05-10 23:21:18",
+    "created": "2023-05-11 01:39:18",
     "author": {
       "queueType": "RANKED_SOLO_5x5",
       "summonerName": "호랑이 깡총",

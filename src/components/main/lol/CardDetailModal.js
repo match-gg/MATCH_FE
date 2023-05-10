@@ -1,16 +1,13 @@
-import { Button, Typography, Box, Modal } from '@mui/material';
-
 import { Fragment, useState } from 'react';
 
+import { Button, Typography, Box, Modal } from '@mui/material';
+
+import RemainingTime from './RemainingTime';
 import PartyMember from './PartyMember';
 import Recruitment from './Recruitment';
-import Countdown from 'react-countdown';
-import { expiredTime } from './transform.d';
-
 
 const CardDetailModal = (props) => {
-  const { author, content, expire } = props.item;
-  const createdDate = props.createdDate;
+  const { author, content, expire, created } = props;
 
   // 방에 대한 인원 수 정보
   const totalMember = 5;
@@ -21,20 +18,6 @@ const CardDetailModal = (props) => {
   const openModalHandler = () => setOpen(true);
   const closeModalHandler = () => {
     setOpen(false);
-  };
-
-  // 타이머 관련 변수와 함수
-  const remainingTime = createdDate.getTime() + expiredTime[expire] - Date.now(); 
-  const renderer = ({ hours, minutes, seconds, completed }) => {
-    if (completed) {
-      return <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>만료됨</Typography>;
-    } else if (hours !== 0 ) {
-      return <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>{hours}시간 남음</Typography>;
-    }  else if (minutes !== 0 ) {
-      return <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>{minutes}분 남음</Typography>;
-    } else {
-      return <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>{seconds}초 남음</Typography>;
-    }
   };
 
   return (
@@ -66,7 +49,7 @@ const CardDetailModal = (props) => {
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', width: 120 }}>
               <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}>마감일시</Typography>
-              <Countdown date={Date.now() + remainingTime} renderer={renderer}/>
+              <RemainingTime created={created} expire={expire} />
             </Box>
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column', pb: 1 }}>
