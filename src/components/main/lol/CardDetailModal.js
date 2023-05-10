@@ -1,13 +1,17 @@
 import { Fragment, useState } from 'react';
 
-import { Button, Typography, Box, Modal } from '@mui/material';
+import { Button, Typography, Box, Modal, IconButton } from '@mui/material';
+
+import CloseIcon from '@mui/icons-material/Close';
 
 import RemainingTime from './RemainingTime';
 import PartyMember from './PartyMember';
 import Recruitment from './Recruitment';
 
+import { tierInfo, typeInfo } from './Card.d';
+
 const CardDetailModal = (props) => {
-  const { author, content, expire, created } = props;
+  const { author, content, expire, created, tier, type } = props;
 
   // 방에 대한 인원 수 정보
   const totalMember = 5;
@@ -39,13 +43,36 @@ const CardDetailModal = (props) => {
             p: 2,
             borderRadius: 1
           }}>
-          <Typography component='h1' sx={{ fontSize: 22, fontWeight: 700, pb: 2 }}>
-            {author.summonerName}님의 파티
-          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography component='h1' sx={{ fontSize: 22, fontWeight: 700, pb: 2 }}>
+              {author.summonerName}님의 파티
+            </Typography>
+            <IconButton size='small' onClick={closeModalHandler} sx={{ width: 18, height: 18 }}>
+              <CloseIcon fontSize='inherit' />
+            </IconButton>
+          </Box>
           <Box sx={{ display: 'flex', pb: 3 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', width: 340, pr: '60px' }}>
               <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}>모집 내용</Typography>
               <Typography sx={{ fontSize: 14, fontWeight: 600 }}>{content}</Typography>
+              <Box sx={{ display: 'flex', pt: 0.5 }}>
+                <Typography
+                  color={tierInfo.find(elem => elem.id === tier).color}
+                  sx={{
+                    fontSize: 12,
+                    fontWeight: 700
+                  }}>
+                  #{tierInfo.find(elem => elem.id === tier).kor}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: 12,
+                    fontWeight: 700,
+                    pl: 1
+                  }}>
+                  #{typeInfo.find(elem => elem.id === type).kor}
+                </Typography>
+              </Box>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', width: 120 }}>
               <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}>마감일시</Typography>
