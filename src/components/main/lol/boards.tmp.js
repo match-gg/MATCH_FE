@@ -6,9 +6,9 @@ export const dummyBoards = [
     "tier": "IRON",
     "position": "SPT",
     "voice": "y",
-    "content": "NORMAL IRON 이상 SUP구해요",
-    "expire": "SIX_H",
-    "created": "2023-05-02 01:48:47",
+    "content": "골드2 이상 캐리되는 원딜 구합니다! 디코 가능한 유저 환영입니다.!",
+    "expire": "FIFTEEN_M",
+    "created": "2023-05-10 23:21:18",
     "author": {
       "queueType": "RANKED_SOLO_5x5",
       "summonerName": "호랑이 깡총",
