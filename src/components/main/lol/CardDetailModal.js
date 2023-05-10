@@ -91,8 +91,8 @@ const CardDetailModal = (props) => {
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-between',
-              height: 440,
+              justifyContent: 'flex-start',
+              maxHeight: 440,
               overflow: 'auto'
             }}>
             <PartyMember />
