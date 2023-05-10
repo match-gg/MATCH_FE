@@ -11,21 +11,25 @@ const Recruitment = props => {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        height: 88,
-        width: '100%',
-        pt: 3,
-        pb: 3
+        minHeight: 80,
+        width: 520,
+        backgroundColor: '#F3F3F3',
+        color: '#5C5C5C',
+        border: '1px solid #CCCCCC',
+        borderRadius: 2,
+        p: 2,
+        mb: 1
       }}>
-      <ErrorOutlineIcon />
+      <ErrorOutlineIcon/>
       <Typography
         sx={{
-          fontSize: 18,
-          fontWeight: 800,
+          fontSize: 16,
+          fontWeight: 600,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          ml: 1
+          pl: 1,
         }}>
-        모집중
+        모집 중
       </Typography>
     </Box>
   );
