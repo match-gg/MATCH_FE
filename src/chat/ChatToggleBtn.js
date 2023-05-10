@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { Fragment, useState } from 'react';
 import ChatList from './ChatList';
 import ChatBtn from './ChatBtn';
 
@@ -8,10 +8,11 @@ const ChatToggleBtn = () => {
     setOpen(!open);
   };
 
-  return open ? (
-    <ChatList open={open} handleOpen={handleOpen} />
-  ) : (
-    <ChatBtn open={open} handleOpen={handleOpen} />
+  return (
+    <Fragment>
+      {open && <ChatList open={open} handleOpen={handleOpen} />}
+      {!open && <ChatBtn open={open} handleOpen={handleOpen} />}
+    </Fragment>
   );
 };
 
