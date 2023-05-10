@@ -63,26 +63,18 @@ const RegisterFooter = (props) => {
         maplestory: games.maplestory,
       })
       .catch((error) => {
-        if (response.data.status === 400 && response.data.message === '이미 존재하는 회원입니다.') {
+        if (error.response.status === 400 && error.response.data.message === '이미 존재하는 회원입니다.') {
           alert('이미 존재하는 회원입니다.\n로그인 페이지로 이동합니다.');
           navigate('/login');
+        } else {
+          alert('회원가입 중 문제가 발생했습니다.\n다시 시도해 주세요.'); // mui dialog 이용해서 바꿀 예정
+          navigate('/login');
         }
-        
-        alert('회원가입 중 문제가 발생했습니다.\n다시 시도해 주세요.'); // mui dialog 이용해서 바꿀 예정
-        navigate('/login');
       });
 
-    // console.log(response);
     if (response.status === 200) {
-      const registerSuccess = console.alert(
-        '회원가입이 완료되었습니다.\n로그인 페이지로 이동합니다.'
-      );
-
-      if (registerSuccess) {
-        navigate('/login');
-      } else {
-        console.alert('회원가입 중에 문제가 발생했습니다.\n다시 시도해 주세요.');
-      }
+      alert('회원가입이 완료되었습니다.\n로그인 페이지로 이동합니다.');
+      navigate('/login');
     }
   };
 
