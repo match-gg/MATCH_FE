@@ -27,7 +27,7 @@ const FlexCol = styled(Box)(({ theme }) => ({
 }));
 
 const Card = ({ item }) => {
-  const { author, content, expire, created, voice, tier, position } = item;
+  const { author, content, expire, created, voice, tier, position, type } = item;
 
   const [isHovering, setIsHovering] = useState(false);
 
@@ -52,12 +52,10 @@ const Card = ({ item }) => {
             <FlexCol>
               {/* 모집하는 사람 정보 */}
               <CardTitle
-                expire={expire}
-                created={created}
                 content={content}
                 tier={tier}
                 position={position}
-                isHovering={isHovering}
+                type={type}
               />
               {/* 모집 현황 */}
               <CardRecruitmentStatus isHovering={isHovering} created={created} expire={expire} />

@@ -66,28 +66,6 @@ export const dummyBoards = [
     }
   },
   {
-    "id": "279949681337570280781832879522599299088",
-    "name": "시샘달 사흘",
-    "type": "ALL",
-    "tier": "MASTER",
-    "position": "MID",
-    "voice": "y",
-    "content": "ALL MASTER 이상 MID구해요",
-    "expire": "SIX_H",
-    "created": "2023-05-02 11:48:58",
-    "author": {
-      "queueType": "RANKED_SOLO_5x5",
-      "summonerName": "완도수산새우도둑",
-      "tier": "GOLD",
-      "rank": "I",
-      "leaguePoints": 0,
-      "wins": 33,
-      "losses": 19,
-      "mostChampion": ["lux", "nautilus", "ahri"],
-      "mostLane": "ADC"
-    }
-  },
-  {
     "id": "81015235326917448287812391711579125905",
     "name": "밍꾸라지",
     "type": "ARAM",
@@ -132,28 +110,6 @@ export const dummyBoards = [
     }
   },
   {
-    "id": "124346868943839577574232480122081238218",
-    "name": "밍꾸라지",
-    "type": "ALL",
-    "tier": "MASTER",
-    "position": "ALL",
-    "voice": "n",
-    "content": "ALL MASTER 이상 ALL구해요",
-    "expire": "TWO_H",
-    "created": "2023-05-02 01:49:56",
-    "author": {
-      "queueType": "RANKED_SOLO_5x5",
-      "summonerName": "호랑이 깡총",
-      "tier": "GOLD",
-      "rank": "IV",
-      "leaguePoints": 27,
-      "wins": 50,
-      "losses": 33,
-      "mostChampion": ["shen", "rumble", "aatrox"],
-      "mostLane": "MID"
-    }
-  },
-  {
     "id": "306283534212141321285152285377522075962",
     "name": "밍꾸라지",
     "type": "NORMAL",
@@ -172,28 +128,6 @@ export const dummyBoards = [
       "wins": 20,
       "losses": 30,
       "mostChampion": ["ezreal", "akshan", "varus"],
-      "mostLane": "MID"
-    }
-  },
-  {
-    "id": "75441572053799534661551182943980962369",
-    "name": "밍꾸라지",
-    "type": "ALL",
-    "tier": "ALL",
-    "position": "SPT",
-    "voice": "n",
-    "content": "ALL ALL 이상 SUP구해요",
-    "expire": "ONE_H",
-    "created": "2023-05-02 01:49:56",
-    "author": {
-      "queueType": "RANKED_SOLO_5x5",
-      "summonerName": "밍꾸라지",
-      "tier": "SILVER",
-      "rank": "I",
-      "leaguePoints": 39,
-      "wins": 56,
-      "losses": 109,
-      "mostChampion": ["jhin", "braum", "thresh"],
       "mostLane": "MID"
     }
   },
@@ -217,50 +151,6 @@ export const dummyBoards = [
       "losses": 34,
       "mostChampion": ["brand", "camille", "blitzcrank"],
       "mostLane": "ADC"
-    }
-  },
-  {
-    "id": "128275092100898503554554259954837388611",
-    "name": "밍꾸라지",
-    "type": "ALL",
-    "tier": "IRON",
-    "position": "MID",
-    "voice": "y",
-    "content": "ALL IRON 이상 MID구해요",
-    "expire": "FIFTEEN_M",
-    "created": "2023-05-02 01:49:56",
-    "author": {
-      "queueType": "RANKED_SOLO_5x5",
-      "summonerName": "수유욱",
-      "tier": "GOLD",
-      "rank": "IV",
-      "leaguePoints": 20,
-      "wins": 89,
-      "losses": 34,
-      "mostChampion": ["brand", "camille", "blitzcrank"],
-      "mostLane": "MID"
-    }
-  },
-  {
-    "id": "245689168186426722513811478873040050580",
-    "name": "수유욱",
-    "type": "ALL",
-    "tier": "SILVER",
-    "position": "ADC",
-    "voice": "n",
-    "content": "ALL SILVER 이상 ADC구해요",
-    "expire": "THIRTY_M",
-    "created": "2023-05-02 01:49:56",
-    "author": {
-      "queueType": "RANKED_SOLO_5x5",
-      "summonerName": "수유욱",
-      "tier": "GOLD",
-      "rank": "IV",
-      "leaguePoints": 20,
-      "wins": 89,
-      "losses": 34,
-      "mostChampion": ["brand", "camille", "blitzcrank"],
-      "mostLane": "JUG"
     }
   },
   {
@@ -396,28 +286,6 @@ export const dummyBoards = [
     }
   },
   {
-    "id": "280057300546151859729112218667196038153",
-    "name": "호랑이깡총",
-    "type": "ALL",
-    "tier": "GOLD",
-    "position": "ALL",
-    "voice": "n",
-    "content": "ALL GOLD 이상 ALL구해요",
-    "expire": "FIFTEEN_M",
-    "created": "2023-05-02 01:49:57",
-    "author": {
-      "queueType": "RANKED_SOLO_5x5",
-      "summonerName": "밍꾸라지",
-      "tier": "SILVER",
-      "rank": "I",
-      "leaguePoints": 39,
-      "wins": 56,
-      "losses": 109,
-      "mostChampion": ["jhin", "braum", "thresh"],
-      "mostLane": "TOP"
-    }
-  },
-  {
     "id": "301834399442693335966728924656718272095",
     "name": "완도수산새우도둑",
     "type": "DUO_RANK",
@@ -470,28 +338,6 @@ export const dummyBoards = [
     "voice": "n",
     "content": "ARAM SILVER 이상 SUP구해요",
     "expire": "SIX_H",
-    "created": "2023-05-02 01:49:58",
-    "author": {
-      "queueType": "RANKED_SOLO_5x5",
-      "summonerName": "수유욱",
-      "tier": "GOLD",
-      "rank": "IV",
-      "leaguePoints": 20,
-      "wins": 89,
-      "losses": 34,
-      "mostChampion": ["brand", "camille", "blitzcrank"],
-      "mostLane": "JUG"
-    }
-  },
-  {
-    "id": "235686713902068626270251183443357744348",
-    "name": "수유욱",
-    "type": "ALL",
-    "tier": "MASTER",
-    "position": "ALL",
-    "voice": "y",
-    "content": "ALL MASTER 이상 ALL구해요",
-    "expire": "TWO_H",
     "created": "2023-05-02 01:49:58",
     "author": {
       "queueType": "RANKED_SOLO_5x5",
