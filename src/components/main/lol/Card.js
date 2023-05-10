@@ -78,7 +78,7 @@ const Card = ({ item }) => {
 
   return (
     <div onMouseOver={() => setIsHovering(true)} onMouseOut={() => setIsHovering(false)}>
-      <CardDetailModal item={item} expiredTime={expiredTimeString}>
+      <CardDetailModal item={item} createdDate={createdDate}>
         <BaseCard
           sx={{
             '&:hover': {
