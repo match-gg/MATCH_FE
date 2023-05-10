@@ -179,7 +179,7 @@ const CardAuthor = (props) => {
                 <Box
                   key={index}
                   component='img'
-                  src={`https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/${item}.jpg?`}
+                  src={`https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/${item.toLowerCase()}.jpg?`}
                   alt={item.name}
                   loading='lazy'
                   sx={{
