@@ -14,7 +14,7 @@ import { tierInfo, typeInfo } from './Card.d';
 const CardDetailModal = (props) => {
   const { isLogin } = useSelector(state => state.user);
 
-  const { author, content, expire, created, tier, type } = props;
+  const { author, content, expire, created, tier, type, setIsHovering } = props;
 
   // 방에 대한 인원 수 정보
   const totalMember = 5;
@@ -25,6 +25,7 @@ const CardDetailModal = (props) => {
   const openModalHandler = () => setOpen(true);
   const closeModalHandler = () => {
     setOpen(false);
+    setIsHovering(false);
   };
 
   return (

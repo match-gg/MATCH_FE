@@ -33,7 +33,7 @@ const Card = ({ item }) => {
 
   return (
     <div onMouseOver={() => setIsHovering(true)} onMouseOut={() => setIsHovering(false)}>
-      <CardDetailModal {...item}>
+      <CardDetailModal {...item} setIsHovering={setIsHovering}>
         <BaseCard
           sx={{
             '&:hover': {
