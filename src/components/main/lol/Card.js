@@ -4,11 +4,11 @@ import { Card as MuiCard, CardContent, Box, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import CardDetailModal from './CardDetailModal';
-
-import { tierInfo } from './Card.d';
 import CardTop from './CardTitle';
 import CardRecruitmentStatus from './CardRecruitmentStatus';
 import CardAuthor from './CardAuthor';
+
+import { tierInfo } from './Card.d';
 
 const BaseCard = styled(MuiCard)(({ theme }) => ({
   width: 376,
@@ -28,10 +28,6 @@ const FlexCol = styled(Box)(({ theme }) => ({
 
 const Card = ({ item }) => {
   const { author, content, expire, created, voice, tier, position } = item;
-
-  // 방에 대한 정보가 구현 되면 아래 변수 적용
-  // const totalMemberNums = 5;
-  // const currentMemberNums = 2;
 
   const [isHovering, setIsHovering] = useState(false);
 

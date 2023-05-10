@@ -8,7 +8,7 @@ import MicIcon from '@mui/icons-material/Mic';
 
 // import ViewDetail from './ViewDetail';
 
-import { lanes, rank_emblems, tierInfo } from './transform.d';
+import { lanes, rank_emblems, tierInfo } from './Card.d';
 
 const PartyMember = ({data}) => {
   // 상세보기 관련 state와 함수
