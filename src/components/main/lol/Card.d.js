@@ -42,3 +42,10 @@ export const tierInfo = [
   { id: 'CHALLENGER', color: '#F4C875', kor: '챌린저' },
   { id: 'ALL', color: '#000000', kor: '상관없음' },
 ];
+
+export const typeInfo = [
+  { id: 'DUO_RANK', kor: '솔로랭크' },
+  { id: 'FREE_RANK', kor: '자유랭크' },
+  { id: 'NORMAL', kor: '일반게임' },
+  { id: 'ARAM', kor: '칼바람나락' },
+];
