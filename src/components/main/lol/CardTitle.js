@@ -12,7 +12,7 @@ const FlexRow = styled(Box)(({ theme }) => ({
   flexDirection: 'row',
 }));
 
-const CardTop = (props) => {
+const CardTitle = (props) => {
   const { content, tier, position } = props;
 
   return (
@@ -78,4 +78,4 @@ const CardTop = (props) => {
   );
 };
 
-export default CardTop;
+export default CardTitle;

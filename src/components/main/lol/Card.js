@@ -4,7 +4,7 @@ import { Card as MuiCard, CardContent, Box, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import CardDetailModal from './CardDetailModal';
-import CardTop from './CardTitle';
+import CardTitle from './CardTitle';
 import CardRecruitmentStatus from './CardRecruitmentStatus';
 import CardAuthor from './CardAuthor';
 
@@ -51,7 +51,7 @@ const Card = ({ item }) => {
           >
             <FlexCol>
               {/* 모집하는 사람 정보 */}
-              <CardTop
+              <CardTitle
                 expire={expire}
                 created={created}
                 content={content}
