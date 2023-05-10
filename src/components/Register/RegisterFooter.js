@@ -15,7 +15,7 @@ const RegisterFooter = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { phase, increasePhase, decreasePhase} = props;
+  const { phase, increasePhase, decreasePhase } = props;
 
   const { firstTerm, secondTerm, games, gamesCheck, representative } = useSelector(
     (state) => state.register
@@ -51,8 +51,6 @@ const RegisterFooter = (props) => {
       navigate('/login');
     });
 
-    // console.log(kakaoAccessToken);
-
     // send request
     const response = await api
       .post(`/api/user/signup`, {
@@ -65,21 +63,26 @@ const RegisterFooter = (props) => {
         maplestory: games.maplestory,
       })
       .catch((error) => {
+        if (response.data.status === 400 && response.data.message === '이미 존재하는 회원입니다.') {
+          alert('이미 존재하는 회원입니다.\n로그인 페이지로 이동합니다.');
+          navigate('/login');
+        }
+        
         alert('회원가입 중 문제가 발생했습니다.\n다시 시도해 주세요.'); // mui dialog 이용해서 바꿀 예정
         navigate('/login');
       });
 
-    const { accessToken, refreshToken } = response.data['jwtToken'];
-
     // console.log(response);
     if (response.status === 200) {
-      dispatch(tokenActions.SET_TOKEN(accessToken));
-      localStorage.setItem('matchGG_refreshToken', refreshToken);
-      const jwtPayload = jwt_decode(accessToken);
-      dispatch(userActions.SET_USER(jwtPayload));
-      dispatch(registerActions.DELETE_REGISTER());
+      const registerSuccess = console.alert(
+        '회원가입이 완료되었습니다.\n로그인 페이지로 이동합니다.'
+      );
 
-      increasePhase();
+      if (registerSuccess) {
+        navigate('/login');
+      } else {
+        console.alert('회원가입 중에 문제가 발생했습니다.\n다시 시도해 주세요.');
+      }
     }
   };
 
