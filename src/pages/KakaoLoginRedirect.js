@@ -61,7 +61,7 @@ const KakaoLoginRedirect = () => {
       dispatch(userActions.SET_USER({ nickname, profile_image: imageUrl, representative }));
 
       // 사용자가 설정한 대표 게임으로 navigate
-      navigate(`${representative}`);
+      navigate(`/${representative}`);
     };
 
     kakaoLogin();
