@@ -87,7 +87,7 @@ const CardDetailModal = (props) => {
               mt: 1,
               borderColor: '#CCCCCC',
               color: '#5C5C5C',
-              fontWeight: 600,
+              fontWeight: 700,
               ':hover': {
                 borderColor: '#dddddd',
                 backgroundColor: '#f3f3f3'
