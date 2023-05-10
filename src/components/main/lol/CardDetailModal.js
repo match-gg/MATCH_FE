@@ -56,7 +56,9 @@ const CardDetailModal = (props) => {
             <Box sx={{ display: 'flex', flexDirection: 'column', width: 200 }}>
               <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}>마감일시</Typography>
               <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 600 }}>{props.expiredTime}</Typography>
-              <Typography sx={{ fontSize: 14, fontWeight: 600 }}>{year}년 {month}월 {day}일 {hour}시 {minute}분</Typography>
+              <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+                {year}년 {month}월 {day}일 {hour}시 {minute}분
+              </Typography>
             </Box>
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column', pb: 1 }}>
@@ -75,8 +77,7 @@ const CardDetailModal = (props) => {
             <PartyMember />
             <PartyMember />
             <PartyMember />
-            <Recruitment />
-            <Recruitment />
+            {Array(totalMember - currentMember).fill(<Recruitment />)}
           </Box>
           <Button
             variant='outlined'
