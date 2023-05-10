@@ -2,14 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { api } from '../../../api/api';
-import {
-  getDatabase,
-  ref,
-  push,
-  update,
-  child,
-  serverTimestamp,
-} from 'firebase/database';
+import { getDatabase, ref, push, update, child, serverTimestamp } from 'firebase/database';
 
 import {
   Button,
@@ -33,132 +26,32 @@ import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import CloseIcon from '@mui/icons-material/Close';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import CircularProgress from '@mui/material/CircularProgress';
 
-const typeData = [
-  {
-    value: 'DUO_RANK',
-    text: '듀오랭크',
-  },
-  {
-    value: 'FREE_RANK',
-    text: '자유랭크',
-  },
-  {
-    value: 'ARAM',
-    text: '칼바람나락',
-  },
-  {
-    value: 'NORMAL',
-    text: '일반게임',
-  },
-];
-
-const tierData = [
-  {
-    value: 'IRON',
-    text: '아이언',
-  },
-  {
-    value: 'BRONZE',
-    text: '브론즈',
-  },
-  {
-    value: 'SILVER',
-    text: '실버',
-  },
-  {
-    value: 'GOLD',
-    text: '골드',
-  },
-  {
-    value: 'PLATINUM',
-    text: '플레티넘',
-  },
-  {
-    value: 'DIAMOND',
-    text: '다이아몬드',
-  },
-  {
-    value: 'MASTER',
-    text: '마스터',
-  },
-  {
-    value: 'ALL',
-    text: '상관없음',
-  },
-];
-
-const positionData = [
-  {
-    value: 'TOP',
-    text: '탑',
-  },
-  {
-    value: 'JUG',
-    text: '정글',
-  },
-  {
-    value: 'MID',
-    text: '미드',
-  },
-  {
-    value: 'ADC',
-    text: '원딜',
-  },
-  {
-    value: 'SUP',
-    text: '서포터',
-  },
-  {
-    value: 'ALL',
-    text: '상관없음',
-  },
-];
-
-const expireData = [
-  {
-    value: 'FIFTEEN_M',
-    text: '15분',
-  },
-  {
-    value: 'THIRTY_M',
-    text: '30분',
-  },
-  {
-    value: 'ONE_H',
-    text: '1시간',
-  },
-  {
-    value: 'TWO_H',
-    text: '2시간',
-  },
-  {
-    value: 'THREE_H',
-    text: '3시간',
-  },
-  {
-    value: 'SIX_H',
-    text: '6시간',
-  },
-  {
-    value: 'TWELVE_H',
-    text: '12시간',
-  },
-  {
-    value: 'TWENTY_FOUR_H',
-    text: '24시간',
-  },
-];
+import { typeData, tierData, positionData, expireData } from './CreateCardBtn.d';
 
 const CreateCardBtn = (props) => {
   const { accessToken } = useSelector((state) => state.token);
   const user = useSelector((state) => state.user);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 
+  // 로그인 된 사용자의 기본 닉네임 가져오기.
+  const registeredNickname = user.games['lol'];
+
+  // 닉네임 인증여부 확인에 사용할 state와 함수
+  const [isIdChecked, setIsIdChecked] = useState(false);
+
+  // 닉네임 조회 시 로딩 상태 변수
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 사용자 계정에 연결된 닉네임 사용 여부.
+  const [useExistNickname, setUseExistNickname] = useState(registeredNickname ? true : false);
+
+  // 사용자 input에 변동사항 있는지 확인 -> 모달 닫기 전 확인하는 데에 사용.
   const [isChanged, setIsChanged] = useState(false);
 
   const [userInput, setUserInput] = useState({
-    name: props.name ? props.name : '',
+    name: registeredNickname ? registeredNickname : '',
     type: 'DUO_RANK',
     tier: 'IRON',
     position: 'TOP',
@@ -191,9 +84,7 @@ const CreateCardBtn = (props) => {
       });
     } else if (
       newValue === 'DUO_RANK' &&
-      (userInput.tier === 'MASTER' ||
-        userInput.tier === 'ALL' ||
-        userInput.position === 'ALL')
+      (userInput.tier === 'MASTER' || userInput.tier === 'ALL' || userInput.position === 'ALL')
     ) {
       setUserInput({
         ...userInput,
@@ -235,32 +126,32 @@ const CreateCardBtn = (props) => {
     setIsChanged(true);
   };
 
-  // 사용자 계정에 연결된 닉네임 사용 여부.
-  const [useExistNickname, setUseExistNickname] = useState(
-    props.name !== '' ? true : false
-  );
-
-  const handleSwitch = (_e) => {
+  const handleSwitch = (e) => {
     setUseExistNickname((prevState) => !prevState);
     setIsChanged(true);
   };
 
-  //아이디 인증에 사용할 state와 함수
-  const [isIdChecked, setIsIdChecked] = useState(false);
-
+  // 새로 입력한 닉네임 조회하기
   const certifyNickname = async () => {
+    setIsLoading(true);
+
     await api
       .get(`/api/lol/user/exist/${userInput.name}`)
-      .then((response) => {
+      .then(async (response) => {
         if (response.data === true) {
-          setIsIdChecked(true);
+          await api.get(`/api/lol/user/${userInput.name}`).then((_response) => {
+            setIsLoading(false);
+            setIsIdChecked(true);
+          });
         } else {
           setIsIdChecked(false);
+          setIsLoading(false);
         }
       })
       .catch((error) => {
         console.log(error);
       });
+    setIsLoading(false);
     setIsChanged(true);
   };
 
@@ -269,11 +160,7 @@ const CreateCardBtn = (props) => {
   const openModal = () => setOpen(true);
   const closeModalConfirm = () => {
     if (isChanged) {
-      if (
-        window.confirm(
-          '현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'
-        )
-      )
+      if (window.confirm('현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'))
         closeModal();
     } else {
       closeModal();
@@ -284,7 +171,7 @@ const CreateCardBtn = (props) => {
   const closeModal = () => {
     setOpen(false);
     setUserInput({
-      name: props.name ? props.name : '',
+      name: registeredNickname ? registeredNickname : '',
       type: 'DUO_RANK',
       tier: 'IRON',
       position: 'TOP',
@@ -293,7 +180,7 @@ const CreateCardBtn = (props) => {
       content: '',
     });
     setIsIdChecked(false);
-    setUseExistNickname(props.name !== '' ? true : false);
+    setUseExistNickname(registeredNickname ? true : false);
   };
 
   //모달 창 외부 클릭 시 나가지는 동작을 막는 함수
@@ -321,23 +208,24 @@ const CreateCardBtn = (props) => {
 
   //글 작성 완료시 서버로 데이터 전송
   const postModalInfo = async () => {
-    await api
-      .post(`/api/lol/board`, userInput, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Refresh-Token': refreshToken,
-        },
-      })
-      .catch((error) => {
-        alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
-        console.log(error);
-      })
-      .then((_res) => {
-        //모달 닫기
-        closeModal();
-        //채팅방 개설
-        createChatroom();
-      });
+    console.log(userInput);
+    // await api
+    //   .post(`/api/lol/board`, userInput, {
+    //     headers: {
+    //       Authorization: `Bearer ${accessToken}`,
+    //       'Refresh-Token': refreshToken,
+    //     },
+    //   })
+    //   .catch((error) => {
+    //     alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
+    //     console.log(error);
+    //   })
+    //   .then((_res) => {
+    //     //모달 닫기
+    //     closeModal();
+    //     //채팅방 개설
+    //     createChatroom();
+    //   });
   };
 
   return (
@@ -393,11 +281,7 @@ const CreateCardBtn = (props) => {
             <Typography component='h1' sx={{ fontSize: 28, ml: 1 }}>
               새 게시글 등록
             </Typography>
-            <CloseIcon
-              color='primary'
-              onClick={closeModalConfirm}
-              sx={{ mr: 1 }}
-            />
+            <CloseIcon color='primary' onClick={closeModalConfirm} sx={{ mr: 1 }} />
           </Box>
           <Divider sx={{ mb: 1 }} />
           <Box
@@ -409,9 +293,9 @@ const CreateCardBtn = (props) => {
             }}
           >
             <Switch
-              defaultChecked={props.name !== '' ? true : false}
+              defaultChecked={registeredNickname ? true : false}
               onChange={handleSwitch}
-              disabled={props.name !== '' ? false : true}
+              disabled={registeredNickname ? false : true}
             />
             <Typography
               color={useExistNickname ? 'primary' : 'grey'}
@@ -421,7 +305,7 @@ const CreateCardBtn = (props) => {
               }}
             >
               이 아이디 사용하기 :{' '}
-              {props.name ? props.name : '연결된 소환사명 없음'}
+              {registeredNickname ? registeredNickname : '연결된 소환사명 없음'}
             </Typography>
           </Box>
           <Box
@@ -447,14 +331,18 @@ const CreateCardBtn = (props) => {
               disabled={useExistNickname}
               onChange={handleName}
               endAdornment={
-                <Button
-                  position='end'
-                  sx={{ whiteSpace: 'nowrap' }}
-                  onClick={certifyNickname}
-                  disabled={useExistNickname}
-                >
-                  인증하기
-                </Button>
+                isLoading ? (
+                  <CircularProgress color='primary' size={20} />
+                ) : (
+                  <Button
+                    position='end'
+                    sx={{ whiteSpace: 'nowrap' }}
+                    onClick={certifyNickname}
+                    disabled={useExistNickname}
+                  >
+                    인증하기
+                  </Button>
+                )
               }
               sx={{ width: 360 }}
             />
@@ -632,11 +520,7 @@ const CreateCardBtn = (props) => {
               >
                 {expireData.map((data, idx) => {
                   return (
-                    <MenuItem
-                      key={idx}
-                      value={data.value}
-                      sx={{ color: 'grey' }}
-                    >
+                    <MenuItem key={idx} value={data.value} sx={{ color: 'grey' }}>
                       {data.text}
                     </MenuItem>
                   );
@@ -749,13 +633,7 @@ const CreateCardBtn = (props) => {
               variant='contained'
               size='large'
               disabled={
-                userInput.content.length < 20
-                  ? true
-                  : useExistNickname
-                  ? false
-                  : isIdChecked
-                  ? false
-                  : true
+                userInput.content.length >= 20 && (isIdChecked || useExistNickname) ? false : true
               }
             >
               작성하기
