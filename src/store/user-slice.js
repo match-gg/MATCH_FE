@@ -4,6 +4,9 @@ const initialState = {
   nickname: '',
   profile_imageUrl: '',
   representative: '',
+  games: {
+    lol: '',
+  },
   isLogin: false,
 };
 
@@ -20,7 +23,13 @@ const userSlice = createSlice({
     SET_REPRESENTATIVE: (state, action) => {
       state.representative = action.payload.representative;
     },
-    DELETE_USER: (state, action) => {
+    SET_GAMES: (state, action) => {
+      state.games = action.payload;
+    },
+    SET_GAMES_WITH_ID: (state, action) => {
+      state.games[action.payload.id] = action.payload.value;
+    },
+    DELETE_USER: (state, _action) => {
       state.nickname = '';
       state.profile_imageUrl = '';
       state.representative = '';
