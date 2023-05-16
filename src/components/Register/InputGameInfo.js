@@ -33,25 +33,24 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName, helperText }
   }, [dispatch, gameName, games]);
 
   const verifyingNickname = async () => {
-    // if (games[gameName] !== '') {
-    //   setIsPending(true);
-    //   await api
-    //     .get(`/api/${gameName}/exist/${games[gameName]}`)
-    //     .then((response) => {
-    //       if (response.status === 200) {
-    //         dispatch(registerActions.SET_GAMESCHECK_WITH_ID({ id: gameName }));
-    //         setWarning(false);
-    //       } else {
-    //         setWarning(true);
-    //       }
-    //       setIsPending(false);
-    //     })
-    //     .catch((error) => {
-    //       setIsPending(false);
-    //       setWarning(true);
-    //     });
-    // }
-    dispatch(registerActions.SET_GAMESCHECK_WITH_ID({ id: gameName }));
+    if (games[gameName] !== '') {
+      setIsPending(true);
+      await api
+        .get(`/api/${gameName}/exist/${games[gameName]}`)
+        .then((response) => {
+          if (response.status === 200) {
+            dispatch(registerActions.SET_GAMESCHECK_WITH_ID({ id: gameName }));
+            setWarning(false);
+          } else {
+            setWarning(true);
+          }
+          setIsPending(false);
+        })
+        .catch((error) => {
+          setIsPending(false);
+          setWarning(true);
+        });
+    }
   };
 
   return (
