@@ -24,7 +24,8 @@ const PartyMember = (props) => {
   useEffect(() => {
     const fetchSummonerData = async () => {
       await api
-        .get(`/api/lol/summoner/${name}/${type}`)
+        .get(`/api/lol/summoner/${name}/${type === 'FREE_RANK' ? 'free_rank' : 'duo_rank'}`) 
+        // 자유랭크의 경우에만 자유랭크 조회, 그 외에 모두 솔로랭크를 기준으로 조회
         .then((res) => {
           setSummonerData(...summonerData, ...res.data);
         })
