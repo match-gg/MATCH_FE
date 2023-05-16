@@ -4,7 +4,7 @@ import { Box, OutlinedInput, Tooltip } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 // import ChatEnter from './ChatEnter';
 import ChatMessage from './ChatMessage';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   getDatabase,
   onChildAdded,
@@ -12,11 +12,15 @@ import {
   child,
   set,
   push,
+  get,
   serverTimestamp,
 } from 'firebase/database';
+import { chatRoomActions } from '../store/chatRoom-slice';
 
-const ChatRoom = () => {
+const ChatRoom = (props) => {
+  const { closeChatOpen } = props;
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const chatRoom = useSelector((state) => state.chatRoom.currentChatRoom);
   //파이어베이스의 messages ref
   const messagesRef = ref(getDatabase(), 'messages');
@@ -71,8 +75,6 @@ const ChatRoom = () => {
   };
   //메세지 전송
   const postMessage = async () => {
-    inputRef.current.querySelector('input').focus();
-
     setMessageSending(true);
     if (!content) {
       handleTooltipOpen();
@@ -83,16 +85,30 @@ const ChatRoom = () => {
       setMessageSending(false);
       return;
     }
-    try {
-      await set(push(child(messagesRef, chatRoom.roomId)), createMessage());
-      setContent('');
-      setMessageSending(false);
-      setTimeout(() => {
-        inputRef.current.querySelector('input').focus();
-      }, 0);
-    } catch (error) {
-      console.log(error);
-    }
+    const chatroomRef = ref(getDatabase(), 'chatrooms');
+    const members = [];
+    await get(child(chatroomRef, '-NT9iLlCfHtYX6VnE3MR'))
+      .then(async (snapshot) => {
+        snapshot.forEach((member) => members.push(member.val()));
+        if (members.includes('testUser3')) {
+          await set(push(child(messagesRef, chatRoom.roomId)), createMessage())
+            .catch((error) => console.log(error))
+            .then(() => {
+              setContent('');
+              setMessageSending(false);
+              setTimeout(() => {
+                inputRef.current.querySelector('input').focus();
+              }, 0);
+            });
+        } else {
+          alert('유효하지 않은 사용자입니다. 3초후 채팅방에서 나가집니당');
+          setTimeout(() => {
+            closeChatOpen();
+          }, 3000);
+          dispatch(chatRoomActions.SET_CURRENT_CHATROOM(null));
+        }
+      })
+      .catch((error) => console.log(error));
   };
   //엔터키로 메세지 전송
   const handleKeyDown = (e) => {

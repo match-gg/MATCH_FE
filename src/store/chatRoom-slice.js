@@ -16,7 +16,7 @@ const chatRoomSlice = createSlice({
     ADD_JOINED_CHATROOM: (state, action) => {
       state.joinedChatRooms = [...state.joinedChatRooms, action.payload];
     },
-    REMOVE_JOINED_CHATROOM: (state, action) => {
+    LEAVE_JOINED_CHATROOM: (state, action) => {
       state.joinedChatRooms = state.joinedChatRooms.filter(
         (chatroom) => chatroom !== action.payload
       );

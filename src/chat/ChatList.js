@@ -10,11 +10,14 @@ import ChatRoom from './ChatRoom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getDatabase, off, onChildAdded, ref } from 'firebase/database';
 import { chatRoomActions } from '../store/chatRoom-slice';
+import { api } from '../api/api';
 
 const ChatList = (props) => {
   const joinedChatRooms = useSelector(
     (state) => state.chatRoom.joinedChatRooms
   );
+  const { accessToken } = useSelector((state) => state.token);
+  const refreshToken = localStorage.getItem('matchGG_refreshToken');
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(true);
@@ -57,6 +60,26 @@ const ChatList = (props) => {
     setChatOpen(false);
     setHeader('현재 참여중인 파티');
   };
+
+  useEffect(() => {
+    const getChatRooms = async () => {
+      await api
+        .get(`/api/chat/rooms`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Refresh-Token': refreshToken,
+          },
+        })
+        .catch((error) => console.log(error))
+        .then((response) => {
+          response.data.chatRoomList.forEach((item, _index) => {
+            dispatch(chatRoomActions.ADD_JOINED_CHATROOM(item.chatRoomId));
+          });
+        });
+    };
+
+    getChatRooms();
+  }, []);
 
   return (
     <Zoom in={open}>
@@ -125,7 +148,10 @@ const ChatList = (props) => {
                   color: 'white',
                 },
               }}
-              onClick={handleOpen}
+              onClick={() => {
+                handleOpen();
+                closeChatOpen();
+              }}
             />
           </Box>
           {/* 컨텐츠 */}
