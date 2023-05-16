@@ -72,40 +72,6 @@ const CardTitle = (props) => {
               {' ' + content}
             </Typography>
           </Box>
-          {/* <Typography
-            align='left'
-            sx={{
-              display: '-webkit-box',
-              overflow: 'hidden',
-              WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 2
-            }}>
-            <Typography
-              component='span'
-              color={tierInfo.find(elem => elem.id === tier).color}
-              sx={{
-                fontSize: 12,
-                fontWeight: 700
-              }}>
-              #{tierInfo.find(elem => elem.id === tier).kor}
-            </Typography>
-            <Typography
-              component='span'
-              sx={{
-                fontSize: 12,
-                fontWeight: 700,
-                pl: 1
-              }}>
-              #{typeInfo.find(elem => elem.id === type).kor}
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: 14,
-                fontWeight: 600
-              }}>
-              {' ' + content}
-            </Typography>
-          </Typography> */}
         </FlexRow>
       </FlexRow>
     </Fragment>
