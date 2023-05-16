@@ -9,12 +9,12 @@ import RemainingTime from './RemainingTime';
 import PartyMember from './PartyMember';
 import Recruitment from './Recruitment';
 
-import { tierInfo, typeInfo } from './Card.d';
+import { tierInfo, typeInfo, lanes } from './Card.d';
 
 const CardDetailModal = (props) => {
   const { isLogin } = useSelector(state => state.user);
 
-  const { author, content, expire, created, tier, type, setIsHovering } = props;
+  const { author, content, expire, created, tier, type, position, setIsHovering } = props;
 
   // 방에 대한 인원 수 정보
   const totalMember = 5;
@@ -75,6 +75,14 @@ const CardDetailModal = (props) => {
                     pl: 1
                   }}>
                   #{typeInfo.find(elem => elem.id === type).kor}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: 12,
+                    fontWeight: 700,
+                    pl: 1
+                  }}>
+                  #{lanes.find(elem => elem.id === position).kor}구함
                 </Typography>
               </Box>
             </Box>

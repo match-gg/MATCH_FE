@@ -40,7 +40,7 @@ export const tierInfo = [
   { id: 'MASTER', color: '#9A4EB0', kor: '마스터' },
   { id: 'GRANDMASTER', color: '#CD4545', kor: '그랜드마스터' },
   { id: 'CHALLENGER', color: '#F4C875', kor: '챌린저' },
-  { id: 'ALL', color: '#000000', kor: '상관없음' },
+  { id: 'ALL', color: '#000000', kor: '모든티어' },
 ];
 
 export const typeInfo = [
@@ -48,4 +48,5 @@ export const typeInfo = [
   { id: 'FREE_RANK', kor: '자유랭크' },
   { id: 'NORMAL', kor: '일반게임' },
   { id: 'ARAM', kor: '칼바람나락' },
+  { id: 'ALL', kor: '모든큐' },
 ];
