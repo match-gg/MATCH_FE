@@ -158,7 +158,7 @@ const CreateCardBtn = (props) => {
     await api
       .get(`/api/lol/user/exist/${userInput.name}`)
       .then(async (response) => {
-        if (response.data === true) {
+        if (response.status === 200) {
           await api.get(`/api/lol/user/${userInput.name}`).then((_response) => {
             setIsLoading(false);
             setIsIdChecked(true);
@@ -233,8 +233,8 @@ const CreateCardBtn = (props) => {
         if (response.status === 200) {
           const newChatroom = {
             roomId: key,
-            createdBy: registeredNickname,
-            members: [registeredNickname],
+            createdBy: userInput.name,
+            members: [userInput.name],
           };
           await update(child(chatroomRef, key), newChatroom)
             .catch((error) => console.log(error))

@@ -19,9 +19,11 @@ import { chatRoomActions } from '../store/chatRoom-slice';
 
 const ChatRoom = (props) => {
   const { closeChatOpen } = props;
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.register.games['lol']);
   const dispatch = useDispatch();
-  const chatRoom = useSelector((state) => state.chatRoom.currentChatRoom);
+  const currentChatRoom = useSelector(
+    (state) => state.chatRoom.currentChatRoom
+  );
   //파이어베이스의 messages ref
   const messagesRef = ref(getDatabase(), 'messages');
 
@@ -39,8 +41,8 @@ const ChatRoom = (props) => {
 
   //컴포넌트 생성 시 메세지 가져와서 보여주기
   useEffect(() => {
-    if (chatRoom) {
-      addMessagesListener(chatRoom.roomId);
+    if (currentChatRoom) {
+      addMessagesListener(currentChatRoom.roomId);
     }
   }, []);
 
@@ -86,12 +88,14 @@ const ChatRoom = (props) => {
       return;
     }
     const chatroomRef = ref(getDatabase(), 'chatrooms');
-    const members = [];
-    await get(child(chatroomRef, '-NT9iLlCfHtYX6VnE3MR'))
+    await get(child(chatroomRef, currentChatRoom.roomId))
       .then(async (snapshot) => {
-        snapshot.forEach((member) => members.push(member.val()));
-        if (members.includes('testUser3')) {
-          await set(push(child(messagesRef, chatRoom.roomId)), createMessage())
+        const members = [...snapshot.val().members];
+        if (members.includes(user)) {
+          await set(
+            push(child(messagesRef, currentChatRoom.roomId)),
+            createMessage()
+          )
             .catch((error) => console.log(error))
             .then(() => {
               setContent('');

@@ -9,6 +9,7 @@ import CardRecruitmentStatus from './CardRecruitmentStatus';
 import CardAuthor from './CardAuthor';
 
 import { tierInfo } from './Card.d';
+import TestCardDetailModal from './TestCardDetailModal';
 
 const BaseCard = styled(MuiCard)(({ theme }) => ({
   width: 376,
@@ -36,7 +37,8 @@ const Card = ({ item }) => {
       onMouseOver={() => setIsHovering(true)}
       onMouseOut={() => setIsHovering(false)}
     >
-      <CardDetailModal {...item}>
+      {/* <CardDetailModal {...item}> */}
+      <TestCardDetailModal {...item}>
         <BaseCard
           sx={{
             '&:hover': {
@@ -76,7 +78,8 @@ const Card = ({ item }) => {
             </FlexCol>
           </CardContent>
         </BaseCard>
-      </CardDetailModal>
+        {/* </CardDetailModal> */}
+      </TestCardDetailModal>
     </div>
   );
 };
