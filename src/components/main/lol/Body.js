@@ -58,7 +58,7 @@ const Body = () => {
       setIsLoading(true);
 
       await api
-        .get('/api/lol/board', {
+        .get('/api/lol/boards', {
           params: { size: 12, page: 0, position: lane, type: queueType, tier },
         })
         .then((response) => {
@@ -78,8 +78,14 @@ const Body = () => {
   // 더 불러오기 버튼 클릭 시
   const moreBoards = async () => {
     await api
-      .get('/api/lol/board', {
-        params: { size: 12, page: pageNumber, position: lane, type: queueType, tier },
+      .get('/api/lol/boards', {
+        params: {
+          size: 12,
+          page: pageNumber,
+          position: lane,
+          type: queueType,
+          tier,
+        },
       })
       .then((res) => {
         setBoards([...boards, ...res.data.content]);

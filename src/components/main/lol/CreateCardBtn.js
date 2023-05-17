@@ -1,8 +1,15 @@
 import React, { Fragment, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { api } from '../../../api/api';
-import { getDatabase, ref, push, update, child, serverTimestamp } from 'firebase/database';
+import {
+  getDatabase,
+  ref,
+  push,
+  update,
+  child,
+  // serverTimestamp,
+} from 'firebase/database';
 
 import {
   Button,
@@ -28,15 +35,24 @@ import CloseIcon from '@mui/icons-material/Close';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { typeData, tierData, positionData, expireData } from './CreateCardBtn.d';
+import {
+  typeData,
+  tierData,
+  positionData,
+  expireData,
+} from './CreateCardBtn.d';
+import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const CreateCardBtn = (props) => {
   const { accessToken } = useSelector((state) => state.token);
   const user = useSelector((state) => state.user);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
+  const dispatch = useDispatch();
 
   // 로그인 된 사용자의 기본 닉네임 가져오기.
-  const registeredNickname = user.games['lol'];
+  // const registeredNickname = user.games['lol'];
+  //테스트용임 나중에 지워야함!
+  const registeredNickname = 'test밍꾸라지';
 
   // 닉네임 인증여부 확인에 사용할 state와 함수
   const [isIdChecked, setIsIdChecked] = useState(false);
@@ -45,7 +61,9 @@ const CreateCardBtn = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // 사용자 계정에 연결된 닉네임 사용 여부.
-  const [useExistNickname, setUseExistNickname] = useState(registeredNickname ? true : false);
+  const [useExistNickname, setUseExistNickname] = useState(
+    registeredNickname ? true : false
+  );
 
   // 사용자 input에 변동사항 있는지 확인 -> 모달 닫기 전 확인하는 데에 사용.
   const [isChanged, setIsChanged] = useState(false);
@@ -84,7 +102,9 @@ const CreateCardBtn = (props) => {
       });
     } else if (
       newValue === 'DUO_RANK' &&
-      (userInput.tier === 'MASTER' || userInput.tier === 'ALL' || userInput.position === 'ALL')
+      (userInput.tier === 'MASTER' ||
+        userInput.tier === 'ALL' ||
+        userInput.position === 'ALL')
     ) {
       setUserInput({
         ...userInput,
@@ -138,7 +158,7 @@ const CreateCardBtn = (props) => {
     await api
       .get(`/api/lol/user/exist/${userInput.name}`)
       .then(async (response) => {
-        if (response.data === true) {
+        if (response.status === 200) {
           await api.get(`/api/lol/user/${userInput.name}`).then((_response) => {
             setIsLoading(false);
             setIsIdChecked(true);
@@ -160,7 +180,11 @@ const CreateCardBtn = (props) => {
   const openModal = () => setOpen(true);
   const closeModalConfirm = () => {
     if (isChanged) {
-      if (window.confirm('현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'))
+      if (
+        window.confirm(
+          '현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'
+        )
+      )
         closeModal();
     } else {
       closeModal();
@@ -189,43 +213,57 @@ const CreateCardBtn = (props) => {
   };
 
   //채팅방 생성 함수
-  const createChatroom = async () => {
+  const createChatroom = async (boardId, totalUser) => {
     const chatroomRef = ref(getDatabase(), 'chatrooms');
     const key = push(chatroomRef).key;
-    const newChatroom = {
-      roomId: key,
-      createdBy: user.nickname,
-      timestamp: serverTimestamp(),
-      //해당 게임으로 수정해야함
-      game: props.game,
+    const chatRoomInfo = {
+      boardId: Number(boardId),
+      chatRoomId: key,
+      totalUser,
     };
-    try {
-      await update(child(chatroomRef, key), newChatroom);
-    } catch (error) {
-      console.log(error);
-    }
+    await api
+      .post(`/api/chat/lol`, chatRoomInfo, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Refresh-Token': refreshToken,
+        },
+      })
+      .catch((error) => console.log(error))
+      .then(async (response) => {
+        if (response.status === 200) {
+          const newChatroom = {
+            roomId: key,
+            createdBy: userInput.name,
+            members: [userInput.name],
+          };
+          await update(child(chatroomRef, key), newChatroom)
+            .catch((error) => console.log(error))
+            .then((_response) => {
+              dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
+              closeModal();
+            });
+        }
+      });
   };
 
   //글 작성 완료시 서버로 데이터 전송
   const postModalInfo = async () => {
-    console.log(userInput);
-    // await api
-    //   .post(`/api/lol/board`, userInput, {
-    //     headers: {
-    //       Authorization: `Bearer ${accessToken}`,
-    //       'Refresh-Token': refreshToken,
-    //     },
-    //   })
-    //   .catch((error) => {
-    //     alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
-    //     console.log(error);
-    //   })
-    //   .then((_res) => {
-    //     //모달 닫기
-    //     closeModal();
-    //     //채팅방 개설
-    //     createChatroom();
-    //   });
+    await api
+      .post(`/api/lol/board`, userInput, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Refresh-Token': refreshToken,
+        },
+      })
+      .catch((error) => {
+        alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
+        console.log(error);
+      })
+      .then((response) => {
+        const boardId = response.data;
+        //채팅방 개설
+        createChatroom(boardId, 5);
+      });
   };
 
   return (
@@ -281,7 +319,11 @@ const CreateCardBtn = (props) => {
             <Typography component='h1' sx={{ fontSize: 28, ml: 1 }}>
               새 게시글 등록
             </Typography>
-            <CloseIcon color='primary' onClick={closeModalConfirm} sx={{ mr: 1 }} />
+            <CloseIcon
+              color='primary'
+              onClick={closeModalConfirm}
+              sx={{ mr: 1 }}
+            />
           </Box>
           <Divider sx={{ mb: 1 }} />
           <Box
@@ -520,7 +562,11 @@ const CreateCardBtn = (props) => {
               >
                 {expireData.map((data, idx) => {
                   return (
-                    <MenuItem key={idx} value={data.value} sx={{ color: 'grey' }}>
+                    <MenuItem
+                      key={idx}
+                      value={data.value}
+                      sx={{ color: 'grey' }}
+                    >
                       {data.text}
                     </MenuItem>
                   );
@@ -633,7 +679,10 @@ const CreateCardBtn = (props) => {
               variant='contained'
               size='large'
               disabled={
-                userInput.content.length >= 20 && (isIdChecked || useExistNickname) ? false : true
+                userInput.content.length >= 20 &&
+                (isIdChecked || useExistNickname)
+                  ? false
+                  : true
               }
             >
               작성하기

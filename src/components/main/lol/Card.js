@@ -9,6 +9,7 @@ import CardRecruitmentStatus from './CardRecruitmentStatus';
 import CardAuthor from './CardAuthor';
 
 import { tierInfo } from './Card.d';
+import TestCardDetailModal from './TestCardDetailModal';
 
 const BaseCard = styled(MuiCard)(({ theme }) => ({
   width: 376,
@@ -51,15 +52,11 @@ const Card = ({ item }) => {
           >
             <FlexCol>
               {/* 모집하는 사람 정보 */}
-              <CardTitle
-                content={content}
-                tier={tier}
-                position={position}
-                type={type}
-              />
+              <CardTitle content={content} tier={tier} position={position} type={type} />
               {/* 모집 현황 */}
               <CardRecruitmentStatus isHovering={isHovering} created={created} expire={expire} />
               <Divider sx={{ my: 1 }} />
+              {/* 파티장 정보 */}
               <CardAuthor author={author} voice={voice} position={position} />
             </FlexCol>
           </CardContent>
