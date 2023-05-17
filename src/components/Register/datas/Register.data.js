@@ -9,12 +9,12 @@ export const RegisterPhases = [
   {
     phase: 1,
     title: '플레이하는 게임과 닉네임을 알려주세요.',
-    description: '이후에 마이페이지에서 수정이 가능합니다.',
+    description: '1개 이상의 게임을 등록해야 합니다.',
   },
   {
     phase: 2,
     title: '대표게임을 설정해 주세요.',
-    description: '이후에 마이페이지에서 수정이 가능합니다.',
+    description: '앞에서 등록한 게임 중 하나를 대표게임으로 설정할 수 있습니다.',
   },
   {
     phase: 3,
