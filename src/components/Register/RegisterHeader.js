@@ -84,21 +84,6 @@ const RegisterHeader = (props) => {
                 }}
               />
             )}
-            {phase === 3 ? (
-              <CircleIcon
-                sx={{
-                  color: 'grey',
-                  fontSize: { xs: 'medium', sm: 'large' },
-                }}
-              />
-            ) : (
-              <CircleOutlinedIcon
-                sx={{
-                  color: 'grey',
-                  fontSize: { xs: 'medium', sm: 'large' },
-                }}
-              />
-            )}
           </Fragment>
         )}
       </Box>

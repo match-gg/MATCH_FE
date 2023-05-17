@@ -55,10 +55,10 @@ const KakaoLoginRedirect = () => {
 
       // 액세스 토큰에서 사용자 정보 decode
       const jwtPayload = jwt_decode(accessToken);
-      const { nickname, imageUrl, representative } = jwtPayload;
+      const { nickname, imageUrl, representative, oAuth2Id } = jwtPayload;
 
       // 앱에 사용자 정보 저장.
-      dispatch(userActions.SET_USER({ nickname, profile_image: imageUrl, representative }));
+      dispatch(userActions.SET_USER({ nickname, profile_image: imageUrl, representative, oauth2Id : oAuth2Id }));
 
       // 사용자가 설정한 대표 게임으로 navigate
       navigate(`/${representative}`);
