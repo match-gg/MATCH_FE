@@ -51,6 +51,10 @@ const RegisterFooter = (props) => {
       navigate('/login');
     });
 
+    // 사용자 닉네임으로 DB 채우기 작업 필요
+    // 현재 롤만
+    api.get(`/api/lol/user/${games['lol']}`)
+
     // send request
     const response = await api
       .post(`/api/user/signup`, {

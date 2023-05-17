@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Box, TextField, Button } from '@mui/material';
+import { Box, TextField, Button, CircularProgress } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
 
 import { registerActions } from '../../store/register-slice';
 import GameIcon from './GameIcon';
 import { api } from '../../api/api';
 
 const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName, helperText }) => {
-  const { games } = useSelector((state) => state.register);
+  const { games, gamesCheck } = useSelector((state) => state.register);
 
   const [warning, setWarning] = useState(false);
+  const [isPending, setIsPending] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -31,19 +33,24 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName, helperText }
   }, [dispatch, gameName, games]);
 
   const verifyingNickname = async () => {
-    await api
-      .get(`/api/${gameName}/exist/${games[gameName]}`)
-      .then((response) => {
-        if (response.status === 200) {
-          dispatch(registerActions.SET_GAMESCHECK_WITH_ID({ id: gameName }));
-          setWarning(false);
-        } else {
+    if (games[gameName] !== '') {
+      setIsPending(true);
+      await api
+        .get(`/api/${gameName}/exist/${games[gameName]}`)
+        .then((response) => {
+          if (response.status === 200) {
+            dispatch(registerActions.SET_GAMESCHECK_WITH_ID({ id: gameName }));
+            setWarning(false);
+          } else {
+            setWarning(true);
+          }
+          setIsPending(false);
+        })
+        .catch((error) => {
+          setIsPending(false);
           setWarning(true);
-        }
-      })
-      .catch((error) => {
-        setWarning(true);
-      });
+        });
+    }
   };
 
   return (
@@ -77,13 +84,22 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName, helperText }
           variant='outlined'
           onChange={changeTextField}
           defaultValue={games[gameName]}
+          focused={gamesCheck[gameName] && games[gameName]}
           value={games[gameName]}
           InputProps={{
-            endAdornment: games[gameName] && (
-              <Button onClick={verifyingNickname} sx={{ width: 80 }}>
-                인증하기
-              </Button>
-            ),
+            endAdornment:
+              games[gameName] && isPending ? (
+                <CircularProgress size={'1.5rem'} color='inherit' />
+              ) : gamesCheck[gameName] && games[gameName] !== '' ? (
+                <CheckIcon color='primary' />
+              ) : (
+                <Button
+                  onClick={verifyingNickname}
+                  sx={{ width: 80, display : games[gameName] === '' ? 'none' : 'block'}}
+                >
+                  인증하기
+                </Button>
+              ),
           }}
         />
       </Box>
