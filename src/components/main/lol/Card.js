@@ -4,7 +4,7 @@ import { Card as MuiCard, CardContent, Box, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import CardDetailModal from './CardDetailModal';
-import CardTop from './CardTitle';
+import CardTitle from './CardTitle';
 import CardRecruitmentStatus from './CardRecruitmentStatus';
 import CardAuthor from './CardAuthor';
 
@@ -27,13 +27,13 @@ const FlexCol = styled(Box)(({ theme }) => ({
 }));
 
 const Card = ({ item }) => {
-  const { author, content, expire, created, voice, tier, position } = item;
+  const { author, content, expire, created, voice, tier, position, type } = item;
 
   const [isHovering, setIsHovering] = useState(false);
 
   return (
     <div onMouseOver={() => setIsHovering(true)} onMouseOut={() => setIsHovering(false)}>
-      <CardDetailModal {...item}>
+      <CardDetailModal {...item} setIsHovering={setIsHovering}>
         <BaseCard
           sx={{
             '&:hover': {
@@ -51,13 +51,11 @@ const Card = ({ item }) => {
           >
             <FlexCol>
               {/* 모집하는 사람 정보 */}
-              <CardTop
-                expire={expire}
-                created={created}
+              <CardTitle
                 content={content}
                 tier={tier}
                 position={position}
-                isHovering={isHovering}
+                type={type}
               />
               {/* 모집 현황 */}
               <CardRecruitmentStatus isHovering={isHovering} created={created} expire={expire} />

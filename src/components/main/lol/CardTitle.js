@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 import { Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import { lanes, tierInfo } from './Card.d';
+import { lanes, tierInfo, typeInfo } from './Card.d';
 
 const FlexRow = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -12,70 +12,70 @@ const FlexRow = styled(Box)(({ theme }) => ({
   flexDirection: 'row',
 }));
 
-const CardTop = (props) => {
-  const { content, tier, position } = props;
+const CardTitle = (props) => {
+  const { content, tier, position, type } = props;
 
   return (
     <Fragment>
       <FlexRow
         sx={{
           alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
+          justifyContent: 'space-between'
+        }}>
         <FlexRow
           sx={{
             height: 48,
             alignItems: 'center',
-            justifyContent: 'flex-start',
-          }}
-        >
+            justifyContent: 'flex-start'
+          }}>
           <Box
             component='img'
-            src={lanes.find((elem) => elem.id === position).image}
+            src={lanes.find(elem => elem.id === position).image}
             loading='lazy'
             alt={position}
             sx={{
               height: 40,
               width: 40,
               mr: 1,
-              mixBlendMode: 'exclusion',
+              mixBlendMode: 'exclusion'
             }}
           />
-          <Typography
-            align='left'
-            sx={{
-              display: '-webkit-box',
-              overflow: 'hidden',
-              WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 2,
-            }}
-          >
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <Box sx={{ display: 'flex' }}>
+              <Typography
+                color={tierInfo.find(elem => elem.id === tier).color}
+                sx={{
+                  fontSize: 12,
+                  fontWeight: 700
+                }}>
+                #{tierInfo.find(elem => elem.id === tier).kor}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  pl: 1
+                }}>
+                #{typeInfo.find(elem => elem.id === type).kor}
+              </Typography>
+            </Box>
             <Typography
-              component='span'
-              color={tierInfo.find((elem) => elem.id === tier).color}
+              align='left'
               sx={{
-                display: 'inline-block',
-                fontSize: 16,
-                fontWeight: 700,
-              }}
-            >
-              [{tierInfo.find((elem) => elem.id === tier).kor}]
-            </Typography>
-            <Typography
-              component='span'
-              sx={{
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: 600,
-              }}
-            >
+                display: '-webkit-box',
+                overflow: 'hidden',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 1
+              }}>
               {' ' + content}
             </Typography>
-          </Typography>
+          </Box>
         </FlexRow>
       </FlexRow>
     </Fragment>
   );
 };
 
-export default CardTop;
+export default CardTitle;
