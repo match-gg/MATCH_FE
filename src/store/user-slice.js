@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  nickname: '',
-  profile_imageUrl: '',
-  representative: '',
+  nickname: '', // 카카오톡 닉네임
+  profile_imageUrl: '', // 카카오톡 프로필 이미지
+  representative: '', // 대표게임
   games: {
-    lol: '',
+    lol: '', // 롤 소환사명
   },
   isLogin: false,
 };
