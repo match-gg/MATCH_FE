@@ -13,22 +13,24 @@ import { chatRoomActions } from '../store/chatRoom-slice';
 import { api } from '../api/api';
 
 const ChatList = (props) => {
+  //리덕스에 저장되어있는 내가 가입한 채팅방 Id
   const joinedChatRooms = useSelector(
     (state) => state.chatRoom.joinedChatRooms
   );
+  //토큰
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
   const dispatch = useDispatch();
 
+  //로딩중 관리 state
   const [loading, setLoading] = useState(true);
 
   //채팅방 리스트
   const [chatRooms, setChatRooms] = useState([]);
 
-  //파이어베이스 - 실시간 데이터베이스 - 채팅방 Ref
-  const chatRoomsRef = ref(getDatabase(), 'chatrooms');
-
-  //채팅방 불러오기 + 채팅방이 추가될 때 파이어베이스에서 최신 정보 가져오기
+  //파이어베이스
+  const chatRoomsRef = ref(getDatabase(), 'chatRooms');
+  //채팅방 불러오기 (리스너 함수)
   const addChatRoomsListener = () => {
     const chatRoomsArray = [];
     onChildAdded(chatRoomsRef, (DataSnapshot) => {
@@ -171,14 +173,12 @@ const ChatList = (props) => {
             >
               {!loading ? (
                 chatRooms
-                  .filter((chatroom) =>
-                    joinedChatRooms.includes(chatroom.roomId)
-                  )
+                  .filter((chatroom) => joinedChatRooms.includes(chatroom.key))
                   .map((filteredChatRoom, idx) => {
                     return (
                       <ChatCard
                         chatRoomInfo={filteredChatRoom}
-                        key={idx}
+                        key={filteredChatRoom.roomId}
                         name={filteredChatRoom.createdBy}
                         handleChatOpen={handleChatOpen}
                       />

@@ -1,15 +1,14 @@
 import { Box, Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
 // import moment from 'moment';
 
 const ChatMessage = (props) => {
-  const { user, message } = props;
+  const { messageInfo } = props;
+  // const oauth2Id = useSelector((state) => state.user.oauth2Id);
+  const oauth2Id = 'kakaoTT123';
 
-  // const timeFromNow = (timestamp) => {
-  //   return moment(timestamp).fromNow();
-  // };
-
-  const isMessageMine = (message, user) => {
-    return message.name === user.nickname;
+  const isMessageMine = (messageInfo, oauth2Id) => {
+    return messageInfo.user.oauth2Id === oauth2Id;
   };
 
   return (
@@ -21,8 +20,8 @@ const ChatMessage = (props) => {
         marginTop: '14px',
         borderRadius: '12px',
         padding: '5px',
-        position: isMessageMine(message, user) && 'relative',
-        left: isMessageMine(message, user) && '80px',
+        position: isMessageMine(messageInfo, oauth2Id) && 'relative',
+        left: isMessageMine(messageInfo, oauth2Id) && '80px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -43,18 +42,8 @@ const ChatMessage = (props) => {
             textAlign: 'start',
           }}
         >
-          <strong>{message.name}</strong>님
+          <strong>{messageInfo.user.nickname}</strong>님
         </Typography>
-        {/* 시간 표시 */}
-        {/* <Typography
-          sx={{
-            fontSize: '4px',
-            marginLeft: '12px',
-            textAlign: 'end',
-          }}
-        >
-          {timeFromNow(message.timestamp)}
-        </Typography>  */}
       </Box>
       <Box
         sx={{
@@ -73,7 +62,7 @@ const ChatMessage = (props) => {
             lineBreak: 'anywhere',
           }}
         >
-          {message.content}
+          {messageInfo.content}
         </Typography>
       </Box>
     </Box>
