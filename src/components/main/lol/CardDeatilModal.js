@@ -73,11 +73,13 @@ const CardDeatilModal = (props) => {
   const currentMember = boardData?.memberList?.length || 0;
 
   return (
-    <ModalContainer>
+    <ModalContainer onClick={() => navigate('/lol')}>
+      {/* ModalContainer와 CloseModalBtn 클릭시 뒤로가기(창 닫기)
+        ModalContent 클릭 시 뒤로가기(창 닫기) 하지않음. */}
       <CloseModalBtn onClick={() => navigate('/lol')}>
         <Close fontSize='large' />
       </CloseModalBtn>
-      <ModalContent>
+      <ModalContent onClick={e => e.stopPropagation()}>
         <Box
           sx={{
             display: 'flex',
@@ -170,7 +172,7 @@ const CardDeatilModal = (props) => {
               })}
             {Array(totalMember - currentMember).fill(<Recruitment />)}
           </Box>
-          {isLogin && (
+          {!isLogin && (
             <Button
               variant='outlined'
               size='small'
