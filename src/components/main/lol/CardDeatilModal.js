@@ -7,7 +7,7 @@ import { api } from '../../../api/api';
 import { tierInfo, typeInfo, lanes } from './Card.d';
 
 // mui
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, Dialog } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 // custom components
@@ -62,6 +62,8 @@ const CardDeatilModal = (props) => {
         .catch((err) => {
           // 게시글 상세조회 실패
           console.log(err);
+          alert("게시글에 대한 정보를 불러오는 데 실패했습니다.\n'확인'을 누르면 메인페이지로 이동합니다.");
+          navigate('/lol');
         });
     };
 
