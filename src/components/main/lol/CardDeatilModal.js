@@ -172,7 +172,7 @@ const CardDeatilModal = (props) => {
               })}
             {Array(totalMember - currentMember).fill(<Recruitment />)}
           </Box>
-          {!isLogin && (
+          {isLogin && (
             <Button
               variant='outlined'
               size='small'
