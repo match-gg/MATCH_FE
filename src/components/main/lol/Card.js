@@ -3,13 +3,11 @@ import { useState } from 'react';
 import { Card as MuiCard, CardContent, Box, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import CardDetailModal from './prevCardDetailModal';
 import CardTitle from './CardTitle';
 import CardRecruitmentStatus from './CardRecruitmentStatus';
 import CardAuthor from './CardAuthor';
 
 import { tierInfo } from './Card.d';
-import { useNavigate } from 'react-router-dom';
 
 const BaseCard = styled(MuiCard)(({ theme }) => ({
   width: 376,
@@ -28,8 +26,6 @@ const FlexCol = styled(Box)(({ theme }) => ({
 }));
 
 const Card = ({ item }) => {
-  const navigate = useNavigate();
-
   const { author, content, expire, created, voice, tier, position, type } = item;
 
   const [isHovering, setIsHovering] = useState(false);

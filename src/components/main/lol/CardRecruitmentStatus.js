@@ -14,19 +14,15 @@ const FlexRow = styled(Box)(({ theme }) => ({
 }));
 
 const CardRecruitmentStatus = (props) => {
-  const {
-    isHovering,
-    created,
-    expire,
-    curMembers = 2,
-    totalMembers = 5,
-  } = props;
+  const { isHovering, created, expire, curMembers = 2, totalMembers = 5 } = props;
 
   return (
     <Fragment>
       {isHovering && (
-        <Box sx={{ alignItems: 'center' }}>
-          <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>클릭해서 상세보기</Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>
+            클릭해서 상세보기
+          </Typography>
         </Box>
       )}
       {!isHovering && (
@@ -35,16 +31,18 @@ const CardRecruitmentStatus = (props) => {
             height: 20,
             alignItems: 'center',
             justifyContent: 'space-between',
-            pl: 6
-          }}>
+            pl: 6,
+          }}
+        >
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography
               sx={{
                 color: 'grey',
                 fontSize: 14,
                 fontWeight: 700,
-                mr: 1.5
-              }}>
+                mr: 1.5,
+              }}
+            >
               모집 현황
             </Typography>
             {new Array(totalMembers).fill(0).map((_item, idx) => {
@@ -62,7 +60,7 @@ const CardRecruitmentStatus = (props) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     mr: 0.5,
-                    padding: '2px'
+                    padding: '2px',
                   }}
                 />
               );
