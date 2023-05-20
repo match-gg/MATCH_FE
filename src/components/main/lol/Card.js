@@ -9,7 +9,6 @@ import CardRecruitmentStatus from './CardRecruitmentStatus';
 import CardAuthor from './CardAuthor';
 
 import { tierInfo } from './Card.d';
-import TestCardDetailModal from './TestCardDetailModal';
 
 const BaseCard = styled(MuiCard)(({ theme }) => ({
   width: 376,

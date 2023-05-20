@@ -52,7 +52,7 @@ const CreateCardBtn = (props) => {
   // 로그인 된 사용자의 기본 닉네임 가져오기.
   // const registeredNickname = user.games['lol'];
   //테스트용임 나중에 지워야함!
-  const registeredNickname = 'test밍꾸라지';
+  const registeredNickname = '밍꾸라지';
 
   // 닉네임 인증여부 확인에 사용할 state와 함수
   const [isIdChecked, setIsIdChecked] = useState(false);

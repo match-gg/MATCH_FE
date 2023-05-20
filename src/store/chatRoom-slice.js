@@ -2,8 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialChatroomState = {
   currentChatRoom: null,
-  //로그인 성공 시  서버에서 가입되어있는 채팅방에 대한 정보를 가져와야함
-  joinedChatRooms: ['-NT4hkTqGn02tAzZtFjx'],
+  joinedChatRooms: [''],
 };
 
 const chatRoomSlice = createSlice({
@@ -13,6 +12,9 @@ const chatRoomSlice = createSlice({
     SET_CURRENT_CHATROOM: (state, action) => {
       state.currentChatRoom = action.payload;
     },
+    REMOVE_CURRENT_CHATROOM: (state, _action) => {
+      state.currentChatRoom = null;
+    },
     ADD_JOINED_CHATROOM: (state, action) => {
       state.joinedChatRooms = [...state.joinedChatRooms, action.payload];
     },
@@ -20,6 +22,9 @@ const chatRoomSlice = createSlice({
       state.joinedChatRooms = state.joinedChatRooms.filter(
         (chatroom) => chatroom !== action.payload
       );
+    },
+    REMOVE_ALL_JOINED_CHATROOM: (state, _action) => {
+      state.joinedChatRooms = [];
     },
   },
 });

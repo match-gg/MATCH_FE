@@ -20,15 +20,17 @@ const RemainingTime = (props) => {
   // 타이머 관련 변수와 함수
   const remainingTime = createdDate.getTime() + expiredTime[expire] - Date.now(); 
   const renderer = ({ hours, minutes, seconds, completed }) => {
-    if (completed) {
-      return <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>만료됨</Typography>;
-    } else if (hours !== 0) {
-      return <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>{hours}시간 남음</Typography>;
-    } else if (minutes !== 0) {
-      return <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>{minutes}분 남음</Typography>;
-    } else {
-      return <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>{seconds}초 남음</Typography>;
-    }
+    return (
+      <Typography sx={{ color: '#5383e8', fontSize: 14, fontWeight: 700 }}>
+        {completed
+          ? '만료됨'
+          : hours !== 0
+          ? `${hours}시간 남음`
+          : minutes !== 0
+          ? `${minutes}분 남음`
+          : `${seconds}초 남음`}
+      </Typography>
+    );
   };
 
   return <Countdown date={Date.now() + remainingTime} renderer={renderer} />;

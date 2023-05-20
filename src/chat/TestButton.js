@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { child, get, getDatabase, ref, update } from 'firebase/database';
+import { child, get, getDatabase, push, ref, update } from 'firebase/database';
 import { useDispatch, useSelector } from 'react-redux';
 import { api } from '../api/api';
 import { chatRoomActions } from '../store/chatRoom-slice';
@@ -9,59 +9,92 @@ const TestButton = () => {
 
   const dispatch = useDispatch();
 
-  const leaveChatRoom = async () => {
-    const targetMember = 'minggurazi';
-
-    //서버에 알려주기
-
-    // 파이어베이스 채팅방의 members에 접근해서 닉네임 지우기
-    const members = [];
-    const chatRoomRef = ref(getDatabase(), 'chatrooms');
-    await get(child(chatRoomRef, '-NT9iLlCfHtYX6VnE3MR/members'))
-      .then((datasnapshot) => members.push(...datasnapshot.val()))
-      .then(async () => {
-        const removedArr = members.filter((member) => member !== targetMember);
-        await update(ref(getDatabase(), 'chatrooms/-NT9iLlCfHtYX6VnE3MR'), {
-          members: [...removedArr],
-        });
-      })
-      // 리덕스에서 지우기
-      .then(() =>
-        dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM('-NT9iLlCfHtYX6VnE3MR'))
-      )
-      .catch((error) => console.log(error));
-  };
-
-  const addChatRoom = () => {
-    dispatch(chatRoomActions.ADD_JOINED_CHATROOM('-NT9iLlCfHtYX6VnE3MR'));
-  };
-
-  const addUser = async () => {
-    const newMember = 'testUser2';
+  const joinChatRoom = async () => {
+    const newMemberNickname = 'T밍';
+    const newMemberOauth2Id = 'kakaoTT123';
+    const newUser = {
+      nickname: newMemberNickname,
+      oauth2Id: newMemberOauth2Id,
+    };
+    const chatRoomId = '-NVnTEQq78HR-wKp_bAt';
     //서버에 데이터 전송
 
     //파이어베이스의 해당 채팅방에 유저 추가
-    const currentMembers = [];
-    const chatRoomRef = ref(getDatabase(), 'chatrooms');
-    await get(child(chatRoomRef, '-NT9iLlCfHtYX6VnE3MR/members'))
-      .then((datasnapshot) => currentMembers.push(...datasnapshot.val()))
-      .then(async () => {
-        await update(ref(getDatabase(), 'chatrooms/-NT9iLlCfHtYX6VnE3MR'), {
-          members: [...currentMembers, newMember],
-        });
+    const chatRoomRef = ref(getDatabase(), 'chatRooms');
+    await get(child(chatRoomRef, chatRoomId))
+      .then(async (datasnapshot) => {
+        const prevMemberList = [];
+        prevMemberList.push(...datasnapshot.val().memberList);
+        const joinedMemberList = [...prevMemberList, newUser];
+        await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
+          memberList: joinedMemberList,
+        }).then(() =>
+          dispatch(chatRoomActions.ADD_JOINED_CHATROOM(chatRoomId))
+        );
       })
-      //내 리덕스에 채팅방 id 추가
-      .then(() => dispatch(chatRoomActions.ADD_JOINED_CHATROOM('테스트성공')))
       .catch((error) => console.log(error));
+  };
+
+  const leaveChatRoom = async () => {
+    const targetMemberNickname = 'T밍';
+    const targetMemberOauth2Id = 'kakaoTT123';
+    const targetUser = {
+      nickname: targetMemberNickname,
+      oauth2Id: targetMemberOauth2Id,
+    };
+    const chatRoomId = '-NVnTEQq78HR-wKp_bAt';
+    //서버에 알려주기
+
+    // 파이어베이스 채팅방의 members에 접근해서 닉네임 지우기
+    const chatRoomRef = ref(getDatabase(), 'chatRooms');
+    await get(child(chatRoomRef, `${chatRoomId}/memberList`))
+      .then(async (datasnapshot) => {
+        const prevMemberList = [...datasnapshot.val()];
+        const removedMemberList = prevMemberList.filter((member) => {
+          return member.oauth2Id !== targetUser.oauth2Id;
+        });
+        await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
+          memberList: removedMemberList,
+        }).then(dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId)));
+      })
+      .catch((error) => console.log(error));
+  };
+
+  // const addChatRoom = () => {
+  //   dispatch(chatRoomActions.ADD_JOINED_CHATROOM('-NT9iLlCfHtYX6VnE3MR'));
+  // };
+
+  const createChatRoom = async () => {
+    const roomId = 1;
+    const user = '방장';
+    const memberList = [{ oauth2Id: 123, nickname: user }];
+
+    const chatRoomRef = ref(getDatabase(), 'chatRooms');
+    const key = push(chatRoomRef).key;
+
+    const newChatRoom = {
+      key,
+      roomId,
+      createdBy: user,
+      memberList,
+      timestamp: new Date().toString(),
+    };
+
+    await update(child(chatRoomRef, key), newChatRoom)
+      .catch((error) => console.log(error))
+      .then(() => console.log('채팅방 생성 테스트 성공'));
   };
 
   return (
     <>
-      <Button variant='outlined' onClick={leaveChatRoom}>
-        채팅방 나가기
+      <Button variant='outlined' onClick={joinChatRoom}>
+        파티 참여
       </Button>
-      <Button variant='outlined' onClick={addUser}>
-        사용자 추가
+      <Button variant='outlined' onClick={leaveChatRoom}>
+        파티 탈퇴
+      </Button>
+      <Button variant='outlined' onClick={createChatRoom}>
+        파티 생성
       </Button>
     </>
   );

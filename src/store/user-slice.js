@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  nickname: '',
-  profile_imageUrl: '',
-  representative: '',
+  nickname: '', // 카카오톡 닉네임
+  oauth2Id: '', // kakao oauth id
+  profile_imageUrl: '', // 카카오톡 프로필 이미지
+  representative: '', // 대표게임
   games: {
-    lol: '',
+    lol: '', // 롤 소환사명
   },
   isLogin: false,
 };
@@ -18,6 +19,7 @@ const userSlice = createSlice({
       state.nickname = action.payload.nickname;
       state.profile_imageUrl = action.payload.profile_imageUrl;
       state.representative = action.payload.representative;
+      state.oauth2Id = action.payload.oauth2Id
       state.isLogin = true;
     },
     SET_REPRESENTATIVE: (state, action) => {
