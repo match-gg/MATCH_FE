@@ -119,7 +119,7 @@ const ValorantBody = () => {
               <MenuItem value={'RADIANT'}>레디언트</MenuItem>
               <MenuItem value={'IMMORTAL'}>불멸</MenuItem>
               <MenuItem value={'DIAMOND'}>다이아몬드</MenuItem>
-              <MenuItem value={'PLATINUM'}>플레티넘</MenuItem>
+              <MenuItem value={'PLATINUM'}>플래티넘</MenuItem>
               <MenuItem value={'GOLD'}>골드</MenuItem>
               <MenuItem value={'SILVER'}>실버</MenuItem>
               <MenuItem value={'BRONZE'}>브론즈</MenuItem>

@@ -36,7 +36,7 @@ export const tierData = [
   },
   {
     value: 'PLATINUM',
-    text: '플레티넘',
+    text: '플래티넘',
   },
   {
     value: 'DIAMOND',
