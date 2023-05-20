@@ -20,7 +20,7 @@ export default function App() {
         <Route path='/kakao/login' element={<KakaoLoginRedirect />} />
         <Route path='/kakao/register' element={<RegisterPage />} />
         <Route path='/mypage' element={<MyPage />} />
-        <Route path='/lol' element={<LeagueofLegends />} />
+        <Route path='/lol/*' element={<LeagueofLegends />} />
         <Route path='/valorant' element={<Valorant />} />
       </Routes>
     </Router>

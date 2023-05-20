@@ -5,7 +5,7 @@ import Countdown from 'react-countdown';
 import { expiredTime } from './Card.d';
 
 const RemainingTime = (props) => {
-  const {created, expire} = props;
+  const {created = '2000-12-31 23:59:59', expire = 'FIFTEEN_M'} = props;
 
   // date parsing
   const year = created.substring(0, 4);

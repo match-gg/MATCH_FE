@@ -1,4 +1,5 @@
 import { useState, useEffect, Fragment } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 import styled from '@emotion/styled';
 import { Box, Button, Container, Typography } from '@mui/material';
@@ -22,6 +23,8 @@ const BoardsWrapper = styled('div')({
 });
 
 const Body = () => {
+  const location = useLocation();
+
   const [boards, setBoards] = useState(dummyBoards); // 전체 게시글 저장
   const [pageNumber, setPageNumber] = useState(1); // 불러 올 페이지 번호
 
@@ -115,7 +118,11 @@ const Body = () => {
         <BoardsWrapper>
           {!isLoading &&
             boards.map((item, _index) => {
-              return <Card key={item.id} item={item} />;
+              return (
+                <Link to={`${item.id}`} state={{ background: location }} style={{textDecoration: 'none'}}>
+                  <Card key={item.id} item={item} />
+                </Link>
+              );
             })}
           {isLoading && <Typography>Loading...</Typography>}
         </BoardsWrapper>
