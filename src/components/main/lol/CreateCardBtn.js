@@ -241,13 +241,14 @@ const CreateCardBtn = (props) => {
         },
       })
       .catch((error) => {
-        alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
+        alert('게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.');
         console.log(error);
       })
       .then((response) => {
         const boardId = response.data;
         //채팅방 개설
         createChatroom(boardId, 5);
+        // 인원수 제한이 5로 되어있는 것 같은데 5로 고정할 건지 고민좀 해봐야 할 듯
       });
   };
 
