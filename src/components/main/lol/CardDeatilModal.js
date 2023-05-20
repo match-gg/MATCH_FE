@@ -7,7 +7,7 @@ import { api } from '../../../api/api';
 import { tierInfo, typeInfo, lanes } from './Card.d';
 
 // mui
-import { Box, Button, Typography, Dialog } from '@mui/material';
+import { Box, Button, Typography, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 // custom components
@@ -62,8 +62,8 @@ const CardDeatilModal = (props) => {
         .catch((err) => {
           // 게시글 상세조회 실패
           console.log(err);
-          alert("게시글에 대한 정보를 불러오는 데 실패했습니다.\n'확인'을 누르면 메인페이지로 이동합니다.");
-          navigate('/lol');
+          // alert("게시글에 대한 정보를 불러오는 데 실패했습니다.\n'확인'을 누르면 메인페이지로 이동합니다.");
+          // navigate('/lol');
         });
     };
 
@@ -78,10 +78,7 @@ const CardDeatilModal = (props) => {
     <ModalContainer onClick={() => navigate('/lol')}>
       {/* ModalContainer와 CloseModalBtn 클릭시 뒤로가기(창 닫기)
         ModalContent 클릭 시 뒤로가기(창 닫기) 하지않음. */}
-      <CloseModalBtn onClick={() => navigate('/lol')}>
-        <Close fontSize='large' />
-      </CloseModalBtn>
-      <ModalContent onClick={e => e.stopPropagation()}>
+      <ModalContent onClick={(e) => e.stopPropagation()}>
         <Box
           sx={{
             display: 'flex',
@@ -92,10 +89,13 @@ const CardDeatilModal = (props) => {
             borderRadius: 1,
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography component='h1' sx={{ fontSize: 22, fontWeight: 700, pb: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb:1 }}>
+            <Typography component='h1' sx={{ fontSize: 22, fontWeight: 700}}>
               {boardData?.name}님의 파티
             </Typography>
+            <IconButton size='small' sx={{}} onClick={() => navigate('/lol')}>
+              <Close />
+            </IconButton>
           </Box>
           <Box sx={{ display: 'flex', pb: 3 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', width: 340, pr: '60px' }}>
