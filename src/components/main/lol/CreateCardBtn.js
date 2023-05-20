@@ -45,9 +45,7 @@ const CreateCardBtn = (props) => {
   const dispatch = useDispatch();
 
   // 로그인 된 사용자의 기본 닉네임 가져오기.
-  // const registeredNickname = user.games['lol'];
-  //테스트용임 나중에 지워야함!
-  const registeredNickname = '밍꾸라지';
+  const registeredNickname = user.games['lol'] || '완도수산새우도둑';
 
   // 닉네임 인증여부 확인에 사용할 state와 함수
   const [isIdChecked, setIsIdChecked] = useState(false);
@@ -355,6 +353,7 @@ const CreateCardBtn = (props) => {
               placeholder='소환사 명을 입력하세요.'
               disabled={useExistNickname}
               onChange={handleName}
+              error={isIdChecked ? false : true}
               endAdornment={
                 isLoading ? (
                   <CircularProgress color='primary' size={16} />
@@ -365,11 +364,11 @@ const CreateCardBtn = (props) => {
                     onClick={certifyNickname}
                     disabled={useExistNickname}
                   >
-                    인증하기
+                    {isIdChecked ? '인증완료' : '인증하기'}
                   </Button>
                 )
               }
-              sx={{ width: 320, height: 36, fontSize: 14 }}
+              sx={{ width: 320, height: 36, fontSize: 14, color: isIdChecked ? 'primary' : 'grey' }}
             />
           </Box>
           <Box
@@ -638,7 +637,7 @@ const CreateCardBtn = (props) => {
               </Typography>
             </Box>
           </Box>
-          <Divider sx={{ mt: 2 }} />
+          <Divider sx={{ mt: 1 }} />
           <Box
             sx={{
               display: 'flex',
