@@ -7,19 +7,18 @@ import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const JoinPartyButton = (props) => {
   //game, chatRoomId, id를 props로 받아와야함
-  // const {game, chatRoomId, id, newMember} = props;
-  //테스트용 데이터
-  const game = 'lol';
-  const chatRoomId = '-NVooseMj-whfjWw4gua';
-  const { id } = props;
+  const { game, chatRoomId, id } = props;
+  const nickname = useSelector((state) => state.user.nickname);
+  const oauth2Id = useSelector((state) => state.user.oauth2Id);
   const newMember = {
-    nickname: '테스트용닉네임',
-    oauth2Id: 'kakaoTest123',
+    nickname,
+    oauth2Id,
   };
 
   //토큰
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
+
   const dispatch = useDispatch();
 
   const addFirebaseRDB = async (newMember, chatRoomId) => {
@@ -70,8 +69,7 @@ const JoinPartyButton = (props) => {
           backgroundColor: '#f3f3f3',
         },
       }}
-      // onClick={joinParty}
-      onClick={() => addFirebaseRDB(newMember, chatRoomId)}
+      onClick={joinParty}
     >
       파티 참가
     </Button>

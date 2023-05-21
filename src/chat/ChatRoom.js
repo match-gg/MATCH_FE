@@ -18,14 +18,8 @@ import { chatRoomActions } from '../store/chatRoom-slice';
 
 const ChatRoom = (props) => {
   const { closeChatOpen } = props;
-  // const nickname = useSelector((state) => state.user.games['lol']);
-  //테스트용 data
-  const nickname = 'T밍';
-  const oauth2Id = 'kakaoTT123';
-  const user = {
-    nickname,
-    oauth2Id,
-  };
+  const nickname = useSelector((state) => state.user.games['lol']);
+  const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
   const dispatch = useDispatch();
   const currentChatRoom = useSelector(
@@ -39,7 +33,6 @@ const ChatRoom = (props) => {
 
   //파이어베이스의 메세지들을 가져올 리스너 함수
   const addMessagesListener = (chatRoomId) => {
-    // let messagesArray = [];
     const messagesArray = [];
     onChildAdded(child(messagesRef, chatRoomId), (DataSnapshot) => {
       messagesArray.push(DataSnapshot.val());
@@ -78,7 +71,10 @@ const ChatRoom = (props) => {
   const createMessage = () => {
     const message = {
       timestamp: serverTimestamp(),
-      user,
+      user: {
+        nickname,
+        oauth2Id,
+      },
       content,
     };
     return message;
@@ -95,12 +91,14 @@ const ChatRoom = (props) => {
       setMessageSending(false);
       return;
     }
+    //메세지 전송 유효성 테스트 (해당 파티에 가입되어 있는지 확인)
     const chatroomRef = ref(getDatabase(), 'chatRooms');
     await get(child(chatroomRef, currentChatRoom.key))
       .then(async (snapshot) => {
         const members = [...snapshot.val().memberList];
         const oauth2IdList = members.map((member) => member.oauth2Id);
-        if (oauth2IdList.includes(user.oauth2Id)) {
+        //유효성 확인 통과 (파티에 가입되어있는 사용자)
+        if (oauth2IdList.includes(oauth2Id)) {
           await set(
             push(child(messagesRef, currentChatRoom.key)),
             createMessage()
@@ -157,12 +155,9 @@ const ChatRoom = (props) => {
         sx={{
           padding: '5px',
           width: '100%',
-          display: 'fext',
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
           maxHeight: '460px',
           overflowY: 'auto',
+          position: 'relative',
         }}
       >
         {messages.map((message, idx) => {

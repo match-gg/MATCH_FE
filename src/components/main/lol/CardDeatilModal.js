@@ -7,16 +7,8 @@ import { api } from '../../../api/api';
 import { tierInfo, typeInfo, lanes } from './Card.d';
 
 // mui
-import {
-  Box,
-  Button,
-  Typography,
-  IconButton,
-  TextField,
-  InputAdornment,
-} from '@mui/material';
+import { Box, Button, Typography, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import SendIcon from '@mui/icons-material/Send';
 
 // custom components
 import RemainingTime from './RemainingTime';
@@ -27,6 +19,7 @@ import Recruitment from './Recruitment';
 import styled from '@emotion/styled';
 import JoinPartyButton from './JoinPartyButton';
 import LeavePatryButton from './LeavePatryButton';
+import ChatInCardDetailModal from '../../../chat/ChatInCardDetailModal';
 const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'fixed',
   top: 0,
@@ -120,9 +113,11 @@ const CardDeatilModal = (props) => {
               <Typography component='h1' sx={{ fontSize: 22, fontWeight: 700 }}>
                 {boardData?.name}님의 파티
               </Typography>
-              <IconButton size='small' onClick={() => navigate('/lol')}>
-                <Close />
-              </IconButton>
+              {!isLogin && !joinedChatRooms.includes(boardData.chatRoomId) && (
+                <IconButton size='small' onClick={() => navigate('/lol')}>
+                  <Close />
+                </IconButton>
+              )}
             </Box>
             <Box sx={{ display: 'flex', pb: 3 }}>
               <Box
@@ -231,76 +226,25 @@ const CardDeatilModal = (props) => {
                 })}
               {Array(totalMember - currentMember).fill(<Recruitment />)}
             </Box>
-            {!isLogin &&
-              (joinedChatRooms.includes('-NVooseMj-whfjWw4gua') ? (
-                <LeavePatryButton />
-              ) : (
-                <JoinPartyButton />
-              ))}
-            {/* <JoinPartyButton />
-          <LeavePatryButton /> */}
-          </Box>
-          <Box
-            sx={{
-              width: '100%',
-              height: '100%',
-              p: 2,
-              pb: 3,
-            }}
-          >
-            <Typography
-              component='h1'
-              sx={{ fontSize: 22, fontWeight: 700, pb: 1, color: 'white' }}
-            >
-              {'채팅 영역'}
-            </Typography>
-            <Typography
-              sx={{
-                color: 'grey',
-                fontSize: 14,
-                fontWeight: 600,
-                pb: 0.5,
-              }}
-            >
-              파티 전용 채팅
-            </Typography>
-            <Box
-              sx={{
-                backgroundColor: '#ececec',
-                mt: 1,
-                minWidth: 360,
-                minHeight: 540,
-                overflowY: 'scroll',
-                position: 'relative',
-              }}
-            >
-              <Box
-                sx={{
-                  position: 'absolute',
-                  bottom: '0px',
-                  backgroundColor: 'white',
-                  width: '100%',
-                }}
-              >
-                <TextField
-                  label='메세지를 입력해주세요.'
-                  sx={{
-                    mt: 1,
-                    width: '100%',
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position='end'>
-                        <IconButton size='small'>
-                          <SendIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
+            {isLogin &&
+              (joinedChatRooms.includes(boardData.chatRoomId) ? (
+                <LeavePatryButton
+                  chatRoomId={boardData.chatRoomId}
+                  game={'lol'}
+                  id={boardData.id}
                 />
-              </Box>
-            </Box>
+              ) : (
+                <JoinPartyButton
+                  chatRoomId={boardData.chatRoomId}
+                  game={'lol'}
+                  id={boardData.id}
+                />
+              ))}
           </Box>
+          {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
+            <ChatInCardDetailModal chatRoomId={boardData.chatRoomId} />
+          )}
+          {/* <ChatInCardDetailModal chatRoomId={boardData.chatRoomId} /> */}
         </Box>
       </ModalContent>
     </ModalContainer>

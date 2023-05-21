@@ -4,8 +4,7 @@ import { useSelector } from 'react-redux';
 
 const ChatMessage = (props) => {
   const { messageInfo } = props;
-  // const oauth2Id = useSelector((state) => state.user.oauth2Id);
-  const oauth2Id = 'kakaoTT123';
+  const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
   const isMessageMine = (messageInfo, oauth2Id) => {
     return messageInfo.user.oauth2Id === oauth2Id;
@@ -15,7 +14,6 @@ const ChatMessage = (props) => {
     <Box
       sx={{
         maxWidth: '200px',
-        // backgroundColor: '#e2e2e2',
         border: '1px solid #ececec',
         marginTop: '14px',
         borderRadius: '12px',
