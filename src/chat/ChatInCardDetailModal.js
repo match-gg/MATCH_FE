@@ -64,6 +64,7 @@ const ChatInCardDetailModal = (props) => {
 
   //메세지 Ref
   const messagesRef = ref(getDatabase(), 'messages');
+
   //메세지들을 가져올 리스너 함수
   const addMessagesListener = (chatRoomId) => {
     const messagesArray = [];

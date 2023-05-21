@@ -40,7 +40,7 @@ const LeavePatryButton = (props) => {
   const leaveParty = async () => {
     //서버에 파티 탈퇴 전송
     await api
-      .delete(`/api/chat/${game}/${id}/${targetMember.oauth2Id}`, {
+      .delete(`/api/chat/${game}/${id}/member`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Refresh-Token': refreshToken,
