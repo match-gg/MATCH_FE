@@ -6,7 +6,11 @@ const initialState = {
   profile_imageUrl: '', // 카카오톡 프로필 이미지
   representative: '', // 대표게임
   games: {
-    lol: '', // 롤 소환사명
+    lol: '',        // 롤 소환사명
+    valorant: '',   // 발로란트 닉네임
+    pubg: '',       // 배틀그라운드 유저네임
+    overwatch: '',  // 오버워치 사용자이름+배틀태그
+    lostark: '',    // 로스트아크 닉네임
   },
   isLogin: false,
 };

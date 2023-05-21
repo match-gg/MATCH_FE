@@ -35,12 +35,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import {
-  typeData,
-  tierData,
-  positionData,
-  expireData,
-} from './CreateCardBtn.d';
+import { typeData, tierData, positionData, expireData } from './CreateCardBtn.d';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const CreateCardBtn = (props) => {
@@ -50,9 +45,7 @@ const CreateCardBtn = (props) => {
   const dispatch = useDispatch();
 
   // 로그인 된 사용자의 기본 닉네임 가져오기.
-  // const registeredNickname = user.games['lol'];
-  //테스트용임 나중에 지워야함!
-  const registeredNickname = '밍꾸라지';
+  const registeredNickname = user.games['lol'];
 
   // 닉네임 인증여부 확인에 사용할 state와 함수
   const [isIdChecked, setIsIdChecked] = useState(false);
@@ -61,9 +54,7 @@ const CreateCardBtn = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // 사용자 계정에 연결된 닉네임 사용 여부.
-  const [useExistNickname, setUseExistNickname] = useState(
-    registeredNickname ? true : false
-  );
+  const [useExistNickname, setUseExistNickname] = useState(registeredNickname ? true : false);
 
   // 사용자 input에 변동사항 있는지 확인 -> 모달 닫기 전 확인하는 데에 사용.
   const [isChanged, setIsChanged] = useState(false);
@@ -102,9 +93,7 @@ const CreateCardBtn = (props) => {
       });
     } else if (
       newValue === 'DUO_RANK' &&
-      (userInput.tier === 'MASTER' ||
-        userInput.tier === 'ALL' ||
-        userInput.position === 'ALL')
+      (userInput.tier === 'MASTER' || userInput.tier === 'ALL' || userInput.position === 'ALL')
     ) {
       setUserInput({
         ...userInput,
@@ -180,11 +169,7 @@ const CreateCardBtn = (props) => {
   const openModal = () => setOpen(true);
   const closeModalConfirm = () => {
     if (isChanged) {
-      if (
-        window.confirm(
-          '현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'
-        )
-      )
+      if (window.confirm('현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'))
         closeModal();
     } else {
       closeModal();
@@ -256,13 +241,14 @@ const CreateCardBtn = (props) => {
         },
       })
       .catch((error) => {
-        alert('게시글 작성중 문제가 발생하였습니다.\n다시 시도해주세요.');
+        alert('게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.');
         console.log(error);
       })
       .then((response) => {
         const boardId = response.data;
         //채팅방 개설
         createChatroom(boardId, 5);
+        // 인원수 제한이 5로 되어있는 것 같은데 5로 고정할 건지 고민좀 해봐야 할 듯
       });
   };
 
@@ -271,7 +257,7 @@ const CreateCardBtn = (props) => {
       <Button
         variant='outlined'
         sx={{
-          height: 40,
+          height: 36,
           borderColor: '#dddddd',
           color: 'black',
           '&:hover': {
@@ -300,12 +286,11 @@ const CreateCardBtn = (props) => {
           justifyContent='center'
           alignItems='stretch'
           sx={{
-            width: '50%',
             bgcolor: 'white',
-            px: 4,
-            py: 3,
-            maxWidth: 640,
-            borderRadius: 4,
+            px: 2,
+            py: 2,
+            minWidth: 500,
+            borderRadius: 2,
           }}
         >
           <Box
@@ -316,14 +301,10 @@ const CreateCardBtn = (props) => {
               mb: 1,
             }}
           >
-            <Typography component='h1' sx={{ fontSize: 28, ml: 1 }}>
+            <Typography component='h1' sx={{ fontSize: 18 }}>
               새 게시글 등록
             </Typography>
-            <CloseIcon
-              color='primary'
-              onClick={closeModalConfirm}
-              sx={{ mr: 1 }}
-            />
+            <CloseIcon color='primary' onClick={closeModalConfirm} sx={{ mr: 1, fontSize: 18 }} />
           </Box>
           <Divider sx={{ mb: 1 }} />
           <Box
@@ -338,11 +319,12 @@ const CreateCardBtn = (props) => {
               defaultChecked={registeredNickname ? true : false}
               onChange={handleSwitch}
               disabled={registeredNickname ? false : true}
+              size='medium'
             />
             <Typography
               color={useExistNickname ? 'primary' : 'grey'}
               sx={{
-                fontSize: '16px',
+                fontSize: 14,
                 fontWeight: 'bold',
               }}
             >
@@ -360,21 +342,22 @@ const CreateCardBtn = (props) => {
             <Typography
               component='h2'
               sx={{
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: 400,
                 color: 'grey',
               }}
             >
-              등록할 소환사 명
+              플레이할 소환사 명
             </Typography>
             <OutlinedInput
               size='small'
-              placeholder='리그오브레전드 소환사 명을 입력하세요.'
+              placeholder='소환사 명을 입력하세요.'
               disabled={useExistNickname}
               onChange={handleName}
+              error={isIdChecked ? false : true}
               endAdornment={
                 isLoading ? (
-                  <CircularProgress color='primary' size={20} />
+                  <CircularProgress color='primary' size={16} />
                 ) : (
                   <Button
                     position='end'
@@ -382,11 +365,11 @@ const CreateCardBtn = (props) => {
                     onClick={certifyNickname}
                     disabled={useExistNickname}
                   >
-                    인증하기
+                    {isIdChecked ? '인증완료' : '인증하기'}
                   </Button>
                 )
               }
-              sx={{ width: 360 }}
+              sx={{ width: 320, height: 36, fontSize: 14, color: isIdChecked ? 'primary' : 'grey' }}
             />
           </Box>
           <Box
@@ -400,7 +383,7 @@ const CreateCardBtn = (props) => {
             <Typography
               component='h2'
               sx={{
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: 400,
                 color: 'grey',
               }}
@@ -417,8 +400,9 @@ const CreateCardBtn = (props) => {
                   color: 'white',
                 },
                 '& > *': {
-                  height: 40,
+                  height: 36,
                   px: '10px',
+                  fontSize: 14,
                 },
               }}
             >
@@ -442,7 +426,7 @@ const CreateCardBtn = (props) => {
             <Typography
               component='h2'
               sx={{
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: 400,
                 color: 'grey',
               }}
@@ -469,8 +453,9 @@ const CreateCardBtn = (props) => {
                   color: 'white',
                 },
                 '& > *': {
-                  height: 40,
+                  height: 36,
                   px: '10px',
+                  fontSize: 14,
                 },
               }}
             >
@@ -504,7 +489,7 @@ const CreateCardBtn = (props) => {
             <Typography
               component='h2'
               sx={{
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: 400,
                 color: 'grey',
               }}
@@ -522,8 +507,9 @@ const CreateCardBtn = (props) => {
                   color: 'white',
                 },
                 '& > *': {
-                  height: 40,
+                  height: 36,
                   px: '10px',
+                  fontSize: 14,
                 },
               }}
             >
@@ -547,7 +533,7 @@ const CreateCardBtn = (props) => {
             <Typography
               component='h2'
               sx={{
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: 400,
                 color: 'grey',
               }}
@@ -558,15 +544,17 @@ const CreateCardBtn = (props) => {
               <Select
                 value={userInput.expire}
                 onChange={handleExpire}
-                sx={{ color: 'grey', height: 40 }}
+                sx={{
+                  color: 'grey',
+                  height: 36,
+                  '& > *': {
+                    fontSize: 14,
+                  },
+                }}
               >
                 {expireData.map((data, idx) => {
                   return (
-                    <MenuItem
-                      key={idx}
-                      value={data.value}
-                      sx={{ color: 'grey' }}
-                    >
+                    <MenuItem key={idx} value={data.value} sx={{ color: 'grey' }}>
                       {data.text}
                     </MenuItem>
                   );
@@ -585,7 +573,7 @@ const CreateCardBtn = (props) => {
             <Typography
               component='h2'
               sx={{
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: 400,
                 color: 'grey',
               }}
@@ -602,17 +590,18 @@ const CreateCardBtn = (props) => {
                   color: 'white',
                 },
                 '& > *': {
-                  height: 40,
+                  height: 36,
                   px: 1.5,
+                  fontSize: 14,
                 },
               }}
             >
               <ToggleButton key={'micOn'} value={'y'}>
-                <MicIcon sx={{ mr: 1 }} />
+                <MicIcon sx={{ mr: 1, fontSize: 18 }} />
                 사용
               </ToggleButton>
               <ToggleButton key={'micOff'} value={'n'}>
-                <MicOffIcon sx={{ mr: 1 }} />
+                <MicOffIcon sx={{ mr: 1, fontSize: 18 }} />
                 사용안함
               </ToggleButton>
             </ToggleButtonGroup>
@@ -637,25 +626,26 @@ const CreateCardBtn = (props) => {
                 mt: 1,
               }}
             >
-              <HelpOutlineIcon />
+              <HelpOutlineIcon sx={{ fontSize: 16 }} />
               <Typography
                 sx={{
                   color: 'grey',
                   pl: 1,
+                  fontSize: 12,
                 }}
               >
                 20자 이상 작성해야 합니다.
               </Typography>
             </Box>
           </Box>
-          <Divider sx={{ mt: 2 }} />
+          <Divider sx={{ mt: 1 }} />
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'flex-end',
               alignItems: 'center',
               backgroundColor: 'white',
-              mt: 2,
+              mt: 1,
             }}
           >
             <Button
@@ -665,7 +655,8 @@ const CreateCardBtn = (props) => {
               size='large'
               sx={{
                 bgcolor: '#808080',
-                mr: 2,
+                mr: 1,
+                height: 36,
                 ':hover': {
                   bgcolor: '#a0a0a0',
                 },
@@ -679,11 +670,11 @@ const CreateCardBtn = (props) => {
               variant='contained'
               size='large'
               disabled={
-                userInput.content.length >= 20 &&
-                (isIdChecked || useExistNickname)
-                  ? false
-                  : true
+                userInput.content.length >= 20 && (isIdChecked || useExistNickname) ? false : true
               }
+              sx={{
+                height: 36,
+              }}
             >
               작성하기
             </Button>
