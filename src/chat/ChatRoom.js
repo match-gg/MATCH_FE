@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-
 import { Box, OutlinedInput, Tooltip } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 // import ChatEnter from './ChatEnter';
@@ -19,7 +18,9 @@ import { chatRoomActions } from '../store/chatRoom-slice';
 
 const ChatRoom = (props) => {
   const { closeChatOpen } = props;
-  const user = useSelector((state) => state.register.games['lol']);
+  const nickname = useSelector((state) => state.user.games['lol']);
+  const oauth2Id = useSelector((state) => state.user.oauth2Id);
+
   const dispatch = useDispatch();
   const currentChatRoom = useSelector(
     (state) => state.chatRoom.currentChatRoom
@@ -32,7 +33,7 @@ const ChatRoom = (props) => {
 
   //파이어베이스의 메세지들을 가져올 리스너 함수
   const addMessagesListener = (chatRoomId) => {
-    let messagesArray = [];
+    const messagesArray = [];
     onChildAdded(child(messagesRef, chatRoomId), (DataSnapshot) => {
       messagesArray.push(DataSnapshot.val());
       setMessages([...messagesArray]);
@@ -42,7 +43,7 @@ const ChatRoom = (props) => {
   //컴포넌트 생성 시 메세지 가져와서 보여주기
   useEffect(() => {
     if (currentChatRoom) {
-      addMessagesListener(currentChatRoom.roomId);
+      addMessagesListener(currentChatRoom.key);
     }
   }, []);
 
@@ -70,8 +71,11 @@ const ChatRoom = (props) => {
   const createMessage = () => {
     const message = {
       timestamp: serverTimestamp(),
-      name: user.nickname,
-      content: content,
+      user: {
+        nickname,
+        oauth2Id,
+      },
+      content,
     };
     return message;
   };
@@ -87,13 +91,16 @@ const ChatRoom = (props) => {
       setMessageSending(false);
       return;
     }
-    const chatroomRef = ref(getDatabase(), 'chatrooms');
-    await get(child(chatroomRef, currentChatRoom.roomId))
+    //메세지 전송 유효성 테스트 (해당 파티에 가입되어 있는지 확인)
+    const chatroomRef = ref(getDatabase(), 'chatRooms');
+    await get(child(chatroomRef, currentChatRoom.key))
       .then(async (snapshot) => {
-        const members = [...snapshot.val().members];
-        if (members.includes(user)) {
+        const members = [...snapshot.val().memberList];
+        const oauth2IdList = members.map((member) => member.oauth2Id);
+        //유효성 확인 통과 (파티에 가입되어있는 사용자)
+        if (oauth2IdList.includes(oauth2Id)) {
           await set(
-            push(child(messagesRef, currentChatRoom.roomId)),
+            push(child(messagesRef, currentChatRoom.key)),
             createMessage()
           )
             .catch((error) => console.log(error))
@@ -126,7 +133,6 @@ const ChatRoom = (props) => {
   useEffect(() => {
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages]);
-
   return (
     <Box
       sx={{
@@ -149,20 +155,13 @@ const ChatRoom = (props) => {
         sx={{
           padding: '5px',
           width: '100%',
-          display: 'fext',
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
           maxHeight: '460px',
           overflowY: 'auto',
+          position: 'relative',
         }}
       >
-        {/* 채팅방 입장 메세지 */}
-        {/* {members.map((member, idx) => {
-          return <ChatEnter key={idx} name={member} />;
-        })} */}
         {messages.map((message, idx) => {
-          return <ChatMessage key={idx} user={user} message={message} />;
+          return <ChatMessage key={idx} messageInfo={message} />;
         })}
       </Box>
       {/* 입력 영역 */}
