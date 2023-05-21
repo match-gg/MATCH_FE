@@ -2,14 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { api } from '../../../api/api';
-import {
-  getDatabase,
-  ref,
-  push,
-  update,
-  child,
-  // serverTimestamp,
-} from 'firebase/database';
+import { getDatabase, ref, push, update, child } from 'firebase/database';
 
 import {
   Button,
@@ -229,7 +222,9 @@ const CreateCardBtn = (props) => {
       })
       .catch((error) => console.log(error))
       .then(async (response) => {
+        //서버 전송 성공시
         if (response.status === 200) {
+          //파이어베이스의 Realtime DB에 저장될 객체
           const newChatroom = {
             key,
             roomId: boardId,
@@ -239,6 +234,7 @@ const CreateCardBtn = (props) => {
             ],
             timestamp: new Date().toString(),
           };
+          //Ref에 접근해서 데이터 update
           await update(child(chatroomRef, key), newChatroom)
             .catch((error) => console.log(error))
             .then((_response) => {

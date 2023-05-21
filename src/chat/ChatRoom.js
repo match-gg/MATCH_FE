@@ -142,7 +142,6 @@ const ChatRoom = (props) => {
         alignItems: 'center',
         height: '530px',
         maxHeight: '530px',
-        // overflowY: 'scroll',
         width: '300px',
         backgroundColor: '#ffffff',
         borderRadius: '20px',
