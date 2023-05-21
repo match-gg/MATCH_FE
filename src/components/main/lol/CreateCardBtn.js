@@ -35,7 +35,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { typeData, tierData, positionData, expireData } from './CreateCardBtn.d';
+import {
+  typeData,
+  tierData,
+  positionData,
+  expireData,
+} from './CreateCardBtn.d';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const CreateCardBtn = (props) => {
@@ -54,7 +59,9 @@ const CreateCardBtn = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // 사용자 계정에 연결된 닉네임 사용 여부.
-  const [useExistNickname, setUseExistNickname] = useState(registeredNickname ? true : false);
+  const [useExistNickname, setUseExistNickname] = useState(
+    registeredNickname ? true : false
+  );
 
   // 사용자 input에 변동사항 있는지 확인 -> 모달 닫기 전 확인하는 데에 사용.
   const [isChanged, setIsChanged] = useState(false);
@@ -93,7 +100,9 @@ const CreateCardBtn = (props) => {
       });
     } else if (
       newValue === 'DUO_RANK' &&
-      (userInput.tier === 'MASTER' || userInput.tier === 'ALL' || userInput.position === 'ALL')
+      (userInput.tier === 'MASTER' ||
+        userInput.tier === 'ALL' ||
+        userInput.position === 'ALL')
     ) {
       setUserInput({
         ...userInput,
@@ -169,7 +178,11 @@ const CreateCardBtn = (props) => {
   const openModal = () => setOpen(true);
   const closeModalConfirm = () => {
     if (isChanged) {
-      if (window.confirm('현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'))
+      if (
+        window.confirm(
+          '현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'
+        )
+      )
         closeModal();
     } else {
       closeModal();
@@ -199,8 +212,9 @@ const CreateCardBtn = (props) => {
 
   //채팅방 생성 함수
   const createChatroom = async (boardId, totalUser) => {
-    const chatroomRef = ref(getDatabase(), 'chatrooms');
+    const chatroomRef = ref(getDatabase(), 'chatRooms');
     const key = push(chatroomRef).key;
+    //서버로 보낼 데이터
     const chatRoomInfo = {
       boardId: Number(boardId),
       chatRoomId: key,
@@ -217,9 +231,13 @@ const CreateCardBtn = (props) => {
       .then(async (response) => {
         if (response.status === 200) {
           const newChatroom = {
-            roomId: key,
-            createdBy: userInput.name,
-            members: [userInput.name],
+            key,
+            roomId: boardId,
+            createdBy: user.games['lol'],
+            memberList: [
+              { nickname: user.games['lol'], oauth2Id: user.oauth2Id },
+            ],
+            timestamp: new Date().toString(),
           };
           await update(child(chatroomRef, key), newChatroom)
             .catch((error) => console.log(error))
@@ -241,7 +259,9 @@ const CreateCardBtn = (props) => {
         },
       })
       .catch((error) => {
-        alert('게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.');
+        alert(
+          '게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.'
+        );
         console.log(error);
       })
       .then((response) => {
@@ -304,7 +324,11 @@ const CreateCardBtn = (props) => {
             <Typography component='h1' sx={{ fontSize: 18 }}>
               새 게시글 등록
             </Typography>
-            <CloseIcon color='primary' onClick={closeModalConfirm} sx={{ mr: 1, fontSize: 18 }} />
+            <CloseIcon
+              color='primary'
+              onClick={closeModalConfirm}
+              sx={{ mr: 1, fontSize: 18 }}
+            />
           </Box>
           <Divider sx={{ mb: 1 }} />
           <Box
@@ -369,7 +393,12 @@ const CreateCardBtn = (props) => {
                   </Button>
                 )
               }
-              sx={{ width: 320, height: 36, fontSize: 14, color: isIdChecked ? 'primary' : 'grey' }}
+              sx={{
+                width: 320,
+                height: 36,
+                fontSize: 14,
+                color: isIdChecked ? 'primary' : 'grey',
+              }}
             />
           </Box>
           <Box
@@ -554,7 +583,11 @@ const CreateCardBtn = (props) => {
               >
                 {expireData.map((data, idx) => {
                   return (
-                    <MenuItem key={idx} value={data.value} sx={{ color: 'grey' }}>
+                    <MenuItem
+                      key={idx}
+                      value={data.value}
+                      sx={{ color: 'grey' }}
+                    >
                       {data.text}
                     </MenuItem>
                   );
@@ -670,7 +703,10 @@ const CreateCardBtn = (props) => {
               variant='contained'
               size='large'
               disabled={
-                userInput.content.length >= 20 && (isIdChecked || useExistNickname) ? false : true
+                userInput.content.length >= 20 &&
+                (isIdChecked || useExistNickname)
+                  ? false
+                  : true
               }
               sx={{
                 height: 36,
