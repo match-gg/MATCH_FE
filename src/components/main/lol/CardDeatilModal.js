@@ -72,7 +72,7 @@ const CardDeatilModal = (props) => {
     };
 
     fetchBoardDetail();
-  });
+  }, []);
 
   // 방에 대한 인원 수 정보
   const totalMember = typeInfo.find((elem) => elem.id === boardData.type)?.maxMember || 0;
