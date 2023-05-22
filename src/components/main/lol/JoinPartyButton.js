@@ -8,12 +8,13 @@ import { chatRoomActions } from '../../../store/chatRoom-slice';
 const JoinPartyButton = (props) => {
   //game, chatRoomId, id를 props로 받아와야함
   const { game, chatRoomId, id } = props;
-  const nickname = useSelector((state) => state.user.nickname);
+  const nickname = useSelector((state) => state.user.games[`${game}`]);
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
   const newMember = {
     nickname,
     oauth2Id,
   };
+  //현재 게임
 
   //토큰
   const { accessToken } = useSelector((state) => state.token);
@@ -21,6 +22,21 @@ const JoinPartyButton = (props) => {
 
   const dispatch = useDispatch();
 
+  const isBaned = async (chatRoomId, oauth2Id) => {
+    let ban = false;
+    const chatRoomRef = ref(getDatabase(), 'chatRooms');
+    await get(child(chatRoomRef, chatRoomId)).then((datasnapshot) => {
+      const banedList = datasnapshot.val().banedList
+        ? datasnapshot.val().banedList
+        : [];
+      const banedOauth2IdList = banedList.map((member) => member.oauth2Id);
+      if (banedOauth2IdList.includes(oauth2Id)) {
+        ban = true;
+      }
+    });
+    return ban;
+  };
+  //파이어베이스에 추가해주는 함수
   const addFirebaseRDB = async (newMember, chatRoomId) => {
     const chatRoomRef = ref(getDatabase(), 'chatRooms');
     await get(child(chatRoomRef, chatRoomId))
@@ -37,6 +53,12 @@ const JoinPartyButton = (props) => {
       .catch((error) => console.log(error));
   };
   const joinParty = async () => {
+    //벤 여부 확인
+    if (isBaned(chatRoomId, oauth2Id)) {
+      alert('강퇴당한 사용자입니다.');
+      dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
+      return;
+    }
     //서버에 파티 참가 전송
     await api
       .post(`/api/chat/${game}/${id}/member`, null, {

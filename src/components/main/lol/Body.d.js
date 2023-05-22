@@ -17,6 +17,7 @@ export const tierList = [
   { value: 'SILVER', label: '실버' },
   { value: 'BRONZE', label: '브론즈' },
   { value: 'IRON', label: '아이언' },
+  { value: 'UNRANKED', label: '언랭크드' },
 ];
 
 export const laneList = [

@@ -15,17 +15,10 @@ import { queueTypeList, tierList, laneList } from './Body.d';
 import CreateCardBtn from './CreateCardBtn';
 
 const BoardsFilter = ({ filterProps }) => {
-  const { isLogin } = useSelector((state) => state.user)
+  const { isLogin } = useSelector((state) => state.user);
 
-  const {
-    handleLine,
-    handleQueueType,
-    handleTier,
-    line,
-    queueType,
-    tier,
-    refreshBoards,
-  } = filterProps;
+  const { handleLine, handleQueueType, handleTier, line, queueType, tier, refreshBoards } =
+    filterProps;
 
   return (
     <Grid
@@ -41,11 +34,7 @@ const BoardsFilter = ({ filterProps }) => {
     >
       <Grid item xs={6} sm={3.5} md={2} lg={1.5} sx={{ pr: 1 }}>
         <FormControl sx={{ width: '100%' }} size='small'>
-          <Select
-            id='queue-type-select'
-            value={queueType}
-            onChange={handleQueueType}
-          >
+          <Select id='queue-type-select' value={queueType} onChange={handleQueueType}>
             {queueTypeList.map((item, _index) => {
               return (
                 <MenuItem key={item.value} value={item.value}>
@@ -103,6 +92,7 @@ const BoardsFilter = ({ filterProps }) => {
         </ToggleButtonGroup>
       </Grid>
       <Grid
+        item
         sm
         sx={{
           p: 0,

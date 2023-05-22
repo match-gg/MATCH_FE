@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { api } from '../../../api/api';
 
@@ -46,6 +46,10 @@ const CloseModalBtn = styled(Button)({
 });
 
 const CardDeatilModal = (props) => {
+  //현재 게임 정보
+  const location = useLocation();
+  const game = location.pathname.split('/')[1];
+
   const navigate = useNavigate();
   const params = useParams();
   const { id: boardId } = params;
@@ -53,24 +57,49 @@ const CardDeatilModal = (props) => {
   const { isLogin } = useSelector((state) => state.user);
   const { joinedChatRooms } = useSelector((state) => state.chatRoom);
 
-  const [boardData, setBoardData] = useState({});
+  const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
+  const [boardData, setBoardData] = useState({
+    id: -1,
+    oauth2Id: 'kakao0000000000',
+    name: 'summonerName',
+    type: 'ARAM',
+    tier: 'ALL',
+    position: 'ALL',
+    voice: 'N',
+    content: 'contents',
+    expire: 'FIFTEEN_M',
+    created: '2023-12-31 23:59:59',
+    author: {
+      queueType: 'RANKED_SOLO_5x5',
+      summonerName: 'summonerName',
+      tier: 'UNRANKED',
+      rank: '',
+      leaguePoints: 0,
+      wins: 0,
+      losses: 0,
+      mostChampion: ['poro', 'poro', 'poro'],
+      lane: 'TOP',
+    },
+    chatRoomId: '',
+    memberList: ['summonerName'],
+  });
+  // 게시글 상세조회
+  const fetchBoardDetail = async () => {
+    await api
+      .get(`/api/${game}/boards/${boardId}`)
+      .then((res) => {
+        setBoardData(res.data);
+      })
+      .catch((err) => {
+        // 게시글 상세조회 실패
+        console.log(err);
+        // alert("게시글에 대한 정보를 불러오는 데 실패했습니다.\n'확인'을 누르면 메인페이지로 이동합니다.");
+        // navigate('/lol');
+      });
+  };
+  //컴포넌트 렌더링 시 게시글 상세 조회 호출
   useEffect(() => {
-    // 게시글 상세조회
-    const fetchBoardDetail = async () => {
-      await api
-        .get(`/api/lol/boards/${boardId}`)
-        .then((res) => {
-          setBoardData(res.data);
-        })
-        .catch((err) => {
-          // 게시글 상세조회 실패
-          console.log(err);
-          // alert("게시글에 대한 정보를 불러오는 데 실패했습니다.\n'확인'을 누르면 메인페이지로 이동합니다.");
-          // navigate('/lol');
-        });
-    };
-
     fetchBoardDetail();
   }, []);
 
@@ -79,7 +108,7 @@ const CardDeatilModal = (props) => {
   const currentMember = boardData?.memberList?.length || 0;
 
   return (
-    <ModalContainer onClick={() => navigate('/lol')}>
+    <ModalContainer onClick={() => navigate(`/${game}`)}>
       {/* ModalContainer와 CloseModalBtn 클릭시 뒤로가기(창 닫기)
         ModalContent 클릭 시 뒤로가기(창 닫기) 하지않음. */}
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -112,13 +141,13 @@ const CardDeatilModal = (props) => {
                 {boardData?.name}님의 파티
               </Typography>
               {!isLogin && !joinedChatRooms.includes(boardData.chatRoomId) && (
-                <IconButton size='small' onClick={() => navigate('/lol')}>
+                <IconButton size='small' onClick={() => navigate(`/${game}`)}>
                   <Close />
                 </IconButton>
               )}
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column'}}>
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                   <Box
                     sx={{
@@ -194,14 +223,25 @@ const CardDeatilModal = (props) => {
                     flexDirection: 'column',
                     justifyContent: 'flex-start',
                     minWidth: 520,
-                    minHeight: 420,
-                    maxHeight: 420,
+                    minHeight: 440,
+                    maxHeight: 440,
                     overflow: 'auto',
                   }}
                 >
                   {boardData.memberList &&
                     boardData.memberList.map((elem, _idx) => {
-                      return <PartyMember key={elem} name={elem} type={boardData.type} />;
+                      return (
+                        <PartyMember
+                          key={elem}
+                          name={elem}
+                          type={boardData.type}
+                          isAuthor={oauth2Id === boardData.oauth2Id}
+                          game={game}
+                          id={boardData.id}
+                          chatRoomId={boardData.chatRoomId}
+                          fetchBoardDetail={fetchBoardDetail}
+                        />
+                      );
                     })}
                   {Array(totalMember - currentMember).fill(<Recruitment />)}
                 </Box>
@@ -220,12 +260,9 @@ const CardDeatilModal = (props) => {
                     />
                   ))}
               </Box>
-              <Box sx={{ ml: 2 }}>
-                <ChatInCardDetailModal chatRoomId={'-NW1_3OU7HNA8ieHfkEX'} />
-              </Box>
               {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
                 <Box sx={{ ml: 2 }}>
-                  <ChatInCardDetailModal chatRoomId={boardData.chatRoomId} />
+                  <ChatInCardDetailModal chatRoomId={boardData.chatRoomId} game={game} />
                 </Box>
               )}
             </Box>

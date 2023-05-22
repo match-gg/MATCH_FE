@@ -3,9 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 //mui
-import { Box, Typography, TextField, InputAdornment, IconButton } from '@mui/material';
+import {
+  Box,
+  Typography,
+  TextField,
+  InputAdornment,
+  IconButton,
+} from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import { Close } from '@mui/icons-material';
 
 import {
   ref,
@@ -19,13 +24,13 @@ import {
   off,
 } from 'firebase/database';
 import ChatMessageInDetail from './ChatMessageInDetail';
+import { chatRoomActions } from '../store/chatRoom-slice';
 
 const ChatInCardDetailModal = (props) => {
-  const navigate = useNavigate();
   //props로 해당 파티의 채팅방 id값 가져오기
-  const { chatRoomId } = props;
+  const { chatRoomId, game } = props;
   //닉네임, ouath2Id
-  const nickname = useSelector((state) => state.user.games['lol']);
+  const nickname = useSelector((state) => state.user.games[`${game}`]);
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
   const dispatch = useDispatch();
@@ -93,7 +98,9 @@ const ChatInCardDetailModal = (props) => {
             }, 0);
           });
       } else {
+        // 가입되어있지 않은 사용자
         alert('유효하지 않은 사용자 입니다.');
+        dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
         return;
       }
     });
@@ -160,7 +167,9 @@ const ChatInCardDetailModal = (props) => {
           {messages.map((message, idx) => {
             console.log(message);
             const msgBySameSender =
-              message.user.nickname === messages[idx - 1]?.user.nickname ? true : false;
+              message.user.nickname === messages[idx - 1]?.user.nickname
+                ? true
+                : false;
             return (
               <ChatMessageInDetail
                 key={idx}

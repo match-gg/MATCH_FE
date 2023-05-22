@@ -85,6 +85,45 @@ const TestButton = () => {
       .then(() => console.log('채팅방 생성 테스트 성공'));
   };
 
+  const kickMember = async (nickname) => {
+    const chatRoomId = '-NW1_4aEj481AXLoEeoa';
+    const chatRoomRef = ref(getDatabase(), 'chatRooms');
+    await get(child(chatRoomRef, chatRoomId))
+      .then(async (datasnapshot) => {
+        const prevMemberList = [...datasnapshot.val().memberList];
+        const target = prevMemberList.find(
+          (member) => member.nickname === nickname
+        );
+        const prevBanedList = datasnapshot.val().banedList
+          ? [...datasnapshot.val().banedList]
+          : [];
+        const newMemberList = prevMemberList.filter(
+          (member) => member.nickname !== nickname
+        );
+        const newBanedList = [...prevBanedList, target];
+        await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
+          memberList: newMemberList,
+          banedList: newBanedList,
+        });
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const banTest = async () => {
+    const chatRoomRef = ref(getDatabase(), 'chatRooms');
+    await get(child(chatRoomRef, '-NW1_4aEj481AXLoEeoa')).then(
+      (datasnapshot) => {
+        const banedList = datasnapshot.val().banedList
+          ? datasnapshot.val().banedList
+          : [];
+        const banedOauth2IdList = banedList.map((member) => member.oauth2Id);
+        if (banedOauth2IdList.includes('kakaoTaxi')) {
+          console.log('벤 당한 사용자임');
+        }
+      }
+    );
+  };
+
   return (
     <>
       <Button variant='outlined' onClick={joinChatRoom}>
@@ -93,8 +132,14 @@ const TestButton = () => {
       <Button variant='outlined' onClick={leaveChatRoom}>
         파티 탈퇴
       </Button>
-      <Button variant='outlined' onClick={createChatRoom}>
+      {/* <Button variant='outlined' onClick={createChatRoom}>
         파티 생성
+      </Button> */}
+      {/* <Button variant='outlined' onClick={() => kickMember('명욱')}>
+        멤버 강퇴
+      </Button> */}
+      <Button variant='outlined' onClick={banTest}>
+        벤테스트
       </Button>
     </>
   );

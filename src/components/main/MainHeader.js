@@ -187,9 +187,9 @@ const MainHeader = ({ game }) => {
                   backgroundColor: '#f3f3f3',
                 }}
               >
-                {GameList.map((aGame, _index) => {
+                {GameList.map((aGame, index) => {
                   return (
-                    <Fragment>
+                    <Fragment key={index}>
                       <Button
                         onClick={() => {
                           if (game === aGame.id) {
@@ -278,12 +278,12 @@ const MainHeader = ({ game }) => {
               >
                 {GameList.map((aGame, index) => {
                   return (
-                    <MenuItem
+                    <MenuItem key={index}
                       onClick={() => {
                         navigate(`/${aGame.id}`);
                       }}
                     >
-                      <ListItemText style={{ textAlign: 'center' }}>
+                      <ListItemText key={index} style={{ textAlign: 'center' }}>
                         {aGame.fullName_Kor}
                       </ListItemText>
                     </MenuItem>
