@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Box, TextField, Button, CircularProgress } from '@mui/material';
+import { Box, TextField, Button, CircularProgress, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 
 import { registerActions } from '../../store/register-slice';
@@ -20,7 +20,7 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName, helperText }
     dispatch(
       registerActions.SET_GAMES_WITH_ID({
         id: e.target.id,
-        value: e.target.value.trim(),
+        value: e.target.value,
       })
     );
   };
@@ -57,7 +57,7 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName, helperText }
     <Box
       component='div'
       sx={{
-        width: '40%',
+        minWidth: 440,
         height: 100,
         display: 'flex',
         flexDirection: 'row',
@@ -69,7 +69,8 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName, helperText }
       <Box
         component='div'
         sx={{
-          width: '90%',
+          minWidth: 400,
+          width: '50%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -95,9 +96,18 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName, helperText }
               ) : (
                 <Button
                   onClick={verifyingNickname}
-                  sx={{ width: 80, display : games[gameName] === '' ? 'none' : 'block'}}
+                  sx={{
+                    p: 0,
+                    display: games[gameName] === '' ? 'none' : 'block',
+                  }}
                 >
-                  인증하기
+                  <Typography
+                    sx={{
+                      fontSize: 12,
+                    }}
+                  >
+                    인증하기
+                  </Typography>
                 </Button>
               ),
           }}
