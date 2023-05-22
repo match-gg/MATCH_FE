@@ -175,7 +175,7 @@ const MyInfo = ({ userInfo }) => {
               marginLeft: 1,
             }}
           >
-            {created || '가입 일자'}
+            {created.slice(0, 10) || '가입 일자'}
           </Typography>
         </Box>
       </Box>
