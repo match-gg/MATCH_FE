@@ -116,8 +116,8 @@ const TestButton = () => {
         const banedList = datasnapshot.val().banedList
           ? datasnapshot.val().banedList
           : [];
-        const banedOuath2IdList = banedList.map((member) => member.oauth2Id);
-        if (banedOuath2IdList.includes('kakaoTaxi')) {
+        const banedOauth2IdList = banedList.map((member) => member.oauth2Id);
+        if (banedOauth2IdList.includes('kakaoTaxi')) {
           console.log('벤 당한 사용자임');
         }
       }
