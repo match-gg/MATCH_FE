@@ -8,12 +8,13 @@ import { chatRoomActions } from '../../../store/chatRoom-slice';
 const JoinPartyButton = (props) => {
   //game, chatRoomId, id를 props로 받아와야함
   const { game, chatRoomId, id } = props;
-  const nickname = useSelector((state) => state.user.nickname);
+  const nickname = useSelector((state) => state.user.games[`${game}`]);
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
   const newMember = {
     nickname,
     oauth2Id,
   };
+  //현재 게임
 
   //토큰
   const { accessToken } = useSelector((state) => state.token);
@@ -25,6 +26,17 @@ const JoinPartyButton = (props) => {
     const chatRoomRef = ref(getDatabase(), 'chatRooms');
     await get(child(chatRoomRef, chatRoomId))
       .then(async (datasnapshot) => {
+        // ban 여부 확인
+        const banedList = datasnapshot.val().banedList
+          ? datasnapshot.val().banedList
+          : [];
+        const banedOuath2IdList = banedList.map((member) => member.oauth2Id);
+        if (banedOuath2IdList.includes(newMember.oauth2Id)) {
+          alert('강퇴당한 사용자입니다.');
+          dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
+          return;
+        }
+        //FBRDB에 추가
         const prevMemberList = [];
         prevMemberList.push(...datasnapshot.val().memberList);
         const joinedMemberList = [...prevMemberList, newMember];

@@ -2,14 +2,17 @@ import { useEffect, useState } from 'react';
 
 import { api } from '../../../api/api';
 
-import { Typography, Box, ImageList } from '@mui/material';
+import { Typography, Box, ImageList, Button, IconButton } from '@mui/material';
 
 import { lanes, rank_emblems, tierInfo } from './Card.d';
+import { Close } from '@mui/icons-material';
+import { ref, child, get, getDatabase, update } from 'firebase/database';
 
 const PartyMember = (props) => {
-  const { name, type } = props;
+  const { name, type, isAuthor, game, id, chatRoomId, fetchBoardDetail } =
+    props;
 
-  const [summonerData, setSummonerData] = useState();
+  const [summonerData, setSummonerData] = useState({});
 
   useEffect(() => {
     const fetchSummonerData = async () => {
@@ -29,17 +32,52 @@ const PartyMember = (props) => {
     };
 
     fetchSummonerData();
-  });
+  }, []);
 
-  const totalPlayed = summonerData.wins + summonerData.losses;
-  const winRate = Math.round((summonerData.wins / totalPlayed) * 100);
+  const kickMember = async () => {
+    await api
+      .delete(`/api/chat/${game}/${id}/${name}`)
+      .then(async (response) => {
+        if (response.status === 200) {
+          const chatRoomRef = ref(getDatabase(), 'chatRooms');
+          await get(child(chatRoomRef, chatRoomId))
+            .then(async (datasnapshot) => {
+              const prevMemberList = [...datasnapshot.val().memberList];
+              const target = prevMemberList.find(
+                (member) => member.nickname === summonerData.summonerName
+              );
+              const prevBanedList = datasnapshot.val().banedList
+                ? [...datasnapshot.val().banedList]
+                : [];
+              const newMemberList = prevMemberList.filter(
+                (member) => member.nickname !== summonerData.summonerName
+              );
+              const newBanedList = [...prevBanedList, target];
+              await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
+                memberList: newMemberList,
+                banedList: newBanedList,
+              })
+                // CardDetailModal에서 새로 멤버 받아오기 (삭제된 유저가 있으니 새로고침)
+                .then(() => fetchBoardDetail());
+            })
+            .catch((error) => console.log(error));
+        }
+      });
+  };
+
+  const totalPlayed = summonerData
+    ? summonerData.wins + summonerData.losses
+    : 999;
+  const winRate = summonerData
+    ? Math.round((summonerData.wins / totalPlayed) * 100)
+    : 999;
 
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         width: 520,
         minHeight: 80,
@@ -49,8 +87,21 @@ const PartyMember = (props) => {
         mb: 1,
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
-        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: 140,
+        }}
+      >
+        <Typography
+          sx={{
+            color: 'grey',
+            fontSize: 12,
+            fontWeight: 700,
+            textOverflow: 'ellipsis',
+          }}
+        >
           닉네임
         </Typography>
         <Typography component='span' sx={{ fontSize: 16, fontWeight: 700 }}>
@@ -140,9 +191,7 @@ const PartyMember = (props) => {
           </Box>
         </Box>
       </Box>
-      <Box
-        sx={{ display: 'flex', flexDirection: 'column', minWidth: 160, pl: 4 }}
-      >
+      <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
         <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
           모스트 챔피언
         </Typography>
@@ -167,6 +216,13 @@ const PartyMember = (props) => {
           </ImageList>
         </Box>
       </Box>
+      {isAuthor && (
+        <Box>
+          <IconButton onClick={kickMember}>
+            <Close color='warning' />
+          </IconButton>
+        </Box>
+      )}
     </Box>
   );
 };
