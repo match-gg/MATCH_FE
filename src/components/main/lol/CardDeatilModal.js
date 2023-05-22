@@ -35,7 +35,7 @@ const ModalContainer = styled(Box)(({ theme }) => ({
 const ModalContent = styled(Box)(({ theme }) => ({
   backgroundColor: 'white',
   borderRadius: 4,
-  minHeight: 640, // minHeight을 주지않으면 솔로랭크는 두칸이라 답답해 보여서 추가.
+  minHeight: 600, // minHeight을 주지않으면 솔로랭크는 두칸이라 답답해 보여서 추가.
 }));
 
 const CloseModalBtn = styled(Button)({
@@ -88,7 +88,6 @@ const CardDeatilModal = (props) => {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'flex-start',
-            mb: 1,
           }}
         >
           <Box
@@ -119,7 +118,7 @@ const CardDeatilModal = (props) => {
               )}
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', pb: 3 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                   <Box
                     sx={{
@@ -194,7 +193,8 @@ const CardDeatilModal = (props) => {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'flex-start',
-                    maxHeight: 440,
+                    minHeight: 420,
+                    maxHeight: 420,
                     overflow: 'auto',
                   }}
                 >
@@ -203,7 +203,9 @@ const CardDeatilModal = (props) => {
                       return <PartyMember key={elem} name={elem} type={boardData.type} />;
                     })}
                   {Array(totalMember - currentMember).fill(<Recruitment />)}
-                  {isLogin &&
+                  
+                </Box>
+                {isLogin &&
                     (joinedChatRooms.includes(boardData.chatRoomId) ? (
                       <LeavePatryButton
                         chatRoomId={boardData.chatRoomId}
@@ -217,7 +219,6 @@ const CardDeatilModal = (props) => {
                         id={boardData.id}
                       />
                     ))}
-                </Box>
               </Box>
               {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
                 <Box sx={{ ml: 2 }}>
