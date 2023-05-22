@@ -3,13 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 //mui
-import {
-  Box,
-  Typography,
-  TextField,
-  InputAdornment,
-  IconButton,
-} from '@mui/material';
+import { Box, Typography, TextField, InputAdornment, IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { Close } from '@mui/icons-material';
 
@@ -124,109 +118,93 @@ const ChatInCardDetailModal = (props) => {
   }, [messages]);
 
   return (
-    <>
-      <Box
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        pb: 1,
+      }}
+    >
+      <Typography
         sx={{
-          width: '100%',
-          height: '100%',
-          p: 2,
-          pb: 3,
+          color: 'grey',
+          fontSize: 14,
+          fontWeight: 600,
         }}
       >
+        파티 전용 채팅
+      </Typography>
+      <Box
+        sx={{
+          backgroundColor: 'rgba(236, 236, 236, 0.5)',
+          minWidth: 360,
+          maxWidth: 360,
+          minHeight: 480,
+          position: 'relative',
+          borderRadius: 1,
+          p: 1,
+        }}
+      >
+        {/* 채탕 매세지 영역 */}
         <Box
+          ref={scrollRef}
           sx={{
+            width: '100%',
+            overflow: 'scroll',
             display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            maxHeight: 480,
           }}
         >
-          <Typography
-            component='h1'
-            sx={{
-              fontSize: 22,
-              fontWeight: 700,
-              pb: 1,
-              color: 'white',
-            }}
-          >
-            {'님의 파티 채팅'}
-          </Typography>
-          <IconButton size='small' onClick={() => navigate('/lol')}>
-            <Close />
-          </IconButton>
+          {messages.map((message, idx) => {
+            console.log(message);
+            const msgBySameSender =
+              message.user.nickname === messages[idx - 1]?.user.nickname ? true : false;
+            return (
+              <ChatMessageInDetail
+                key={idx}
+                messageInfo={message}
+                msgBySameSender={msgBySameSender}
+              />
+            );
+          })}
         </Box>
-        <Typography
-          sx={{
-            color: 'grey',
-            fontSize: 14,
-            fontWeight: 600,
-            pb: 0.5,
-          }}
-        >
-          파티 전용 채팅
-        </Typography>
-        <Box
-          sx={{
-            backgroundColor: 'rgba(236, 236, 236, 0.5)',
-            mt: 1,
-            minWidth: 360,
-            minHeight: 540,
-            position: 'relative',
-          }}
-        >
-          {/* 채탕 매세지 영역 */}
-          <Box
-            ref={scrollRef}
-            sx={{
-              padding: 1,
-              width: '100%',
-              overflow: 'scroll',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              maxHeight: 480,
-            }}
-          >
-            {messages.map((message, idx) => {
-              return <ChatMessageInDetail key={idx} messageInfo={message} />;
-            })}
-          </Box>
-          {/* 메세지 인풋 영역 */}
-          <Box
-            sx={{
-              position: 'absolute',
-              bottom: '0px',
-              backgroundColor: 'white',
-              width: '100%',
-            }}
-          >
-            <TextField
-              label='메세지를 입력해주세요.'
-              disabled={messageSending}
-              value={content}
-              onChange={handleContent}
-              onKeyDown={handleKeyDown}
-              autoComplete='off'
-              autoFocus
-              ref={inputRef}
-              sx={{
-                mt: 1,
-                width: '100%',
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton size='small' onClick={postMessage}>
-                      <SendIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
-        </Box>
+        {/* 메세지 인풋 영역 */}
       </Box>
-    </>
+      <Box
+        sx={{
+          backgroundColor: 'white',
+          width: '100%',
+          height: 40,
+        }}
+      >
+        <TextField
+          label='메세지를 입력해주세요.'
+          disabled={messageSending}
+          value={content}
+          onChange={handleContent}
+          onKeyDown={handleKeyDown}
+          autoComplete='off'
+          autoFocus
+          ref={inputRef}
+          sx={{
+            mt: 1,
+            width: '100%',
+            height: 40,
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position='end'>
+                <IconButton size='small' onClick={postMessage}>
+                  <SendIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
+    </Box>
   );
 };
 
