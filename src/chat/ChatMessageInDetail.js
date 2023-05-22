@@ -24,18 +24,23 @@ const ChatMessageInDetail = (props) => {
           <strong>{messageInfo.user.nickname}</strong>
         )}
       </Typography>
-      <Box sx={{ display: 'flex', flexDirection: isMessageMine ? 'row' : 'row-reverse' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: isMessageMine(messageInfo, oauth2Id) ? 'row-reverse' : 'row',
+        }}
+      >
         <Box
           sx={{
-            mt: !msgBySameSender ? 1 : 0,
-            ml: 2,
+            mt: !msgBySameSender ? 1 : 0.25,
+            ml: isMessageMine(messageInfo, oauth2Id) ? 1 : 2,
             p: 1,
             display: 'flex',
             flexDirection: 'row',
             wordBreak: 'break-all',
             width: 'fit-content',
             maxWidth: '80%',
-            borderRadius: '8px',
+            borderRadius: 2,
             backgroundColor: isMessageMine(messageInfo, oauth2Id) ? 'white' : '#e2e2e2',
             boxShadow: '0 0 1px 1px #ececec',
           }}
@@ -43,8 +48,8 @@ const ChatMessageInDetail = (props) => {
           <Typography>{messageInfo.content}</Typography>
         </Box>
         {date && (
-          <Box sx={{ display: 'flex', alignItems: 'flex-end', pl: 1, pb: 0.5 }}>
-            <Typography sx={{ color: 'grey', fontSize: 12 }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-end', pl: 1 }}>
+            <Typography sx={{ color: 'grey', fontSize: 10 }}>
               {date.toTimeString().split(' ')[0].slice(0, 5)}
             </Typography>
           </Box>

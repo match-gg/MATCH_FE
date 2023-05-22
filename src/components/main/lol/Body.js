@@ -25,7 +25,7 @@ const BoardsWrapper = styled('div')({
 const Body = () => {
   const location = useLocation();
 
-  const [boards, setBoards] = useState(dummyBoards); // 전체 게시글 저장
+  const [boards, setBoards] = useState([]); // 전체 게시글 저장
   const [pageNumber, setPageNumber] = useState(1); // 불러 올 페이지 번호
 
   const [queueType, setQueueType] = useState('ALL'); // 큐 타입
@@ -75,7 +75,7 @@ const Body = () => {
         });
     };
 
-    // fetchBoards();
+    fetchBoards();
   }, [queueType, tier, lane]);
 
   // 더 불러오기 버튼 클릭 시

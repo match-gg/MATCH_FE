@@ -28,12 +28,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import {
-  typeData,
-  tierData,
-  positionData,
-  expireData,
-} from './CreateCardBtn.d';
+import { typeData, tierData, positionData, expireData } from './CreateCardBtn.d';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const CreateCardBtn = (props) => {
@@ -45,6 +40,8 @@ const CreateCardBtn = (props) => {
   // 로그인 된 사용자의 기본 닉네임 가져오기.
   const registeredNickname = user.games['lol'];
 
+  console.log(registeredNickname);
+
   // 닉네임 인증여부 확인에 사용할 state와 함수
   const [isIdChecked, setIsIdChecked] = useState(false);
 
@@ -52,9 +49,7 @@ const CreateCardBtn = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // 사용자 계정에 연결된 닉네임 사용 여부.
-  const [useExistNickname, setUseExistNickname] = useState(
-    registeredNickname ? true : false
-  );
+  const [useExistNickname, setUseExistNickname] = useState(registeredNickname ? true : false);
 
   // 사용자 input에 변동사항 있는지 확인 -> 모달 닫기 전 확인하는 데에 사용.
   const [isChanged, setIsChanged] = useState(false);
@@ -93,9 +88,7 @@ const CreateCardBtn = (props) => {
       });
     } else if (
       newValue === 'DUO_RANK' &&
-      (userInput.tier === 'MASTER' ||
-        userInput.tier === 'ALL' ||
-        userInput.position === 'ALL')
+      (userInput.tier === 'MASTER' || userInput.tier === 'ALL' || userInput.position === 'ALL')
     ) {
       setUserInput({
         ...userInput,
@@ -171,11 +164,7 @@ const CreateCardBtn = (props) => {
   const openModal = () => setOpen(true);
   const closeModalConfirm = () => {
     if (isChanged) {
-      if (
-        window.confirm(
-          '현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'
-        )
-      )
+      if (window.confirm('현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'))
         closeModal();
     } else {
       closeModal();
@@ -229,9 +218,7 @@ const CreateCardBtn = (props) => {
             key,
             roomId: boardId,
             createdBy: user.games['lol'],
-            memberList: [
-              { nickname: user.games['lol'], oauth2Id: user.oauth2Id },
-            ],
+            memberList: [{ nickname: user.games['lol'], oauth2Id: user.oauth2Id }],
             timestamp: new Date().toString(),
           };
           //Ref에 접근해서 데이터 update
@@ -247,6 +234,8 @@ const CreateCardBtn = (props) => {
 
   //글 작성 완료시 서버로 데이터 전송
   const postModalInfo = async () => {
+    setIsPending(true);
+
     await api
       .post(`/api/lol/board`, userInput, {
         headers: {
@@ -259,14 +248,20 @@ const CreateCardBtn = (props) => {
           '게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.'
         );
         console.log(error);
+        setIsPending(false);
       })
       .then((response) => {
         const boardId = response.data;
         //채팅방 개설
         createChatroom(boardId, 5);
         // 인원수 제한이 5로 되어있는 것 같은데 5로 고정할 건지 고민좀 해봐야 할 듯
+
+        setIsPending(false);
       });
   };
+
+  // 게시글 등록 과정 대기 상태 관리
+  const [isPending, setIsPending] = useState(false);
 
   return (
     <Fragment>
@@ -306,7 +301,7 @@ const CreateCardBtn = (props) => {
             px: 2,
             py: 2,
             minWidth: 500,
-            borderRadius: 2,
+            borderRadius: 1,
           }}
         >
           <Box
@@ -320,11 +315,7 @@ const CreateCardBtn = (props) => {
             <Typography component='h1' sx={{ fontSize: 18 }}>
               새 게시글 등록
             </Typography>
-            <CloseIcon
-              color='primary'
-              onClick={closeModalConfirm}
-              sx={{ mr: 1, fontSize: 18 }}
-            />
+            <CloseIcon color='primary' onClick={closeModalConfirm} sx={{ mr: 1, fontSize: 18 }} />
           </Box>
           <Divider sx={{ mb: 1 }} />
           <Box
@@ -338,7 +329,7 @@ const CreateCardBtn = (props) => {
             <Switch
               defaultChecked={registeredNickname ? true : false}
               onChange={handleSwitch}
-              disabled={registeredNickname ? false : true}
+              disabled={isPending ? true : registeredNickname ? false : true}
               size='medium'
             />
             <Typography
@@ -372,7 +363,7 @@ const CreateCardBtn = (props) => {
             <OutlinedInput
               size='small'
               placeholder='소환사 명을 입력하세요.'
-              disabled={useExistNickname}
+              disabled={isPending ? true : useExistNickname}
               onChange={handleName}
               error={isIdChecked ? false : true}
               endAdornment={
@@ -383,7 +374,7 @@ const CreateCardBtn = (props) => {
                     position='end'
                     sx={{ whiteSpace: 'nowrap' }}
                     onClick={certifyNickname}
-                    disabled={useExistNickname}
+                    disabled={isPending ? true : useExistNickname}
                   >
                     {isIdChecked ? '인증완료' : '인증하기'}
                   </Button>
@@ -417,6 +408,7 @@ const CreateCardBtn = (props) => {
             </Typography>
             <ToggleButtonGroup
               exclusive
+              disabled={isPending ? true : false}
               value={userInput.type}
               onChange={handleType}
               sx={{
@@ -468,7 +460,7 @@ const CreateCardBtn = (props) => {
             }}
           >
             <ToggleButtonGroup
-              disabled={userInput.type === 'ARAM' ? true : false}
+              disabled={isPending ? true : userInput.type === 'ARAM' ? true : false}
               value={userInput.tier}
               onChange={handleTier}
               exclusive
@@ -490,8 +482,10 @@ const CreateCardBtn = (props) => {
                     key={idx}
                     value={data.value}
                     disabled={
-                      (data.value === 'MASTER' || data.value === 'ALL') &&
-                      userInput.type === 'DUO_RANK'
+                      isPending
+                        ? true
+                        : (data.value === 'MASTER' || data.value === 'ALL') &&
+                          userInput.type === 'DUO_RANK'
                         ? true
                         : false
                     }
@@ -522,7 +516,7 @@ const CreateCardBtn = (props) => {
               원하는 파티원의 포지션
             </Typography>
             <ToggleButtonGroup
-              disabled={userInput.type === 'ARAM' ? true : false}
+              disabled={isPending ? true : (userInput.type === 'ARAM' ? true : false)}
               value={userInput.position}
               exclusive
               onChange={handlePosition}
@@ -565,7 +559,7 @@ const CreateCardBtn = (props) => {
             >
               파티찾기 지속시간
             </Typography>
-            <FormControl sx={{ width: 240 }}>
+            <FormControl sx={{ width: 240 }} disabled={isPending ? true : false}>
               <Select
                 value={userInput.expire}
                 onChange={handleExpire}
@@ -579,11 +573,7 @@ const CreateCardBtn = (props) => {
               >
                 {expireData.map((data, idx) => {
                   return (
-                    <MenuItem
-                      key={idx}
-                      value={data.value}
-                      sx={{ color: 'grey' }}
-                    >
+                    <MenuItem key={idx} value={data.value} sx={{ color: 'grey' }}>
                       {data.text}
                     </MenuItem>
                   );
@@ -611,6 +601,7 @@ const CreateCardBtn = (props) => {
             </Typography>
             <ToggleButtonGroup
               exclusive='true'
+              disabled={isPending ? true : false}
               value={userInput.voice}
               onChange={handleVoice}
               sx={{
@@ -641,6 +632,7 @@ const CreateCardBtn = (props) => {
               onChange={handleContent}
               fullWidth
               multiline
+              disabled={isPending ? true : false}
               minRows={4}
               maxRows={4}
               placeholder='140자 이내로 원하는 파티원에 대한 설명이나, 자신을 소개해 보세요.'
@@ -681,10 +673,12 @@ const CreateCardBtn = (props) => {
               onClick={closeModalConfirm}
               startIcon={<BackspaceIcon />}
               variant='contained'
+              disabled={isPending ? true : false}
               size='large'
               sx={{
                 bgcolor: '#808080',
                 mr: 1,
+                width: 124,
                 height: 36,
                 ':hover': {
                   bgcolor: '#a0a0a0',
@@ -695,20 +689,22 @@ const CreateCardBtn = (props) => {
             </Button>
             <Button
               onClick={postModalInfo}
-              startIcon={<EditIcon />}
+              startIcon={!isPending && <EditIcon />}
               variant='contained'
               size='large'
               disabled={
-                userInput.content.length >= 20 &&
-                (isIdChecked || useExistNickname)
+                isPending
+                  ? true
+                  : userInput.content.length >= 20 && (isIdChecked || useExistNickname)
                   ? false
                   : true
               }
               sx={{
                 height: 36,
+                width: 124,
               }}
             >
-              작성하기
+              {isPending ? <CircularProgress sx={{ color: 'white' }} size={20} /> : '작성하기'}
             </Button>
           </Box>
         </Stack>

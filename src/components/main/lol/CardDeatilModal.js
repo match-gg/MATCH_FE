@@ -35,7 +35,7 @@ const ModalContainer = styled(Box)(({ theme }) => ({
 const ModalContent = styled(Box)(({ theme }) => ({
   backgroundColor: 'white',
   borderRadius: 4,
-  minHeight: 640, // minHeight을 주지않으면 솔로랭크는 두칸이라 답답해 보여서 추가.
+  minHeight: 600, // minHeight을 주지않으면 솔로랭크는 두칸이라 답답해 보여서 추가.
 }));
 
 const CloseModalBtn = styled(Button)({
@@ -60,29 +60,29 @@ const CardDeatilModal = (props) => {
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
   const [boardData, setBoardData] = useState({
-    id: 2,
-    oauth2Id: 'kakao2668291200',
-    name: '수유욱',
+    id: -1,
+    oauth2Id: 'kakao0000000000',
+    name: 'summonerName',
     type: 'ARAM',
     tier: 'ALL',
     position: 'ALL',
     voice: 'N',
-    content: '123123',
+    content: 'contents',
     expire: 'FIFTEEN_M',
-    created: '2023-05-16 19:20:45',
+    created: '2023-12-31 23:59:59',
     author: {
       queueType: 'RANKED_SOLO_5x5',
-      summonerName: '수유욱',
-      tier: 'GOLD',
-      rank: 'II',
-      leaguePoints: 20,
-      wins: 57,
-      losses: 48,
-      mostChampion: ['Ahri', 'Khazix', 'Lulu'],
-      lane: 'JUNGLE',
+      summonerName: 'summonerName',
+      tier: 'UNRANKED',
+      rank: '',
+      leaguePoints: 0,
+      wins: 0,
+      losses: 0,
+      mostChampion: ['poro', 'poro', 'poro'],
+      lane: 'TOP',
     },
-    chatRoomId: '1234',
-    memberList: ['수유욱', '밍꾸라지', '젖꼭지수산새우도둑'],
+    chatRoomId: '',
+    memberList: ['summonerName'],
   });
   // 게시글 상세조회
   const fetchBoardDetail = async () => {
@@ -104,8 +104,7 @@ const CardDeatilModal = (props) => {
   }, []);
 
   // 방에 대한 인원 수 정보
-  const totalMember =
-    typeInfo.find((elem) => elem.id === boardData.type)?.maxMember || 0;
+  const totalMember = typeInfo.find((elem) => elem.id === boardData.type)?.maxMember || 0;
   const currentMember = boardData?.memberList?.length || 0;
 
   return (
@@ -118,7 +117,6 @@ const CardDeatilModal = (props) => {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'flex-start',
-            mb: 1,
           }}
         >
           <Box
@@ -149,7 +147,7 @@ const CardDeatilModal = (props) => {
               )}
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', pb: 3 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                   <Box
                     sx={{
@@ -159,33 +157,23 @@ const CardDeatilModal = (props) => {
                       pr: '60px',
                     }}
                   >
-                    <Typography
-                      sx={{
-                        color: 'grey',
-                        fontSize: 14,
-                        fontWeight: 600,
-                        pb: 0.5,
-                      }}
-                    >
+                    <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 1 }}>
                       모집 내용
                     </Typography>
                     <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
                       {boardData?.content}
                     </Typography>
-                    <Box sx={{ display: 'flex', pt: 0.5 }}>
+                    <Box sx={{ display: 'flex', pt: 1 }}>
                       <Typography
                         color={
-                          tierInfo.find((elem) => elem.id === boardData?.tier)
-                            ?.color || 'grey'
+                          tierInfo.find((elem) => elem.id === boardData?.tier)?.color || 'grey'
                         }
                         sx={{
                           fontSize: 12,
                           fontWeight: 700,
                         }}
                       >
-                        #
-                        {tierInfo.find((elem) => elem.id === boardData.tier)
-                          ?.kor || '티어'}
+                        #{tierInfo.find((elem) => elem.id === boardData.tier)?.kor || '티어'}
                       </Typography>
                       <Typography
                         sx={{
@@ -194,9 +182,7 @@ const CardDeatilModal = (props) => {
                           pl: 1,
                         }}
                       >
-                        #
-                        {typeInfo.find((elem) => elem.id === boardData.type)
-                          ?.kor || '큐타입'}
+                        #{typeInfo.find((elem) => elem.id === boardData.type)?.kor || '큐타입'}
                       </Typography>
                       <Typography
                         sx={{
@@ -205,9 +191,7 @@ const CardDeatilModal = (props) => {
                           pl: 1,
                         }}
                       >
-                        #
-                        {lanes.find((elem) => elem.id === boardData.position)
-                          ?.kor || '포지션'}
+                        #{lanes.find((elem) => elem.id === boardData.position)?.kor || '포지션'}
                         구함
                       </Typography>
                       <Typography
@@ -222,26 +206,14 @@ const CardDeatilModal = (props) => {
                     </Box>
                   </Box>
                   <Box>
-                    <Typography
-                      sx={{
-                        color: 'grey',
-                        fontSize: 14,
-                        fontWeight: 600,
-                        pb: 0.5,
-                      }}
-                    >
+                    <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 1 }}>
                       마감일시
                     </Typography>
-                    <RemainingTime
-                      created={boardData?.created}
-                      expire={boardData?.expire}
-                    />
+                    <RemainingTime created={boardData?.created} expire={boardData?.expire} />
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', py: 1 }}>
-                  <Typography
-                    sx={{ color: 'grey', fontSize: 14, fontWeight: 600 }}
-                  >
+                  <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600 }}>
                     참여자 목록 ( {currentMember} / {totalMember} )
                   </Typography>
                 </Box>
@@ -250,6 +222,8 @@ const CardDeatilModal = (props) => {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'flex-start',
+                    minWidth: 520,
+                    minHeight: 440,
                     maxHeight: 440,
                     overflow: 'auto',
                   }}
@@ -270,28 +244,25 @@ const CardDeatilModal = (props) => {
                       );
                     })}
                   {Array(totalMember - currentMember).fill(<Recruitment />)}
-                  {isLogin &&
-                    (joinedChatRooms.includes(boardData.chatRoomId) ? (
-                      <LeavePatryButton
-                        chatRoomId={boardData.chatRoomId}
-                        game={game}
-                        id={boardData.id}
-                      />
-                    ) : (
-                      <JoinPartyButton
-                        chatRoomId={boardData.chatRoomId}
-                        game={game}
-                        id={boardData.id}
-                      />
-                    ))}
                 </Box>
+                {isLogin &&
+                  (joinedChatRooms.includes(boardData.chatRoomId) ? (
+                    <LeavePatryButton
+                      chatRoomId={boardData.chatRoomId}
+                      game={'lol'}
+                      id={boardData.id}
+                    />
+                  ) : (
+                    <JoinPartyButton
+                      chatRoomId={boardData.chatRoomId}
+                      game={'lol'}
+                      id={boardData.id}
+                    />
+                  ))}
               </Box>
               {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
                 <Box sx={{ ml: 2 }}>
-                  <ChatInCardDetailModal
-                    chatRoomId={boardData.chatRoomId}
-                    game={game}
-                  />
+                  <ChatInCardDetailModal chatRoomId={boardData.chatRoomId} game={game} />
                 </Box>
               )}
             </Box>
