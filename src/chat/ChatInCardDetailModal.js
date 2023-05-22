@@ -139,7 +139,7 @@ const ChatInCardDetailModal = (props) => {
           backgroundColor: 'rgba(236, 236, 236, 0.5)',
           minWidth: 360,
           maxWidth: 360,
-          minHeight: 480,
+          minHeight: 490,
           position: 'relative',
           borderRadius: 1,
           p: 1,
@@ -188,10 +188,10 @@ const ChatInCardDetailModal = (props) => {
           autoComplete='off'
           autoFocus
           ref={inputRef}
+          size='small'
           sx={{
             mt: 1,
             width: '100%',
-            height: 40,
           }}
           InputProps={{
             endAdornment: (

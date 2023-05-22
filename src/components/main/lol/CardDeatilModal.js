@@ -118,7 +118,7 @@ const CardDeatilModal = (props) => {
               )}
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column'}}>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                   <Box
                     sx={{
@@ -128,13 +128,13 @@ const CardDeatilModal = (props) => {
                       pr: '60px',
                     }}
                   >
-                    <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}>
+                    <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 1 }}>
                       모집 내용
                     </Typography>
                     <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
                       {boardData?.content}
                     </Typography>
-                    <Box sx={{ display: 'flex', pt: 0.5 }}>
+                    <Box sx={{ display: 'flex', pt: 1 }}>
                       <Typography
                         color={
                           tierInfo.find((elem) => elem.id === boardData?.tier)?.color || 'grey'
@@ -177,7 +177,7 @@ const CardDeatilModal = (props) => {
                     </Box>
                   </Box>
                   <Box>
-                    <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}>
+                    <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 1 }}>
                       마감일시
                     </Typography>
                     <RemainingTime created={boardData?.created} expire={boardData?.expire} />
@@ -193,6 +193,7 @@ const CardDeatilModal = (props) => {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'flex-start',
+                    minWidth: 520,
                     minHeight: 420,
                     maxHeight: 420,
                     overflow: 'auto',
@@ -203,22 +204,24 @@ const CardDeatilModal = (props) => {
                       return <PartyMember key={elem} name={elem} type={boardData.type} />;
                     })}
                   {Array(totalMember - currentMember).fill(<Recruitment />)}
-                  
                 </Box>
                 {isLogin &&
-                    (joinedChatRooms.includes(boardData.chatRoomId) ? (
-                      <LeavePatryButton
-                        chatRoomId={boardData.chatRoomId}
-                        game={'lol'}
-                        id={boardData.id}
-                      />
-                    ) : (
-                      <JoinPartyButton
-                        chatRoomId={boardData.chatRoomId}
-                        game={'lol'}
-                        id={boardData.id}
-                      />
-                    ))}
+                  (joinedChatRooms.includes(boardData.chatRoomId) ? (
+                    <LeavePatryButton
+                      chatRoomId={boardData.chatRoomId}
+                      game={'lol'}
+                      id={boardData.id}
+                    />
+                  ) : (
+                    <JoinPartyButton
+                      chatRoomId={boardData.chatRoomId}
+                      game={'lol'}
+                      id={boardData.id}
+                    />
+                  ))}
+              </Box>
+              <Box sx={{ ml: 2 }}>
+                <ChatInCardDetailModal chatRoomId={'-NW1_3OU7HNA8ieHfkEX'} />
               </Box>
               {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
                 <Box sx={{ ml: 2 }}>
