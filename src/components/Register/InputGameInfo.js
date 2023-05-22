@@ -36,7 +36,7 @@ const InputGameInfo = ({ gameIcon, labelText, altMessage, gameName, helperText }
     if (games[gameName] !== '') {
       setIsPending(true);
       await api
-        .get(`/api/${gameName}/exist/${games[gameName]}`)
+        .get(`/api/${gameName}/user/exist/${games[gameName]}`)
         .then((response) => {
           if (response.status === 200) {
             dispatch(registerActions.SET_GAMESCHECK_WITH_ID({ id: gameName }));
