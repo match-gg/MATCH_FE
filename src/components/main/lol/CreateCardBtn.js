@@ -45,6 +45,8 @@ const CreateCardBtn = (props) => {
   // 로그인 된 사용자의 기본 닉네임 가져오기.
   const registeredNickname = user.games['lol'];
 
+  console.log(registeredNickname)
+
   // 닉네임 인증여부 확인에 사용할 state와 함수
   const [isIdChecked, setIsIdChecked] = useState(false);
 
@@ -247,26 +249,35 @@ const CreateCardBtn = (props) => {
 
   //글 작성 완료시 서버로 데이터 전송
   const postModalInfo = async () => {
-    await api
-      .post(`/api/lol/board`, userInput, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Refresh-Token': refreshToken,
-        },
-      })
-      .catch((error) => {
-        alert(
-          '게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.'
-        );
-        console.log(error);
-      })
-      .then((response) => {
-        const boardId = response.data;
-        //채팅방 개설
-        createChatroom(boardId, 5);
-        // 인원수 제한이 5로 되어있는 것 같은데 5로 고정할 건지 고민좀 해봐야 할 듯
-      });
+    
+    setIsPending(true);
+
+    // await api
+    //   .post(`/api/lol/board`, userInput, {
+    //     headers: {
+    //       Authorization: `Bearer ${accessToken}`,
+    //       'Refresh-Token': refreshToken,
+    //     },
+    //   })
+    //   .catch((error) => {
+    //     alert(
+    //       '게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.'
+    //     );
+    //     console.log(error);
+    //     setIsPending(false);
+    //   })
+    //   .then((response) => {
+    //     const boardId = response.data;
+    //     //채팅방 개설
+    //     createChatroom(boardId, 5);
+    //     // 인원수 제한이 5로 되어있는 것 같은데 5로 고정할 건지 고민좀 해봐야 할 듯
+
+    //     setIsPending(false);
+    //   });
   };
+
+  // 게시글 등록 과정 대기 상태 관리
+  const [isPending, setIsPending] = useState(false);
 
   return (
     <Fragment>
@@ -306,7 +317,7 @@ const CreateCardBtn = (props) => {
             px: 2,
             py: 2,
             minWidth: 500,
-            borderRadius: 2,
+            borderRadius: 1,
           }}
         >
           <Box
@@ -685,6 +696,7 @@ const CreateCardBtn = (props) => {
               sx={{
                 bgcolor: '#808080',
                 mr: 1,
+                width: 124,
                 height: 36,
                 ':hover': {
                   bgcolor: '#a0a0a0',
@@ -695,20 +707,22 @@ const CreateCardBtn = (props) => {
             </Button>
             <Button
               onClick={postModalInfo}
-              startIcon={<EditIcon />}
+              startIcon={!isPending && <EditIcon />}
               variant='contained'
               size='large'
               disabled={
-                userInput.content.length >= 20 &&
+                isPending ? true : 
+                (userInput.content.length >= 20 &&
                 (isIdChecked || useExistNickname)
                   ? false
-                  : true
+                  : true)
               }
               sx={{
                 height: 36,
+                width: 124
               }}
             >
-              작성하기
+              {isPending ? (<CircularProgress sx={{color: 'white'}} size={20}/>) : '작성하기'}
             </Button>
           </Box>
         </Stack>
