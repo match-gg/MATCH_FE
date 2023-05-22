@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import {
   Grid,
   FormControl,
@@ -12,9 +13,10 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { queueTypeList, tierList, laneList } from './Body.d';
 
 import CreateCardBtn from './CreateCardBtn';
-import TestButton from '../../../chat/TestButton';
 
 const BoardsFilter = ({ filterProps }) => {
+  const { isLogin } = useSelector((state) => state.user)
+
   const {
     handleLine,
     handleQueueType,
@@ -110,12 +112,11 @@ const BoardsFilter = ({ filterProps }) => {
           gap: 1,
         }}
       >
-        <CreateCardBtn />
+        {isLogin && <CreateCardBtn />}
         <Button sx={{ height: 40, color: '#3d3939' }} onClick={refreshBoards}>
           새로고침
           <RefreshIcon />
         </Button>
-        {/* <TestButton /> */}
       </Grid>
     </Grid>
   );
