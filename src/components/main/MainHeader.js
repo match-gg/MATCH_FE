@@ -23,6 +23,7 @@ import {
   SwipeableDrawer,
 } from '@mui/material';
 
+import LoginIcon from '@mui/icons-material/Login';
 import Logout from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -34,6 +35,7 @@ import { tokenActions } from '../../store/token-slice';
 import { GameList } from './GameList.d';
 
 const MainHeader = ({ game }) => {
+  const { isLogin } = useSelector((state) => state.user);
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 
@@ -96,6 +98,10 @@ const MainHeader = ({ game }) => {
 
   // menu list
   const CurrentGame = GameList.find((elem) => elem.id === game).fullName_Kor;
+
+  const linkToLogin = () => {
+    navigate('/login')
+  }
 
   return (
     <AppBar
@@ -197,10 +203,10 @@ const MainHeader = ({ game }) => {
                         sx={{
                           textDecoration: 'none',
                           color: '#3d3939',
-                          '&:hover' :{
+                          '&:hover': {
                             transform: 'scale(1.1) translateX(10px)',
-                            backgroundColor: '#f3f3f3'
-                          }
+                            backgroundColor: '#f3f3f3',
+                          },
                         }}
                       >
                         <Typography sx={{ fontSize: 24, fontWeight: 600 }}>
@@ -244,7 +250,7 @@ const MainHeader = ({ game }) => {
                 onClick={handleClick2}
                 sx={{
                   marginLeft: 5,
-                  fontSize: 17,
+                  fontSize: 16,
                   color: 'white',
                   fontWeight: 600,
                 }}
@@ -289,7 +295,7 @@ const MainHeader = ({ game }) => {
               <Typography
                 sx={{
                   marginLeft: 5,
-                  fontSize: 15,
+                  fontSize: 14,
                   color: 'white',
                   fontWeight: 600,
                 }}
@@ -299,7 +305,7 @@ const MainHeader = ({ game }) => {
               <Typography
                 sx={{
                   marginLeft: 5,
-                  fontSize: 15,
+                  fontSize: 14,
                   color: 'white',
                   fontWeight: 600,
                 }}
@@ -308,97 +314,118 @@ const MainHeader = ({ game }) => {
               </Typography>
             </Stack>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-            <Tooltip title='Profile Settings'>
-              <IconButton
-                onClick={handleClick}
-                size='small'
-                sx={{ ml: 2 }}
-                aria-controls={open ? 'profile-menu' : undefined}
-                aria-haspopup='true'
-                aria-expanded={open ? 'true' : undefined}
+          {isLogin && (
+            <>
+              <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+                <Tooltip title='Profile Settings'>
+                  <IconButton
+                    onClick={handleClick}
+                    size='small'
+                    sx={{ ml: 2 }}
+                    aria-controls={open ? 'profile-menu' : undefined}
+                    aria-haspopup='true'
+                    aria-expanded={open ? 'true' : undefined}
+                  >
+                    <Typography
+                      sx={{
+                        display: { xs: 'none', sm: 'flex' },
+                        color: 'white',
+                        fontSize: { xs: 14, sm: 16 },
+                        fontWeight: '500',
+                      }}
+                    >
+                      {nickname ? nickname : '카카오닉네임'}
+                    </Typography>
+                    <Box
+                      component='img'
+                      src={
+                        imageUrl || 'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg'
+                      }
+                      sx={{
+                        width: { xs: 32, sm: 40 },
+                        height: { xs: 32, sm: 40 },
+                        marginLeft: 1,
+                        borderRadius: '50%',
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+              <Menu
+                anchorEl={anchorEl}
+                id='account-menu'
+                open={open}
+                onClose={handleClose}
+                onClick={handleClose}
+                PaperProps={{
+                  elevation: 0,
+                  sx: {
+                    overflow: 'visible',
+                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                    mt: 1,
+                    '& .MuiAvatar-root': {
+                      width: 32,
+                      height: 32,
+                      ml: -0.5,
+                      mr: 1,
+                    },
+                    '&:before': {
+                      content: '""',
+                      display: 'block',
+                      position: 'absolute',
+                      top: 0,
+                      right: 20,
+                      width: 10,
+                      height: 10,
+                      bgcolor: 'background.paper',
+                      transform: 'translateY(-50%) rotate(45deg)',
+                      zIndex: 0,
+                    },
+                  },
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
-                <Typography
-                  sx={{
-                    display: { xs: 'none', sm: 'flex' },
-                    color: 'white',
-                    fontSize: { xs: 16, sm: 20 },
-                    fontWeight: '500',
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    navigate('/mypage');
                   }}
                 >
-                  {nickname ? nickname : '카카오닉네임'}
-                </Typography>
-                <Box
-                  component='img'
-                  src={imageUrl || 'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg'}
-                  sx={{
-                    width: { xs: 32, sm: 40 },
-                    height: { xs: 32, sm: 40 },
-                    marginLeft: 1,
-                    borderRadius: '50%',
+                  <Avatar fontSize='medium' />
+                  마이페이지
+                </MenuItem>
+                <Divider />
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    // request to /logout endpoint
+                    logoutHandler();
                   }}
-                />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          <Menu
-            anchorEl={anchorEl}
-            id='account-menu'
-            open={open}
-            onClose={handleClose}
-            onClick={handleClose}
-            PaperProps={{
-              elevation: 0,
-              sx: {
-                overflow: 'visible',
-                filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                mt: 1,
-                '& .MuiAvatar-root': {
-                  width: 32,
-                  height: 32,
-                  ml: -0.5,
-                  mr: 1,
-                },
-                '&:before': {
-                  content: '""',
-                  display: 'block',
-                  position: 'absolute',
-                  top: 0,
-                  right: 20,
-                  width: 10,
-                  height: 10,
-                  bgcolor: 'background.paper',
-                  transform: 'translateY(-50%) rotate(45deg)',
-                  zIndex: 0,
-                },
-              },
-            }}
-            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          >
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                navigate('/mypage');
-              }}
-            >
-              <Avatar fontSize='medium' />
-              마이페이지
-            </MenuItem>
-            <Divider />
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                // request to /logout endpoint
-                logoutHandler();
-              }}
-            >
-              <ListItemIcon>
-                <Logout fontSize='medium' />
-              </ListItemIcon>
-              로그아웃
-            </MenuItem>
-          </Menu>
+                >
+                  <ListItemIcon>
+                    <Logout fontSize='medium' />
+                  </ListItemIcon>
+                  로그아웃
+                </MenuItem>
+              </Menu>
+            </>
+          )}
+          {!isLogin && (
+            <IconButton onClick={linkToLogin}>
+              <LoginIcon sx={{mr: 1, color: 'white'}}/>
+              <Typography
+                      sx={{
+                        display: { xs: 'none', sm: 'flex' },
+                        color: 'white',
+                        fontSize: { xs: 14, sm: 16 },
+                        fontWeight: '500',
+                      }}
+                    >
+                      로그인 / 회원가입
+                    </Typography>
+            </IconButton>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
