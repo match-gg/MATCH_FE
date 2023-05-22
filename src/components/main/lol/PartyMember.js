@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { api } from '../../../api/api'
+import { api } from '../../../api/api';
 
 import { Typography, Box, ImageList } from '@mui/material';
 
@@ -9,25 +9,19 @@ import { lanes, rank_emblems, tierInfo } from './Card.d';
 const PartyMember = (props) => {
   const { name, type } = props;
 
-  const [summonerData, setSummonerData] = useState({
-    queueType: 'RANKED_SOLO_5x5',
-    summonerName: '수유욱',
-    tier: 'GOLD',
-    rank: 'II',
-    leaguePoints: 20,
-    wins: 57,
-    losses: 48,
-    mostChampion: ['Ahri', 'Khazix', 'Lulu'],
-    mostLane: 'MID',
-  });
+  const [summonerData, setSummonerData] = useState();
 
   useEffect(() => {
     const fetchSummonerData = async () => {
       await api
-        .get(`/api/lol/summoner/${name}/${type === 'FREE_RANK' ? 'free_rank' : 'duo_rank'}`) 
+        .get(
+          `/api/lol/summoner/${name}/${
+            type === 'FREE_RANK' ? 'free_rank' : 'duo_rank'
+          }`
+        )
         // 자유랭크의 경우에만 자유랭크 조회, 그 외에 모두 솔로랭크를 기준으로 조회
         .then((res) => {
-          setSummonerData(...summonerData, ...res.data);
+          setSummonerData(res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -56,16 +50,18 @@ const PartyMember = (props) => {
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
-        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>닉네임</Typography>
+        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+          닉네임
+        </Typography>
         <Typography component='span' sx={{ fontSize: 16, fontWeight: 700 }}>
           {summonerData.summonerName}
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
           <Box
             component='img'
-            src={lanes.find((elem) => elem.id === summonerData.mostLane).image}
+            src={lanes.find((elem) => elem.id === summonerData.lane).image}
             loading='lazy'
-            alt={summonerData.mostLane}
+            alt={summonerData.lane}
             sx={{
               height: 20,
               width: 20,
@@ -74,12 +70,14 @@ const PartyMember = (props) => {
             }}
           />
           <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-            {lanes.find((elem) => elem.id === summonerData.mostLane).kor}
+            {lanes.find((elem) => elem.id === summonerData.lane).kor}
           </Typography>
         </Box>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
-        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>티어</Typography>
+        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+          티어
+        </Typography>
         <Box sx={{ display: 'flex' }}>
           <Box
             sx={{
@@ -113,7 +111,9 @@ const PartyMember = (props) => {
           >
             <Typography
               sx={{ fontSize: 14, fontWeight: 500 }}
-              color={tierInfo.find((elem) => elem.id === summonerData.tier).color}
+              color={
+                tierInfo.find((elem) => elem.id === summonerData.tier).color
+              }
             >
               {summonerData.tier.slice(0, 1)}
               {summonerData.rank === 'I'
@@ -140,8 +140,12 @@ const PartyMember = (props) => {
           </Box>
         </Box>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160, pl: 4 }}>
-        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>모스트 챔피언</Typography>
+      <Box
+        sx={{ display: 'flex', flexDirection: 'column', minWidth: 160, pl: 4 }}
+      >
+        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+          모스트 챔피언
+        </Typography>
         <Box sx={{ display: 'flex' }}>
           <ImageList sx={{ m: 0, p: 0 }} cols={3} gap={1}>
             {summonerData.mostChampion.map((item, index) => (
