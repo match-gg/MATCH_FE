@@ -35,14 +35,12 @@ import { tokenActions } from '../../store/token-slice';
 import { GameList } from './GameList.d';
 
 const MainHeader = ({ game }) => {
-  const { isLogin } = useSelector((state) => state.user);
+  const { isLogin, profile_imageUrl, nickname, representative } = useSelector((state) => state.user);
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const { nickname, imageUrl, representative } = useSelector((state) => state.user);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -97,7 +95,7 @@ const MainHeader = ({ game }) => {
   };
 
   // menu list
-  const CurrentGame = GameList.find((elem) => elem.id === game).fullName_Kor;
+  const CurrentGame = GameList.find((elem) => elem.id === game)?.fullName_Kor;
 
   const linkToLogin = () => {
     navigate('/login')
@@ -339,7 +337,7 @@ const MainHeader = ({ game }) => {
                     <Box
                       component='img'
                       src={
-                        imageUrl || 'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg'
+                        profile_imageUrl || 'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg'
                       }
                       sx={{
                         width: { xs: 32, sm: 40 },

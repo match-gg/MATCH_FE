@@ -75,7 +75,7 @@ const Body = () => {
         });
     };
 
-    // fetchBoards();
+    fetchBoards();
   }, [queueType, tier, lane]);
 
   // 더 불러오기 버튼 클릭 시

@@ -1,10 +1,10 @@
-import React from 'react';
-import { api } from '../../api/api';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import jwt_decode from 'jwt-decode';
 
-import { Box, Button } from '@mui/material';
+import { api } from '../../api/api';
+
+import { Box, Button, CircularProgress } from '@mui/material';
 
 import Copyright from '../ui/Copyright';
 import { userActions } from '../../store/user-slice';
@@ -21,6 +21,8 @@ const RegisterFooter = (props) => {
     (state) => state.register
   );
 
+  const [isPending, setIsPending] = useState(false);
+
   const phaseOneNextBtn =
     gamesCheck.lol &&
     gamesCheck.lostark &&
@@ -29,6 +31,8 @@ const RegisterFooter = (props) => {
     gamesCheck.overwatch;
 
   const signUpHandler = async () => {
+    setIsPending(true);
+
     // 1. 인가코드 가져오기
     const params = new URL(document.URL).searchParams;
     const code = params.get('code');
@@ -49,11 +53,12 @@ const RegisterFooter = (props) => {
     }).catch((error) => {
       alert('카카오 연결 중 문제가 발생했습니다.\n잠시후 다시 시도해 주세요.');
       navigate('/login');
+      setIsPending(false);
     });
 
     // 사용자 닉네임으로 DB 채우기 작업 필요
     // 현재 롤만
-    api.get(`/api/lol/user/${games['lol']}`)
+    api.get(`/api/lol/user/${games['lol']}`);
 
     // send request
     const response = await api
@@ -67,12 +72,16 @@ const RegisterFooter = (props) => {
         maplestory: games.maplestory,
       })
       .catch((error) => {
-        if (error.response.status === 400 && error.response.data.message === '이미 존재하는 회원입니다.') {
+        if (
+          error.response.status === 400 &&
+          error.response.data.message === '이미 존재하는 회원입니다.'
+        ) {
           alert('이미 존재하는 회원입니다.\n로그인 페이지로 이동합니다.');
           navigate('/login');
         } else {
           alert('회원가입 중 문제가 발생했습니다.\n다시 시도해 주세요.'); // mui dialog 이용해서 바꿀 예정
           navigate('/login');
+          setIsPending(false);
         }
       });
 
@@ -80,6 +89,8 @@ const RegisterFooter = (props) => {
       alert('회원가입이 완료되었습니다.\n로그인 페이지로 이동합니다.');
       navigate('/login');
     }
+
+    setIsPending(false);
   };
 
   return (
@@ -120,7 +131,9 @@ const RegisterFooter = (props) => {
         이전으로
       </Button>
       <Button
-        disabled={phase === 0 ? !firstTerm || !secondTerm : phase === 1 ? !phaseOneNextBtn : false}
+        disabled={
+          phase === 0 ? !firstTerm || !secondTerm : phase === 1 ? !phaseOneNextBtn : isPending
+        }
         onClick={() => {
           if (phase === 2) {
             signUpHandler();
@@ -145,7 +158,13 @@ const RegisterFooter = (props) => {
           },
         }}
       >
-        {phase !== 2 ? '다음으로' : '회원가입 하기'}
+        {phase !== 2 ? (
+          '다음으로'
+        ) : isPending ? (
+          <CircularProgress size={30} sx={{ color: 'white' }} />
+        ) : (
+          '회원가입 하기'
+        )}
       </Button>
       <Copyright
         sx={{

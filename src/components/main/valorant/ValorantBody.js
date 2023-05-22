@@ -63,7 +63,7 @@ const ValorantBody = () => {
         });
     };
 
-    // fetchBoards();
+    fetchBoards();
   }, [queueType, tier, role]);
 
   // 더 불러오기 버튼 클릭 시

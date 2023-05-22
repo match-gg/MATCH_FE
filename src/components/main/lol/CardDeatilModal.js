@@ -35,7 +35,7 @@ const ModalContainer = styled(Box)(({ theme }) => ({
 const ModalContent = styled(Box)(({ theme }) => ({
   backgroundColor: 'white',
   borderRadius: 4,
-  minHeight: 640, // minHeight을 주지않으면 솔로랭크는 두칸이라 답답해 보여서 추가.
+  minHeight: 600, // minHeight을 주지않으면 솔로랭크는 두칸이라 답답해 보여서 추가.
 }));
 
 const CloseModalBtn = styled(Button)({
@@ -72,7 +72,7 @@ const CardDeatilModal = (props) => {
     };
 
     fetchBoardDetail();
-  });
+  }, []);
 
   // 방에 대한 인원 수 정보
   const totalMember = typeInfo.find((elem) => elem.id === boardData.type)?.maxMember || 0;
@@ -88,7 +88,6 @@ const CardDeatilModal = (props) => {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'flex-start',
-            mb: 1,
           }}
         >
           <Box
@@ -119,7 +118,7 @@ const CardDeatilModal = (props) => {
               )}
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', pb: 3 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column'}}>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                   <Box
                     sx={{
@@ -129,13 +128,13 @@ const CardDeatilModal = (props) => {
                       pr: '60px',
                     }}
                   >
-                    <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}>
+                    <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 1 }}>
                       모집 내용
                     </Typography>
                     <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
                       {boardData?.content}
                     </Typography>
-                    <Box sx={{ display: 'flex', pt: 0.5 }}>
+                    <Box sx={{ display: 'flex', pt: 1 }}>
                       <Typography
                         color={
                           tierInfo.find((elem) => elem.id === boardData?.tier)?.color || 'grey'
@@ -178,7 +177,7 @@ const CardDeatilModal = (props) => {
                     </Box>
                   </Box>
                   <Box>
-                    <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}>
+                    <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 1 }}>
                       마감일시
                     </Typography>
                     <RemainingTime created={boardData?.created} expire={boardData?.expire} />
@@ -194,7 +193,9 @@ const CardDeatilModal = (props) => {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'flex-start',
-                    maxHeight: 440,
+                    minWidth: 520,
+                    minHeight: 420,
+                    maxHeight: 420,
                     overflow: 'auto',
                   }}
                 >
@@ -203,21 +204,24 @@ const CardDeatilModal = (props) => {
                       return <PartyMember key={elem} name={elem} type={boardData.type} />;
                     })}
                   {Array(totalMember - currentMember).fill(<Recruitment />)}
-                  {isLogin &&
-                    (joinedChatRooms.includes(boardData.chatRoomId) ? (
-                      <LeavePatryButton
-                        chatRoomId={boardData.chatRoomId}
-                        game={'lol'}
-                        id={boardData.id}
-                      />
-                    ) : (
-                      <JoinPartyButton
-                        chatRoomId={boardData.chatRoomId}
-                        game={'lol'}
-                        id={boardData.id}
-                      />
-                    ))}
                 </Box>
+                {isLogin &&
+                  (joinedChatRooms.includes(boardData.chatRoomId) ? (
+                    <LeavePatryButton
+                      chatRoomId={boardData.chatRoomId}
+                      game={'lol'}
+                      id={boardData.id}
+                    />
+                  ) : (
+                    <JoinPartyButton
+                      chatRoomId={boardData.chatRoomId}
+                      game={'lol'}
+                      id={boardData.id}
+                    />
+                  ))}
+              </Box>
+              <Box sx={{ ml: 2 }}>
+                <ChatInCardDetailModal chatRoomId={'-NW1_3OU7HNA8ieHfkEX'} />
               </Box>
               {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
                 <Box sx={{ ml: 2 }}>

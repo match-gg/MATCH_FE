@@ -61,6 +61,7 @@ const JoinPartyButton = (props) => {
       sx={{
         p: 1,
         mt: 1,
+        height: 40,
         borderColor: '#CCCCCC',
         color: '#5C5C5C',
         fontWeight: 700,
