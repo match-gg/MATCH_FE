@@ -75,8 +75,7 @@ const CardDeatilModal = (props) => {
   });
 
   // 방에 대한 인원 수 정보
-  const totalMember =
-    typeInfo.find((elem) => elem.id === boardData.type)?.maxMember || 0;
+  const totalMember = typeInfo.find((elem) => elem.id === boardData.type)?.maxMember || 0;
   const currentMember = boardData?.memberList?.length || 0;
 
   return (
@@ -119,132 +118,114 @@ const CardDeatilModal = (props) => {
                 </IconButton>
               )}
             </Box>
-            <Box sx={{ display: 'flex', pb: 3 }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  width: 340,
-                  pr: '60px',
-                }}
-              >
-                <Typography
-                  sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}
-                >
-                  모집 내용
-                </Typography>
-
-                <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
-                  {boardData?.content}
-                </Typography>
-
-                <Box sx={{ display: 'flex', pt: 0.5 }}>
-                  <Typography
-                    color={
-                      tierInfo.find((elem) => elem.id === boardData?.tier)
-                        ?.color || 'grey'
-                    }
+            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', pb: 3 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                  <Box
                     sx={{
-                      fontSize: 12,
-                      fontWeight: 700,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: 340,
+                      pr: '60px',
                     }}
                   >
-                    #
-                    {tierInfo.find((elem) => elem.id === boardData.tier)?.kor ||
-                      '티어'}
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      pl: 1,
-                    }}
-                  >
-                    #
-                    {typeInfo.find((elem) => elem.id === boardData.type)?.kor ||
-                      '큐타입'}
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      pl: 1,
-                    }}
-                  >
-                    #
-                    {lanes.find((elem) => elem.id === boardData.position)
-                      ?.kor || '포지션'}
-                    구함
-                  </Typography>
-                  <Typography
-                    sx={{
-                      fontSize: 12,
-
-                      fontWeight: 700,
-                      pl: 2,
-                    }}
-                  >
-                    {boardData?.mic ? '#음성채팅희망' : ''}
+                    <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}>
+                      모집 내용
+                    </Typography>
+                    <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+                      {boardData?.content}
+                    </Typography>
+                    <Box sx={{ display: 'flex', pt: 0.5 }}>
+                      <Typography
+                        color={
+                          tierInfo.find((elem) => elem.id === boardData?.tier)?.color || 'grey'
+                        }
+                        sx={{
+                          fontSize: 12,
+                          fontWeight: 700,
+                        }}
+                      >
+                        #{tierInfo.find((elem) => elem.id === boardData.tier)?.kor || '티어'}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 12,
+                          fontWeight: 700,
+                          pl: 1,
+                        }}
+                      >
+                        #{typeInfo.find((elem) => elem.id === boardData.type)?.kor || '큐타입'}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 12,
+                          fontWeight: 700,
+                          pl: 1,
+                        }}
+                      >
+                        #{lanes.find((elem) => elem.id === boardData.position)?.kor || '포지션'}
+                        구함
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 12,
+                          fontWeight: 700,
+                          pl: 2,
+                        }}
+                      >
+                        {boardData?.mic ? '#음성채팅희망' : ''}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}>
+                      마감일시
+                    </Typography>
+                    <RemainingTime created={boardData?.created} expire={boardData?.expire} />
+                  </Box>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', py: 1 }}>
+                  <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600 }}>
+                    참여자 목록 ( {currentMember} / {totalMember} )
                   </Typography>
                 </Box>
-              </Box>
-              <Box
-                sx={{ display: 'flex', flexDirection: 'column', width: 120 }}
-              >
-                <Typography
-                  sx={{ color: 'grey', fontSize: 14, fontWeight: 600, pb: 0.5 }}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    maxHeight: 440,
+                    overflow: 'auto',
+                  }}
                 >
-                  마감일시
-                </Typography>
-                <RemainingTime
-                  created={boardData?.created}
-                  expire={boardData?.expire}
-                />
+                  {boardData.memberList &&
+                    boardData.memberList.map((elem, _idx) => {
+                      return <PartyMember key={elem} name={elem} type={boardData.type} />;
+                    })}
+                  {Array(totalMember - currentMember).fill(<Recruitment />)}
+                  {isLogin &&
+                    (joinedChatRooms.includes(boardData.chatRoomId) ? (
+                      <LeavePatryButton
+                        chatRoomId={boardData.chatRoomId}
+                        game={'lol'}
+                        id={boardData.id}
+                      />
+                    ) : (
+                      <JoinPartyButton
+                        chatRoomId={boardData.chatRoomId}
+                        game={'lol'}
+                        id={boardData.id}
+                      />
+                    ))}
+                </Box>
               </Box>
+              {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
+                <Box sx={{ ml: 2 }}>
+                  <ChatInCardDetailModal chatRoomId={boardData.chatRoomId} />
+                </Box>
+              )}
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', pb: 1 }}>
-              <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600 }}>
-                참여자 목록 ( {currentMember} / {totalMember} )
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
-                maxHeight: 440,
-                overflow: 'auto',
-              }}
-            >
-              {boardData.memberList &&
-                boardData.memberList.map((elem, _idx) => {
-                  return (
-                    <PartyMember key={elem} name={elem} type={boardData.type} />
-                  );
-                })}
-              {Array(totalMember - currentMember).fill(<Recruitment />)}
-            </Box>
-            {isLogin &&
-              (joinedChatRooms.includes(boardData.chatRoomId) ? (
-                <LeavePatryButton
-                  chatRoomId={boardData.chatRoomId}
-                  game={'lol'}
-                  id={boardData.id}
-                />
-              ) : (
-                <JoinPartyButton
-                  chatRoomId={boardData.chatRoomId}
-                  game={'lol'}
-                  id={boardData.id}
-                />
-              ))}
           </Box>
-          {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
-            <ChatInCardDetailModal chatRoomId={boardData.chatRoomId} />
-          )}
-          {/* <ChatInCardDetailModal chatRoomId={boardData.chatRoomId} /> */}
         </Box>
       </ModalContent>
     </ModalContainer>
