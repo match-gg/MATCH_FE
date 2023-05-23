@@ -28,7 +28,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { typeData, tierData, positionData, expireData } from './CreateCardBtn.d';
+import {
+  typeData,
+  tierData,
+  positionData,
+  expireData,
+} from './CreateCardBtn.d';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const CreateCardBtn = (props) => {
@@ -49,7 +54,9 @@ const CreateCardBtn = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // 사용자 계정에 연결된 닉네임 사용 여부.
-  const [useExistNickname, setUseExistNickname] = useState(registeredNickname ? true : false);
+  const [useExistNickname, setUseExistNickname] = useState(
+    registeredNickname ? true : false
+  );
 
   // 사용자 input에 변동사항 있는지 확인 -> 모달 닫기 전 확인하는 데에 사용.
   const [isChanged, setIsChanged] = useState(false);
@@ -88,7 +95,9 @@ const CreateCardBtn = (props) => {
       });
     } else if (
       newValue === 'DUO_RANK' &&
-      (userInput.tier === 'MASTER' || userInput.tier === 'ALL' || userInput.position === 'ALL')
+      (userInput.tier === 'MASTER' ||
+        userInput.tier === 'ALL' ||
+        userInput.position === 'ALL')
     ) {
       setUserInput({
         ...userInput,
@@ -164,7 +173,11 @@ const CreateCardBtn = (props) => {
   const openModal = () => setOpen(true);
   const closeModalConfirm = () => {
     if (isChanged) {
-      if (window.confirm('현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'))
+      if (
+        window.confirm(
+          '현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'
+        )
+      )
         closeModal();
     } else {
       closeModal();
@@ -215,10 +228,13 @@ const CreateCardBtn = (props) => {
         if (response.status === 200) {
           //파이어베이스의 Realtime DB에 저장될 객체
           const newChatroom = {
+            isDeleted: false,
             key,
             roomId: boardId,
             createdBy: user.games['lol'],
-            memberList: [{ nickname: user.games['lol'], oauth2Id: user.oauth2Id }],
+            memberList: [
+              { nickname: user.games['lol'], oauth2Id: user.oauth2Id },
+            ],
             timestamp: new Date().toString(),
           };
           //Ref에 접근해서 데이터 update
@@ -315,7 +331,11 @@ const CreateCardBtn = (props) => {
             <Typography component='h1' sx={{ fontSize: 18 }}>
               새 게시글 등록
             </Typography>
-            <CloseIcon color='primary' onClick={closeModalConfirm} sx={{ mr: 1, fontSize: 18 }} />
+            <CloseIcon
+              color='primary'
+              onClick={closeModalConfirm}
+              sx={{ mr: 1, fontSize: 18 }}
+            />
           </Box>
           <Divider sx={{ mb: 1 }} />
           <Box
@@ -460,7 +480,9 @@ const CreateCardBtn = (props) => {
             }}
           >
             <ToggleButtonGroup
-              disabled={isPending ? true : userInput.type === 'ARAM' ? true : false}
+              disabled={
+                isPending ? true : userInput.type === 'ARAM' ? true : false
+              }
               value={userInput.tier}
               onChange={handleTier}
               exclusive
@@ -516,7 +538,9 @@ const CreateCardBtn = (props) => {
               원하는 파티원의 포지션
             </Typography>
             <ToggleButtonGroup
-              disabled={isPending ? true : (userInput.type === 'ARAM' ? true : false)}
+              disabled={
+                isPending ? true : userInput.type === 'ARAM' ? true : false
+              }
               value={userInput.position}
               exclusive
               onChange={handlePosition}
@@ -559,7 +583,10 @@ const CreateCardBtn = (props) => {
             >
               파티찾기 지속시간
             </Typography>
-            <FormControl sx={{ width: 240 }} disabled={isPending ? true : false}>
+            <FormControl
+              sx={{ width: 240 }}
+              disabled={isPending ? true : false}
+            >
               <Select
                 value={userInput.expire}
                 onChange={handleExpire}
@@ -573,7 +600,11 @@ const CreateCardBtn = (props) => {
               >
                 {expireData.map((data, idx) => {
                   return (
-                    <MenuItem key={idx} value={data.value} sx={{ color: 'grey' }}>
+                    <MenuItem
+                      key={idx}
+                      value={data.value}
+                      sx={{ color: 'grey' }}
+                    >
                       {data.text}
                     </MenuItem>
                   );
@@ -695,7 +726,8 @@ const CreateCardBtn = (props) => {
               disabled={
                 isPending
                   ? true
-                  : userInput.content.length >= 20 && (isIdChecked || useExistNickname)
+                  : userInput.content.length >= 20 &&
+                    (isIdChecked || useExistNickname)
                   ? false
                   : true
               }
@@ -704,7 +736,11 @@ const CreateCardBtn = (props) => {
                 width: 124,
               }}
             >
-              {isPending ? <CircularProgress sx={{ color: 'white' }} size={20} /> : '작성하기'}
+              {isPending ? (
+                <CircularProgress sx={{ color: 'white' }} size={20} />
+              ) : (
+                '작성하기'
+              )}
             </Button>
           </Box>
         </Stack>
