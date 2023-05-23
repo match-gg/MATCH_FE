@@ -4,7 +4,7 @@ import { Box, Typography, ImageList } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import MicIcon from '@mui/icons-material/Mic';
 
-import { lanes, rank_emblems, tierInfo } from './Card.d';
+import { mostLaneInfo, rankInfo, tierInfo } from './CardAuthor.d';
 
 const FlexRow = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -21,7 +21,7 @@ const FlexCol = styled(Box)(({ theme }) => ({
 }));
 
 const CardAuthor = (props) => {
-  const { author, voice, position } = props;
+  const { author, voice } = props;
 
   const totalPlayed = author.wins + author.losses;
   const winRate = Math.round((author.wins / totalPlayed) * 100);
@@ -75,9 +75,9 @@ const CardAuthor = (props) => {
           >
             <Box
               component='img'
-              src={lanes.find((elem) => elem.id === author.mostLane).image}
+              src={mostLaneInfo.find((elem) => elem.id === author.mostLane).image}
               loading='lazy'
-              alt={position}
+              alt={author.mostLane}
               sx={{
                 height: 24,
                 width: 24,
@@ -86,7 +86,7 @@ const CardAuthor = (props) => {
               }}
             />
             <Typography component='span' sx={{ fontSize: 16, fontWeight: 700 }}>
-              {lanes.find((elem) => elem.id === author.mostLane).kor}
+              {mostLaneInfo.find((elem) => elem.id === author.mostLane).kor}
             </Typography>
           </Box>
         </FlexCol>
@@ -120,7 +120,7 @@ const CardAuthor = (props) => {
             >
               <Box
                 component='img'
-                src={rank_emblems[author.tier]}
+                src={rankInfo[author.tier]}
                 loading='lazy'
                 alt={author.tier}
                 sx={{

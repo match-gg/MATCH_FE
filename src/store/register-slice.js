@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   firstTerm: false,
   secondTerm: false,
-  representative: '',
+  representative: 'lol',
   games: {
     lol: '',
     pubg: '',

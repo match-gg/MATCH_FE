@@ -17,14 +17,14 @@ export const tierList = [
   { value: 'SILVER', label: '실버' },
   { value: 'BRONZE', label: '브론즈' },
   { value: 'IRON', label: '아이언' },
-  { value: 'UNRANKED', label: '언랭크드' },
+  { value: 'UNRANKED', label: '언랭' },
 ];
 
-export const laneList = [
+export const PositionList = [
   { value: 'ALL', label: '전체' },
   { value: 'TOP', label: '탑' },
   { value: 'JUG', label: '정글' },
   { value: 'MID', label: '미드' },
   { value: 'ADC', label: '원딜' },
-  { value: 'SPT', label: '서포터' },
+  { value: 'SUP', label: '서포터' },
 ];

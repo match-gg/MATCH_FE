@@ -10,14 +10,14 @@ import {
   Button,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { queueTypeList, tierList, laneList } from './Body.d';
+import { queueTypeList, tierList, PositionList } from './BoardsFilter.d';
 
 import CreateCardBtn from './CreateCardBtn';
 
 const BoardsFilter = ({ filterProps }) => {
   const { isLogin } = useSelector((state) => state.user);
 
-  const { handleLine, handleQueueType, handleTier, line, queueType, tier, refreshBoards } =
+  const { handleLane, handleQueueType, handleTier, lane, queueType, tier, refreshBoards } =
     filterProps;
 
   return (
@@ -75,14 +75,14 @@ const BoardsFilter = ({ filterProps }) => {
       <Grid item xs={12} sm={7} md={4.5} lg={3.5} sx={{ pr: 1, pb: 1 }}>
         <ToggleButtonGroup
           fullWidth
-          value={line}
-          onChange={handleLine}
+          value={lane}
+          onChange={handleLane}
           sx={{
             height: 40,
           }}
           disabled={queueType === 'ARAM' ? true : false}
         >
-          {laneList.map((item, _index) => {
+          {PositionList.map((item, _index) => {
             return (
               <ToggleButton key={item.value} value={item.value} sx={{ p: 0 }}>
                 {item.label}

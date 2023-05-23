@@ -82,7 +82,7 @@ const KakaoLoginRedirect = () => {
       dispatch(
         userActions.SET_USER({
           nickname,
-          profile_image: imageUrl,
+          profile_imageUrl: imageUrl,
           representative,
           oauth2Id: oAuth2Id,
         })
@@ -92,7 +92,7 @@ const KakaoLoginRedirect = () => {
       dispatch(userActions.SET_GAMES(games));
 
       // 사용자가 설정한 대표 게임으로 navigate
-      navigate(`/${representative}`);
+      navigate(`/${representative || 'lol'}`);
     };
 
     kakaoLogin();
