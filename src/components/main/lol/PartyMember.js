@@ -9,7 +9,8 @@ import { Close } from '@mui/icons-material';
 import { ref, child, get, getDatabase, update } from 'firebase/database';
 
 const PartyMember = (props) => {
-  const { name, type, isAuthor, game, id, chatRoomId, fetchBoardDetail } = props;
+  const { name, type, isAuthor, game, id, chatRoomId, fetchBoardDetail } =
+    props;
 
   const [summonerData, setSummonerData] = useState({
     queueType: 'RANKED_SOLO_5x5',
@@ -26,7 +27,11 @@ const PartyMember = (props) => {
   useEffect(() => {
     const fetchSummonerData = async () => {
       await api
-        .get(`/api/lol/summoner/${name}/${type === 'FREE_RANK' ? 'free_rank' : 'duo_rank'}`)
+        .get(
+          `/api/lol/summoner/${name}/${
+            type === 'FREE_RANK' ? 'free_rank' : 'duo_rank'
+          }`
+        )
         // 자유랭크의 경우에만 자유랭크 조회, 그 외에 모두 솔로랭크를 기준으로 조회
         .then((res) => {
           setSummonerData(res.data);
@@ -40,36 +45,42 @@ const PartyMember = (props) => {
   }, []);
 
   const kickMember = async () => {
-    await api.delete(`/api/chat/${game}/${id}/${name}`).then(async (response) => {
-      if (response.status === 200) {
-        const chatRoomRef = ref(getDatabase(), 'chatRooms');
-        await get(child(chatRoomRef, chatRoomId))
-          .then(async (datasnapshot) => {
-            const prevMemberList = [...datasnapshot.val().memberList];
-            const target = prevMemberList.find(
-              (member) => member.nickname === summonerData.summonerName
-            );
-            const prevBanedList = datasnapshot.val().banedList
-              ? [...datasnapshot.val().banedList]
-              : [];
-            const newMemberList = prevMemberList.filter(
-              (member) => member.nickname !== summonerData.summonerName
-            );
-            const newBanedList = [...prevBanedList, target];
-            await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
-              memberList: newMemberList,
-              banedList: newBanedList,
+    await api
+      .delete(`/api/chat/${game}/${id}/${name}/ban`)
+      .then(async (response) => {
+        if (response.status === 200) {
+          const chatRoomRef = ref(getDatabase(), 'chatRooms');
+          await get(child(chatRoomRef, chatRoomId))
+            .then(async (datasnapshot) => {
+              const prevMemberList = [...datasnapshot.val().memberList];
+              const target = prevMemberList.find(
+                (member) => member.nickname === summonerData.summonerName
+              );
+              const prevBanedList = datasnapshot.val().banedList
+                ? [...datasnapshot.val().banedList]
+                : [];
+              const newMemberList = prevMemberList.filter(
+                (member) => member.nickname !== summonerData.summonerName
+              );
+              const newBanedList = [...prevBanedList, target];
+              await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
+                memberList: newMemberList,
+                banedList: newBanedList,
+              })
+                // CardDetailModal에서 새로 멤버 받아오기 (삭제된 유저가 있으니 새로고침)
+                .then(() => fetchBoardDetail());
             })
-              // CardDetailModal에서 새로 멤버 받아오기 (삭제된 유저가 있으니 새로고침)
-              .then(() => fetchBoardDetail());
-          })
-          .catch((error) => console.log(error));
-      }
-    });
+            .catch((error) => console.log(error));
+        }
+      });
   };
 
-  const totalPlayed = summonerData ? summonerData.wins + summonerData.losses : 999;
-  const winRate = summonerData ? Math.round((summonerData.wins / totalPlayed) * 100) : 999;
+  const totalPlayed = summonerData
+    ? summonerData.wins + summonerData.losses
+    : 999;
+  const winRate = summonerData
+    ? Math.round((summonerData.wins / totalPlayed) * 100)
+    : 999;
 
   return (
     <Box
@@ -125,7 +136,9 @@ const PartyMember = (props) => {
         </Box>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
-        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>티어</Typography>
+        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+          티어
+        </Typography>
         <Box sx={{ display: 'flex' }}>
           <Box
             sx={{
@@ -159,7 +172,9 @@ const PartyMember = (props) => {
           >
             <Typography
               sx={{ fontSize: 14, fontWeight: 500 }}
-              color={tierInfo.find((elem) => elem.id === summonerData.tier)?.color}
+              color={
+                tierInfo.find((elem) => elem.id === summonerData.tier)?.color
+              }
             >
               {summonerData.tier.slice(0, 1)}
               {summonerData.rank === 'I'
@@ -187,7 +202,9 @@ const PartyMember = (props) => {
         </Box>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
-        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>모스트 챔피언</Typography>
+        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+          모스트 챔피언
+        </Typography>
         <Box sx={{ display: 'flex' }}>
           <ImageList sx={{ m: 0, p: 0 }} cols={3} gap={1}>
             {summonerData.mostChampion.map((item, index) => (
