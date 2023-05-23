@@ -10,27 +10,32 @@ const TestButton = () => {
   const dispatch = useDispatch();
 
   const joinChatRoom = async () => {
-    const newMemberNickname = 'T밍';
-    const newMemberOauth2Id = 'kakaoTT123';
+    const newMemberNickname = '삭제된방에참가하려는유저';
+    const newMemberOauth2Id = 'kakao523바보';
     const newUser = {
       nickname: newMemberNickname,
       oauth2Id: newMemberOauth2Id,
     };
-    const chatRoomId = '-NVnTEQq78HR-wKp_bAt';
-    //서버에 데이터 전송
-
+    const chatRoomId = '-NW5at7xnFwRl70vjvJw';
+    //서버에 데이터 전송했다고 치고
     //파이어베이스의 해당 채팅방에 유저 추가
     const chatRoomRef = ref(getDatabase(), 'chatRooms');
     await get(child(chatRoomRef, chatRoomId))
       .then(async (datasnapshot) => {
+        // isDeleted 판별
+        if (datasnapshot.val().isDeleted === true) {
+          console.log('isDeleted === true 이므로 return 실행');
+          return;
+        }
         const prevMemberList = [];
         prevMemberList.push(...datasnapshot.val().memberList);
         const joinedMemberList = [...prevMemberList, newUser];
         await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
           memberList: joinedMemberList,
-        }).then(() =>
-          dispatch(chatRoomActions.ADD_JOINED_CHATROOM(chatRoomId))
-        );
+        }).then(() => {
+          console.log('dispatch(add_joined_chatroom)실행');
+          dispatch(chatRoomActions.ADD_JOINED_CHATROOM(chatRoomId));
+        });
       })
       .catch((error) => console.log(error));
   };
@@ -65,14 +70,15 @@ const TestButton = () => {
   // };
 
   const createChatRoom = async () => {
-    const roomId = 1;
-    const user = '방장';
-    const memberList = [{ oauth2Id: 123, nickname: user }];
+    const roomId = 523;
+    const user = '523방장';
+    const memberList = [{ oauth2Id: 'kakao523', nickname: user }];
 
     const chatRoomRef = ref(getDatabase(), 'chatRooms');
     const key = push(chatRoomRef).key;
 
     const newChatRoom = {
+      isDeleted: false,
       key,
       roomId,
       createdBy: user,
@@ -81,8 +87,8 @@ const TestButton = () => {
     };
 
     await update(child(chatRoomRef, key), newChatRoom)
-      .catch((error) => console.log(error))
-      .then(() => console.log('채팅방 생성 테스트 성공'));
+      .then(() => console.log('채팅방 생성'))
+      .catch((error) => console.log(error));
   };
 
   const kickMember = async (nickname) => {
@@ -124,22 +130,35 @@ const TestButton = () => {
     );
   };
 
+  const deleteParty = async () => {
+    const testChatRoomId = '-NW5at7xnFwRl70vjvJw';
+    // const chatRoomRef = ref(getDatabase(), 'chatRooms');
+    await update(ref(getDatabase(), `chatRooms/${testChatRoomId}`), {
+      isDeleted: true,
+    })
+      .then(() => console.log('isDeleted -> true 완료'))
+      .catch((error) => console.log(error));
+  };
+
   return (
     <>
       <Button variant='outlined' onClick={joinChatRoom}>
         파티 참여
       </Button>
-      <Button variant='outlined' onClick={leaveChatRoom}>
+      {/* <Button variant='outlined' onClick={leaveChatRoom}>
         파티 탈퇴
-      </Button>
-      {/* <Button variant='outlined' onClick={createChatRoom}>
-        파티 생성
       </Button> */}
+      <Button variant='outlined' onClick={createChatRoom}>
+        파티 생성
+      </Button>
       {/* <Button variant='outlined' onClick={() => kickMember('명욱')}>
         멤버 강퇴
       </Button> */}
-      <Button variant='outlined' onClick={banTest}>
+      {/* <Button variant='outlined' onClick={banTest}>
         벤테스트
+      </Button> */}
+      <Button variant='outlined' onClick={deleteParty}>
+        파티 삭제
       </Button>
     </>
   );

@@ -27,9 +27,10 @@ import ChatMessageInDetail from './ChatMessageInDetail';
 import { chatRoomActions } from '../store/chatRoom-slice';
 
 const ChatInCardDetailModal = (props) => {
+  const navigate = useNavigate();
   //props로 해당 파티의 채팅방 id값 가져오기
   const { chatRoomId, game } = props;
-  //닉네임, ouath2Id
+  //닉네임, oauth2Id
   const nickname = useSelector((state) => state.user.games[`${game}`]);
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
@@ -84,6 +85,12 @@ const ChatInCardDetailModal = (props) => {
     }
     //메세지 전송 유효성 테스트(해당 파티에 가입되어 있는지 확인)
     await get(child(chatRoomRef, chatRoomId)).then(async (datasnapshot) => {
+      if (datasnapshot.val().isDeleted) {
+        alert('종료된 파티입니다.');
+        navigate('/lol');
+        return;
+      }
+      //  종료된 채팅방이 아닌 경우 (정상적인 프로세스)
       const members = [...datasnapshot.val().memberList];
       const oauth2IdList = members.map((member) => member.oauth2Id);
       //유효성 확인 통과 (가입되어 있는 사용자)
@@ -101,6 +108,7 @@ const ChatInCardDetailModal = (props) => {
         // 가입되어있지 않은 사용자
         alert('유효하지 않은 사용자 입니다.');
         dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
+        navigate('/lol');
         return;
       }
     });
@@ -146,7 +154,7 @@ const ChatInCardDetailModal = (props) => {
           backgroundColor: 'rgba(236, 236, 236, 0.5)',
           minWidth: 360,
           maxWidth: 360,
-          minHeight: 490,
+          minHeight: 480,
           position: 'relative',
           borderRadius: 1,
           p: 1,
@@ -197,10 +205,10 @@ const ChatInCardDetailModal = (props) => {
           autoComplete='off'
           autoFocus
           ref={inputRef}
-          size='small'
           sx={{
             mt: 1,
             width: '100%',
+            height: 40,
           }}
           InputProps={{
             endAdornment: (

@@ -55,7 +55,7 @@ const JoinPartyButton = (props) => {
   const joinParty = async () => {
     //벤 여부 확인
     if (isBaned(chatRoomId, oauth2Id)) {
-      alert('강퇴당한 사용자입니다.');
+      alert('참여할 수 없는 사용자입니다.');
       dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
       return;
     }
