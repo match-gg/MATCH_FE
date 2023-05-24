@@ -6,10 +6,13 @@ import { ref, child, get, getDatabase, update } from 'firebase/database';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const JoinPartyButton = (props) => {
-  //game, chatRoomId, id를 props로 받아와야함
+  const dispatch = useDispatch();
   const { game, chatRoomId, id } = props;
+
   const nickname = useSelector((state) => state.user.games[`${game}`]);
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
+
+  // 채팅방에 참여할 사용자 객체
   const newMember = {
     nickname,
     oauth2Id,
@@ -20,22 +23,22 @@ const JoinPartyButton = (props) => {
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 
-  const dispatch = useDispatch();
 
-  const isBaned = async (chatRoomId, oauth2Id) => {
-    let ban = false;
+  const isBanned = async (chatRoomId, oauth2Id) => {
+    let banned = false;
     const chatRoomRef = ref(getDatabase(), 'chatRooms');
     await get(child(chatRoomRef, chatRoomId)).then((datasnapshot) => {
-      const banedList = datasnapshot.val().banedList
-        ? datasnapshot.val().banedList
+      const bannedList = datasnapshot.val().bannedList
+        ? datasnapshot.val().bannedList
         : [];
-      const banedOauth2IdList = banedList.map((member) => member.oauth2Id);
-      if (banedOauth2IdList.includes(oauth2Id)) {
-        ban = true;
+      const bannedOauth2IdList = bannedList.map((member) => member.oauth2Id);
+      if (bannedOauth2IdList.includes(oauth2Id)) {
+        banned = true;
       }
     });
-    return ban;
+    return banned;
   };
+
   //파이어베이스에 추가해주는 함수
   const addFirebaseRDB = async (newMember, chatRoomId) => {
     const chatRoomRef = ref(getDatabase(), 'chatRooms');
@@ -53,13 +56,14 @@ const JoinPartyButton = (props) => {
       .catch((error) => console.log(error));
   };
   const joinParty = async () => {
-    //벤 여부 확인
-    if (isBaned(chatRoomId, oauth2Id)) {
-      alert('참여할 수 없는 사용자입니다.');
+    // 1. 밴 당한 사용자인지 확인
+    if (await isBanned(chatRoomId, oauth2Id)) {
+      alert('참여할 수 없는 사용자입니다.(사유:강제퇴장)');
       dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
       return;
     }
-    //서버에 파티 참가 전송
+
+    // 2. 서버에 파티 참가 전송
     await api
       .post(`/api/chat/${game}/${id}/member`, null, {
         headers: {

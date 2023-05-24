@@ -30,8 +30,9 @@ const ChatInCardDetailModal = (props) => {
   const navigate = useNavigate();
   //props로 해당 파티의 채팅방 id값 가져오기
   const { chatRoomId, game } = props;
-  //닉네임, oauth2Id
-  const nickname = useSelector((state) => state.user.games[`${game}`]);
+
+  //닉네임, ouath2Id
+  const nickname = useSelector((state) => state.user.games[`${game.toLowerCase()}`]);
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ const ChatInCardDetailModal = (props) => {
   const handleContent = (e) => {
     setContent(e.target.value);
   };
+
   //메세지 인풋에 포커스 되도록 Ref
   const inputRef = useRef(null);
   //파이어베이스로 전송할 메세지 객체 생성 함수
@@ -73,6 +75,7 @@ const ChatInCardDetailModal = (props) => {
       setMessages([...messagesArray]);
     });
   };
+
   //메세지 전송 함수
   const postMessage = async () => {
     setMessageSending(true);
@@ -83,6 +86,7 @@ const ChatInCardDetailModal = (props) => {
       setMessageSending(false);
       return;
     }
+
     //메세지 전송 유효성 테스트(해당 파티에 가입되어 있는지 확인)
     await get(child(chatRoomRef, chatRoomId)).then(async (datasnapshot) => {
       if (datasnapshot.val().isDeleted) {
@@ -90,9 +94,11 @@ const ChatInCardDetailModal = (props) => {
         navigate('/lol');
         return;
       }
+
       //  종료된 채팅방이 아닌 경우 (정상적인 프로세스)
       const members = [...datasnapshot.val().memberList];
       const oauth2IdList = members.map((member) => member.oauth2Id);
+      
       //유효성 확인 통과 (가입되어 있는 사용자)
       if (oauth2IdList.includes(oauth2Id)) {
         await set(push(child(messagesRef, chatRoomId)), createMessage())

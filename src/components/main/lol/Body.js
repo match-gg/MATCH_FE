@@ -2,15 +2,13 @@ import { useState, useEffect, Fragment } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import styled from '@emotion/styled';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Button, Container, Typography } from '@mui/material';
 
 import { api } from '../../../api/api';
 
-import BoardsFilter from './BoardFilter';
+import BoardsFilter from './BoardsFilter';
 import Card from './Card';
 import ChatToggleBtn from '../../../chat/ChatToggleBtn';
-
-import { dummyBoards } from './boards.tmp';
 
 const BoardsWrapper = styled('div')({
   width: '100%',
@@ -53,6 +51,7 @@ const Body = () => {
 
   const handleLane = (event) => {
     setLane(event.target.value);
+    console.log(event);
   };
 
   // 최초 1회 게시글 로딩
@@ -72,6 +71,9 @@ const Body = () => {
         .catch((error) => {
           console.log(error);
           setIsLoading(false);
+          if (error.status === 404) {
+            setBoards([]);
+          }
         });
     };
 
@@ -119,7 +121,11 @@ const Body = () => {
           {!isLoading &&
             boards.map((item, _index) => {
               return (
-                <Link to={`${item.id}`} state={{ background: location }} style={{textDecoration: 'none'}}>
+                <Link
+                  to={`${item.id}`}
+                  state={{ background: location }}
+                  style={{ textDecoration: 'none' }}
+                >
                   <Card key={item.id} item={item} />
                 </Link>
               );
