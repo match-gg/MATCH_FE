@@ -35,9 +35,7 @@ const CardAuthor = (props) => {
             alignItems: 'flex-start',
           }}
         >
-          <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
-            작성자
-          </Typography>
+          <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>작성자</Typography>
           <Box
             sx={{
               display: 'flex',
@@ -61,9 +59,7 @@ const CardAuthor = (props) => {
           }}
         >
           <FlexRow>
-            <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
-              주 포지션
-            </Typography>
+            <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>주 포지션</Typography>
           </FlexRow>
           <Box
             sx={{
@@ -102,9 +98,7 @@ const CardAuthor = (props) => {
           }}
         >
           <FlexRow>
-            <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
-              티어
-            </Typography>
+            <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>티어</Typography>
           </FlexRow>
           <Box sx={{ display: 'flex' }}>
             <Box
@@ -142,7 +136,7 @@ const CardAuthor = (props) => {
                 sx={{ fontSize: 14, fontWeight: 500 }}
                 color={tierInfo.find((elem) => elem.id === author.tier).color}
               >
-                {author.tier.slice(0, 1)}
+                {author.tier === 'GRANDMASTER' ? 'GM' : author.tier.slice(0, 1)}
                 {author.rank === 'I'
                   ? 1
                   : author.rank === 'II'

@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 import { Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import { lanes, tierInfo, typeInfo } from './Card.d';
+import { positionList, tierList, typeList } from './CardTitle.d';
 
 const FlexRow = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -13,50 +13,54 @@ const FlexRow = styled(Box)(({ theme }) => ({
 }));
 
 const CardTitle = (props) => {
-  const { content, tier, position, type } = props;
+  const { type, position, tier, content } = props;
 
   return (
     <Fragment>
       <FlexRow
         sx={{
           alignItems: 'center',
-          justifyContent: 'space-between'
-        }}>
+          justifyContent: 'space-between',
+        }}
+      >
         <FlexRow
           sx={{
             height: 48,
             alignItems: 'center',
-            justifyContent: 'flex-start'
-          }}>
+            justifyContent: 'flex-start',
+          }}
+        >
           <Box
             component='img'
-            src={lanes.find(elem => elem.id === position).image}
+            src={positionList.find((elem) => elem.id === position).image}
             loading='lazy'
             alt={position}
             sx={{
               height: 40,
               width: 40,
               mr: 1,
-              mixBlendMode: 'exclusion'
+              mixBlendMode: 'exclusion',
             }}
           />
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <Box sx={{ display: 'flex' }}>
               <Typography
-                color={tierInfo.find(elem => elem.id === tier).color}
-                sx={{
-                  fontSize: 12,
-                  fontWeight: 700
-                }}>
-                #{tierInfo.find(elem => elem.id === tier).kor}
-              </Typography>
-              <Typography
                 sx={{
                   fontSize: 12,
                   fontWeight: 700,
-                  pl: 1
-                }}>
-                #{typeInfo.find(elem => elem.id === type).kor}
+                  pl: 1,
+                }}
+              >
+                #{typeList.find((elem) => elem.id === type).kor}
+              </Typography>
+              <Typography
+                color={tierList.find((elem) => elem.id === tier).color}
+                sx={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                }}
+              >
+                #{tierList.find((elem) => elem.id === tier).kor}
               </Typography>
             </Box>
             <Typography
@@ -67,8 +71,9 @@ const CardTitle = (props) => {
                 display: '-webkit-box',
                 overflow: 'hidden',
                 WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 1
-              }}>
+                WebkitLineClamp: 1,
+              }}
+            >
               {' ' + content}
             </Typography>
           </Box>
