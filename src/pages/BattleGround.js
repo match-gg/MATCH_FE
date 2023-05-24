@@ -5,7 +5,7 @@ import {Route, Routes, useLocation } from 'react-router-dom';
 import MainHeader from '../components/main/MainHeader';
 import MainFooter from '../components/main/MainFooter';
 import MainBodyWrapper from '../components/main/MainBodyWrapper';
-// import Body from '../components/main/pubg/Body';
+import Body from '../components/main/pubg/Body';
 // import CardDeatilModal from '../components/main/pubg/CardDeatilModal';
 
 const BattleGround = () => {
@@ -21,7 +21,7 @@ const BattleGround = () => {
             <Fragment>
               <MainHeader game={'pubg'} />
               <MainBodyWrapper game={'pubg'}>
-                {/* <Body /> */}
+                <Body />
               </MainBodyWrapper>
               <MainFooter />
             </Fragment>
