@@ -7,7 +7,10 @@ import { Button, Container, Typography } from '@mui/material';
 import { api } from '../../../api/api';
 
 import BoardsFilter from './BoardsFilter';
+import Card from './Card/Card';
 import ChatToggleBtn from '../../../chat/ChatToggleBtn';
+
+import { temp_boards } from './boards.tmp';
 
 const BoardsWrapper = styled('div')({
   width: '100%',
@@ -22,7 +25,7 @@ const BoardsWrapper = styled('div')({
 const Body = () => {
   const location = useLocation();
 
-  const [boards, setBoards] = useState([]);
+  const [boards, setBoards] = useState(temp_boards);
 
   // platform, type, tier state
   const [platform, setPlatform] = useState('ALL');
@@ -69,6 +72,17 @@ const Body = () => {
               );
             })}
           {isLoading && <Typography>Loading...</Typography>} */}
+          {boards.map((item, _index) => {
+            return (
+              <Link
+              to={`${item.id}`}
+              state={{ background: location }}
+              style={{ textDecoration: 'none' }}
+              >
+                <Card key={item.id} item={item} />
+              </Link>
+            )
+          })}
         </BoardsWrapper>
       </Container>
       <Button sx={{ mb: 4, color: '#3d3939' }} onClick={null}>
