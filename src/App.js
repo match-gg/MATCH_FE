@@ -10,6 +10,7 @@ import KakaoLoginRedirect from './pages/KakaoLoginRedirect';
 // Games
 import LeagueofLegends from './pages/LeagueofLegends';
 import Valorant from './pages/Valorant';
+import BattleGround from './pages/BattleGround';
 
 export default function App() {
   return (
@@ -21,7 +22,8 @@ export default function App() {
         <Route path='/kakao/register' element={<RegisterPage />} />
         <Route path='/mypage' element={<MyPage />} />
         <Route path='/lol/*' element={<LeagueofLegends />} />
-        <Route path='/valorant' element={<Valorant />} />
+        <Route path='/pubg/*' element={<BattleGround />} />
+        <Route path='/valorant/*' element={<Valorant />} />
       </Routes>
     </Router>
   );
