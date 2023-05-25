@@ -6,27 +6,29 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../../../api/api';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
-const DeletePartyButton = async (props) => {
+const DeletePartyButton = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { chatRoomId, game, id } = props;
 
   //서버에 알리기
-  await api
-    .delete(`/api/${game.toLowerCase()}/${id}`)
-    .then(async (response) => {
-      if (response.status === 200) {
-        //Firebase Realtime DB의 isDeleted 를 true로 설정
-        await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
-          isDeleted: true,
-        })
-          .then(() => {
-            dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
-            navigate('/lol');
+  const deleteParty = async () => {
+    await api
+      .delete(`/api/${game.toLowerCase()}/${id}`)
+      .then(async (response) => {
+        if (response.status === 200) {
+          //Firebase Realtime DB의 isDeleted 를 true로 설정
+          await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
+            isDeleted: true,
           })
-          .catch((error) => console.log(error));
-      }
-    });
+            .then(() => {
+              dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
+              navigate('/lol');
+            })
+            .catch((error) => console.log(error));
+        }
+      });
+  };
 
   return (
     <Button
@@ -44,7 +46,7 @@ const DeletePartyButton = async (props) => {
           backgroundColor: '#f3f3f3',
         },
       }}
-      onClick={DeletePartyButton}
+      onClick={deleteParty}
     >
       게시글 삭제
     </Button>
