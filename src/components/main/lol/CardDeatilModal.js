@@ -77,7 +77,8 @@ const CardDeatilModal = (props) => {
   }, []);
 
   // 방에 대한 인원 수 정보
-  const totalMember = typeInfo.find((elem) => elem.id === boardData.type)?.maxMember || 0;
+  const totalMember =
+    typeInfo.find((elem) => elem.id === boardData.type)?.maxMember || 0;
   const currentMember = boardData?.memberList?.length || 0;
 
   return (
@@ -146,14 +147,17 @@ const CardDeatilModal = (props) => {
                     <Box sx={{ display: 'flex', pt: 1 }}>
                       <Typography
                         color={
-                          tierInfo.find((elem) => elem.id === boardData?.tier)?.color || 'grey'
+                          tierInfo.find((elem) => elem.id === boardData?.tier)
+                            ?.color || 'grey'
                         }
                         sx={{
                           fontSize: 12,
                           fontWeight: 700,
                         }}
                       >
-                        #{tierInfo.find((elem) => elem.id === boardData.tier)?.kor || '티어'}
+                        #
+                        {tierInfo.find((elem) => elem.id === boardData.tier)
+                          ?.kor || '티어'}
                       </Typography>
                       <Typography
                         sx={{
@@ -162,7 +166,9 @@ const CardDeatilModal = (props) => {
                           pl: 1,
                         }}
                       >
-                        #{typeInfo.find((elem) => elem.id === boardData.type)?.kor || '큐타입'}
+                        #
+                        {typeInfo.find((elem) => elem.id === boardData.type)
+                          ?.kor || '큐타입'}
                       </Typography>
                       <Typography
                         sx={{
@@ -171,7 +177,9 @@ const CardDeatilModal = (props) => {
                           pl: 1,
                         }}
                       >
-                        #{lanes.find((elem) => elem.id === boardData.position)?.kor || '포지션'}
+                        #
+                        {lanes.find((elem) => elem.id === boardData.position)
+                          ?.kor || '포지션'}
                         구함
                       </Typography>
                       <Typography
@@ -196,11 +204,16 @@ const CardDeatilModal = (props) => {
                     >
                       마감일시
                     </Typography>
-                    <RemainingTime created={boardData?.created} expire={boardData?.expire} />
+                    <RemainingTime
+                      created={boardData?.created}
+                      expire={boardData?.expire}
+                    />
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', py: 1 }}>
-                  <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600 }}>
+                  <Typography
+                    sx={{ color: 'grey', fontSize: 14, fontWeight: 600 }}
+                  >
                     참여자 목록 ( {currentMember} / {totalMember} )
                   </Typography>
                 </Box>
@@ -215,7 +228,8 @@ const CardDeatilModal = (props) => {
                     overflow: 'auto',
                   }}
                 >
-                  {boardData && boardData.memberList &&
+                  {boardData &&
+                    boardData.memberList &&
                     boardData.memberList.map((elem, idx) => {
                       return (
                         <PartyMember
@@ -230,7 +244,14 @@ const CardDeatilModal = (props) => {
                         />
                       );
                     })}
-                  {Array(totalMember - currentMember).fill(<Recruitment />)}
+                  {Array(totalMember - currentMember).fill(
+                    <Recruitment
+                      isAuthor={oauth2Id === boardData.oauth2Id}
+                      fetchBoardDetail={fetchBoardDetail}
+                      game={game}
+                      id={boardData.id}
+                    />
+                  )}
                 </Box>
                 {isLogin &&
                   (joinedChatRooms.includes(boardData.chatRoomId) ? (
@@ -257,7 +278,10 @@ const CardDeatilModal = (props) => {
               </Box>
               {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
                 <Box sx={{ ml: 2 }}>
-                  <ChatInCardDetailModal chatRoomId={boardData.chatRoomId} game={game} />
+                  <ChatInCardDetailModal
+                    chatRoomId={boardData.chatRoomId}
+                    game={game}
+                  />
                 </Box>
               )}
             </Box>
