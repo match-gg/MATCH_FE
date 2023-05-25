@@ -6,7 +6,7 @@ import MainHeader from '../components/main/MainHeader';
 import MainFooter from '../components/main/MainFooter';
 import MainBodyWrapper from '../components/main/MainBodyWrapper';
 import Body from '../components/main/pubg/Body';
-// import CardDeatilModal from '../components/main/pubg/CardDeatilModal';
+import CardDeatilModal from '../components/main/pubg/Card/CardDeatilModal';
 
 const BattleGround = () => {
   const location = useLocation();
@@ -27,12 +27,12 @@ const BattleGround = () => {
             </Fragment>
           }
         >
-          {/* <Route path={`:id`} element={<CardDeatilModal />} /> */}
+          <Route path={`:id`} element={<CardDeatilModal />} />
         </Route>
       </Routes>
       {background && (
         <Routes>
-          {/* <Route path={`:id`} element={<CardDeatilModal />} /> */}
+          <Route path={`:id`} element={<CardDeatilModal />} />
         </Routes>
       )}
     </Fragment>
