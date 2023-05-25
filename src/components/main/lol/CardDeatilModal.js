@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { api } from '../../../api/api';
 
-import { tierInfo, typeInfo, lanes } from './Card.d';
+import { typeInfo, tierInfo, position } from './CardDeatilModal.d';
 
 // mui
 import { Box, Button, Typography, IconButton } from '@mui/material';
@@ -15,12 +15,15 @@ import RemainingTime from './RemainingTime';
 import PartyMember from './PartyMember';
 import Recruitment from './Recruitment';
 
-// styled component
-import styled from '@emotion/styled';
+// components
 import JoinPartyButton from './JoinPartyButton';
 import LeavePatryButton from './LeavePatryButton';
 import ChatInCardDetailModal from '../../../chat/ChatInCardDetailModal';
 import DeletePartyButton from './DeletePartyButton';
+
+// styled component
+import styled from '@emotion/styled';
+
 const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'fixed',
   top: 0,
@@ -171,7 +174,7 @@ const CardDeatilModal = (props) => {
                           pl: 1,
                         }}
                       >
-                        #{lanes.find((elem) => elem.id === boardData.position)?.kor || '포지션'}
+                        #{position.find((elem) => elem.id === boardData.position)?.kor || '포지션'}
                         구함
                       </Typography>
                       <Typography
