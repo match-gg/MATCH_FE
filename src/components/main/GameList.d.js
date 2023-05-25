@@ -9,4 +9,9 @@ export const GameList = [
     fullName: 'Valorant',
     fullName_Kor: '발로란트',
   },
+  {
+    id: 'overwatch',
+    fullName: 'Overwatch2',
+    fullName_Kor: '오버워치2'
+  }
 ];
