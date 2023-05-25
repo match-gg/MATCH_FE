@@ -130,7 +130,8 @@ const CardAuthor = (props) => {
                 loading='lazy'
                 alt={author.tier}
                 sx={{
-                  transform: 'scale(0.11)'
+                  height: 40,
+                  width: 40
                 }}
               />
             </Box>
