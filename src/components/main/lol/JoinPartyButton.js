@@ -7,7 +7,7 @@ import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const JoinPartyButton = (props) => {
   const dispatch = useDispatch();
-  const { game, chatRoomId, id } = props;
+  const { game, chatRoomId, id, fetchBoardDetail } = props;
 
   const nickname = useSelector((state) => state.user.games[`${game}`]);
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
@@ -22,7 +22,6 @@ const JoinPartyButton = (props) => {
   //토큰
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
-
 
   const isBanned = async (chatRoomId, oauth2Id) => {
     let banned = false;
@@ -49,9 +48,9 @@ const JoinPartyButton = (props) => {
         const joinedMemberList = [...prevMemberList, newMember];
         await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
           memberList: joinedMemberList,
-        }).then(() =>
-          dispatch(chatRoomActions.ADD_JOINED_CHATROOM(chatRoomId))
-        );
+        }).then(() => {
+          dispatch(chatRoomActions.ADD_JOINED_CHATROOM(chatRoomId));
+        });
       })
       .catch((error) => console.log(error));
   };
@@ -76,6 +75,9 @@ const JoinPartyButton = (props) => {
           //파이어베이스의 Realtime DB에 추가, 리덕스에 채팅방 아이디 저장
           addFirebaseRDB(newMember, chatRoomId);
         }
+      })
+      .then(() => {
+        fetchBoardDetail();
       })
       .catch((error) => console.log(error));
   };
