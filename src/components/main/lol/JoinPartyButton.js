@@ -77,6 +77,7 @@ const JoinPartyButton = (props) => {
         }
       })
       .then(() => {
+        //카드 상세보기 모달 페이지에서 파티 참가가 반영된 최신 데이터 가져오기
         fetchBoardDetail();
       })
       .catch((error) => console.log(error));
