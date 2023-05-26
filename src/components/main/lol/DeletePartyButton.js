@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import { ref, getDatabase, update } from 'firebase/database';
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../../api/api';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
@@ -11,10 +11,19 @@ const DeletePartyButton = (props) => {
   const dispatch = useDispatch();
   const { chatRoomId, game, id } = props;
 
+  //토큰
+  const { accessToken } = useSelector((state) => state.token);
+  const refreshToken = localStorage.getItem('matchGG_refreshToken');
+
   //서버에 알리기
   const deleteParty = async () => {
     await api
-      .delete(`/api/${game.toLowerCase()}/${id}`)
+      .delete(`/api/${game.toLowerCase()}/board/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Refresh-Token': refreshToken,
+        },
+      })
       .then(async (response) => {
         if (response.status === 200) {
           //Firebase Realtime DB의 isDeleted 를 true로 설정
@@ -23,8 +32,8 @@ const DeletePartyButton = (props) => {
           })
             .then(() => {
               dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
-              navigate('/lol');
             })
+            .then(() => navigate(0))
             .catch((error) => console.log(error));
         }
       });
