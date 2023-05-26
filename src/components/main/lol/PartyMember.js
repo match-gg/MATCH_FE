@@ -250,7 +250,7 @@ const PartyMember = (props) => {
       </Box>
       {isAuthor &&
         oauth2Id !==
-          props.oauth2Id(
+          props.AuthorOauth2Id(
             <Box>
               <IconButton onClick={kickMember}>
                 <Close color='warning' />
