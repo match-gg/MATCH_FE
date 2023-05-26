@@ -18,7 +18,7 @@ const DeletePartyButton = (props) => {
   //서버에 알리기
   const deleteParty = async () => {
     await api
-      .delete(`/api/${game.toLowerCase()}/board/${id}`, {
+      .delete(`/api/${game}/board/${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Refresh-Token': refreshToken,
