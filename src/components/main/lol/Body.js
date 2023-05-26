@@ -25,6 +25,8 @@ const Body = () => {
 
   const [boards, setBoards] = useState([]); // 전체 게시글 저장
   const [pageNumber, setPageNumber] = useState(1); // 불러 올 페이지 번호
+  // 서버로부터 받은 게시글이 없는 경우
+  const [isNoBoard, setIsNoBoard] = useState(false);
 
   const [queueType, setQueueType] = useState('ALL'); // 큐 타입
   const [tier, setTier] = useState('ALL'); // 티어
@@ -69,10 +71,14 @@ const Body = () => {
           setIsLoading(false);
         })
         .catch((error) => {
-          console.log(error);
           setIsLoading(false);
-          if (error.status === 404) {
+          console.log(error);
+          if (
+            error.response.data.status === 404 &&
+            error.response.data.message === '게시글이 존재하지 않습니다.'
+          ) {
             setBoards([]);
+            setIsNoBoard(true);
           }
         });
     };
@@ -118,6 +124,9 @@ const Body = () => {
       <BoardsFilter filterProps={filterProps} />
       <Container maxWidth='xl' sx={{ mt: 2 }}>
         <BoardsWrapper>
+          {!isLoading && isNoBoard && (
+            <Typography>게시글이 존재하지 않습니다.</Typography>
+          )}
           {!isLoading &&
             boards.map((item, _index) => {
               return (
@@ -133,9 +142,11 @@ const Body = () => {
           {isLoading && <Typography>Loading...</Typography>}
         </BoardsWrapper>
       </Container>
-      <Button sx={{ mb: 4, color: '#3d3939' }} onClick={moreBoards}>
-        더 불러오기
-      </Button>
+      {!isNoBoard && (
+        <Button sx={{ mb: 4, color: '#3d3939' }} onClick={moreBoards}>
+          더 불러오기
+        </Button>
+      )}
       <ChatToggleBtn />
     </Fragment>
   );
