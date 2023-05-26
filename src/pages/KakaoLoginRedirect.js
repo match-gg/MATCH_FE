@@ -42,7 +42,7 @@ const KakaoLoginRedirect = () => {
           oauth2AccessToken: kakaoAccessToken,
         })
         .catch((error) => {
-          if (error.status === 404) {
+          if (error.response.status === 404) {
             alert('존재하지 않는 사용자입니다.\n회원가입을 진행해주세요.');
             navigate('/login');
           }

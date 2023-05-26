@@ -74,7 +74,7 @@ const Body = () => {
           setIsLoading(false);
           console.log(error);
           if (
-            error.response.data.status === 404 &&
+            error.response.status === 404 &&
             error.response.data.message === '게시글이 존재하지 않습니다.'
           ) {
             setBoards([]);
