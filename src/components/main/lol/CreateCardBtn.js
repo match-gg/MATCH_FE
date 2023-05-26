@@ -39,8 +39,10 @@ import {
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const CreateCardBtn = (props) => {
-  const { accessToken } = useSelector((state) => state.token);
   const user = useSelector((state) => state.user);
+
+  //토큰
+  const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 
   const dispatch = useDispatch();
@@ -78,7 +80,7 @@ const CreateCardBtn = (props) => {
   });
 
   const handleName = (e) => {
-    setUserInput({ ...userInput, name: e.target.value.trim() });
+    setUserInput({ ...userInput, name: e.target.value });
     setIsChanged(true);
   };
 
@@ -242,7 +244,9 @@ const CreateCardBtn = (props) => {
             key,
             roomId: boardId,
             createdBy: userInput.name,
-            memberList: [{ nickname: userInput.name, oauth2Id: user.oauth2Id }],
+            memberList: [
+              { nickname: userInput.name.trim(), oauth2Id: user.oauth2Id },
+            ],
             timestamp: new Date().toString(),
           };
           //Ref에 접근해서 데이터 update
@@ -261,12 +265,16 @@ const CreateCardBtn = (props) => {
     setIsPending(true);
 
     await api
-      .post(`/api/lol/board`, userInput, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Refresh-Token': refreshToken,
-        },
-      })
+      .post(
+        `/api/lol/board`,
+        { ...userInput, name: userInput.name.trim() },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Refresh-Token': refreshToken,
+          },
+        }
+      )
       .catch((error) => {
         alert(
           '게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.'

@@ -7,7 +7,7 @@ import { api } from '../../../api/api';
 import { typeInfo, tierInfo, position } from './CardDeatilModal.d';
 
 // mui
-import { Box, Button, Typography, IconButton } from '@mui/material';
+import { Box, Typography, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 // custom components
@@ -53,6 +53,7 @@ const CardDeatilModal = () => {
 
   const { isLogin } = useSelector((state) => state.user);
   const { joinedChatRooms } = useSelector((state) => state.chatRoom);
+  const nickname = useSelector((state) => state.user.games[game]);
 
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
@@ -280,7 +281,11 @@ const CardDeatilModal = () => {
                 <Box sx={{ ml: 2 }}>
                   <ChatInCardDetailModal
                     chatRoomId={boardData.chatRoomId}
-                    game={game}
+                    nickname={
+                      oauth2Id === boardData.oauth2Id
+                        ? boardData.author.summonerName
+                        : nickname
+                    }
                   />
                 </Box>
               )}

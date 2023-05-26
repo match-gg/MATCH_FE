@@ -13,7 +13,7 @@ const PartyMember = (props) => {
   //내 oauth2Id
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
-  //토큰 for kick member
+  //토큰
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 

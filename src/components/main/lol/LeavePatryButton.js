@@ -8,6 +8,7 @@ import { chatRoomActions } from '../../../store/chatRoom-slice';
 const LeavePartyButton = (props) => {
   // game, chatRoomId, id, targetMember를 props로 받아와야함
   const { game, chatRoomId, id, fetchBoardDetail } = props;
+
   const nickname = useSelector((state) => state.user.nickname);
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
   const targetMember = {
