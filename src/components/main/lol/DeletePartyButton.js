@@ -33,7 +33,7 @@ const DeletePartyButton = (props) => {
             .then(() => {
               dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
             })
-            .then(() => navigate(0))
+            .then(() => navigate('lol'))
             .catch((error) => console.log(error));
         }
       });

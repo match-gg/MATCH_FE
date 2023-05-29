@@ -170,7 +170,7 @@ const ChatInCardDetailModal = (props) => {
           ref={scrollRef}
           sx={{
             width: '100%',
-            overflowY: 'scroll',
+            overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-start',
@@ -178,7 +178,6 @@ const ChatInCardDetailModal = (props) => {
           }}
         >
           {messages.map((message, idx) => {
-            console.log(message);
             const msgBySameSender =
               message.user.nickname === messages[idx - 1]?.user.nickname
                 ? true

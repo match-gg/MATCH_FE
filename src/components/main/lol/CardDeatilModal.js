@@ -26,6 +26,7 @@ import styled from '@emotion/styled';
 
 const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'fixed',
+  overflowY: 'hidden',
   top: 0,
   width: '100%',
   height: '100%',
@@ -78,7 +79,9 @@ const CardDeatilModal = () => {
   };
   //컴포넌트 렌더링 시 게시글 상세 조회 호출
   useEffect(() => {
+    document.body.style.overflow = 'hidden';
     fetchBoardDetail();
+    return () => (document.body.style.overflow = 'unset');
   }, []);
 
   // 방에 대한 인원 수 정보
@@ -119,11 +122,11 @@ const CardDeatilModal = () => {
               <Typography component='h1' sx={{ fontSize: 22, fontWeight: 700 }}>
                 {boardData?.name}님의 파티
               </Typography>
-              {!isLogin && !joinedChatRooms.includes(boardData.chatRoomId) && (
-                <IconButton size='small' onClick={() => navigate(`/${game}`)}>
-                  <Close />
-                </IconButton>
-              )}
+              {/* {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && ( */}
+              <IconButton size='small' onClick={() => navigate(`/${game}`)}>
+                <Close />
+              </IconButton>
+              {/* )} */}
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -146,7 +149,13 @@ const CardDeatilModal = () => {
                     >
                       모집 내용
                     </Typography>
-                    <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+                    <Typography
+                      sx={{
+                        fontSize: 14,
+                        fontWeight: 600,
+                        wordBreak: 'break-all',
+                      }}
+                    >
                       {boardData?.content}
                     </Typography>
                     <Box sx={{ display: 'flex', pt: 1 }}>

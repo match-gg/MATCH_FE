@@ -234,7 +234,6 @@ const CreateCardBtn = (props) => {
           'Refresh-Token': refreshToken,
         },
       })
-      .catch((error) => console.log(error))
       .then(async (response) => {
         if (response.status === 200) {
           //파이어베이스의 Realtime DB에 저장될 객체
@@ -250,14 +249,18 @@ const CreateCardBtn = (props) => {
             timestamp: new Date().toString(),
           };
           //Ref에 접근해서 데이터 update
-          await update(child(chatroomRef, key), newChatroom)
-            .catch((error) => console.log(error))
-            .then((_response) => {
-              dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
-              closeModal();
-            });
+          await update(child(chatroomRef, key), newChatroom).catch((error) =>
+            console.log(error)
+          );
         }
-      });
+      })
+      // redux에 채팅방 id 저장
+      .then((_response) => {
+        dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
+        closeModal();
+      })
+      .then(() => navigate(0))
+      .catch((error) => console.log(error));
   };
 
   //글 작성 완료시 서버로 데이터 전송
@@ -283,13 +286,13 @@ const CreateCardBtn = (props) => {
         setIsPending(false);
       })
       .then((response) => {
+        console.log(response);
         const boardId = response.data;
         //채팅방 개설
         createChatroom(boardId, 5);
         // 인원수 제한이 5로 되어있는 것 같은데 5로 고정할 건지 고민좀 해봐야 할 듯
 
         setIsPending(false);
-        navigate(0);
       });
   };
 

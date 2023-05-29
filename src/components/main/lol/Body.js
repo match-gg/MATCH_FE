@@ -18,6 +18,7 @@ const BoardsWrapper = styled('div')({
   flexWrap: 'wrap',
   pl: 1,
   pt: 1,
+  // position: 'fixed',
 });
 
 const Body = () => {
@@ -133,7 +134,10 @@ const Body = () => {
                 <Link
                   to={`${item.id}`}
                   state={{ background: location }}
-                  style={{ textDecoration: 'none' }}
+                  style={{
+                    textDecoration: 'none',
+                    background: 'fixed',
+                  }}
                 >
                   <Card key={item.id} item={item} />
                 </Link>

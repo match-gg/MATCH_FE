@@ -248,15 +248,13 @@ const PartyMember = (props) => {
           </ImageList>
         </Box>
       </Box>
-      {isAuthor &&
-        oauth2Id !==
-          props.AuthorOauth2Id(
-            <Box>
-              <IconButton onClick={kickMember}>
-                <Close color='warning' />
-              </IconButton>
-            </Box>
-          )}
+      {isAuthor && oauth2Id !== props.AuthorOauth2Id && (
+        <Box>
+          <IconButton onClick={kickMember}>
+            <Close color='warning' />
+          </IconButton>
+        </Box>
+      )}
     </Box>
   );
 };
