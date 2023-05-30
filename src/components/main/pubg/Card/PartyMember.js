@@ -97,7 +97,7 @@ const PartyMember = (props) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          width: 132
+          width: 150
         }}>
         <Typography
           sx={{
@@ -118,7 +118,7 @@ const PartyMember = (props) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          width: 90
+          // width: 90
         }}>
         <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>RP</Typography>
         <Box
@@ -149,7 +149,7 @@ const PartyMember = (props) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          width: 60
+          // width: 60
         }}>
         <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>K/D</Typography>
         <Typography
@@ -170,7 +170,7 @@ const PartyMember = (props) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          width: 100
+          // width: 100
         }}>
         <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>경기 당 데미지</Typography>
         <Typography
@@ -186,7 +186,7 @@ const PartyMember = (props) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          width: 60
+          // width: 60
         }}>
         <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>Top 1%</Typography>
         <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
@@ -197,7 +197,7 @@ const PartyMember = (props) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          width: 60
+          // width: 60
         }}>
         <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>Top 10%</Typography>
         <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
