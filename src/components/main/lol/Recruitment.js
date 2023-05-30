@@ -57,7 +57,6 @@ const RecruitmentForAuthor = (props) => {
   const handleName = (e) => {
     setName(e.target.value);
   };
-  console.log(name);
 
   //닉네임 인증 요청시 인증중(loading) 상태를 관리하는 state
   const [isLoading, setIsLoading] = useState(false);
