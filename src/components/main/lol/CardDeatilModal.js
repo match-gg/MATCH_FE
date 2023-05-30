@@ -203,7 +203,7 @@ const CardDeatilModal = () => {
                           pl: 2,
                         }}
                       >
-                        {boardData?.mic ? '#음성채팅희망' : ''}
+                        {boardData?.voice ? '#음성채팅희망' : ''}
                       </Typography>
                     </Box>
                   </Box>
@@ -218,10 +218,12 @@ const CardDeatilModal = () => {
                     >
                       마감일시
                     </Typography>
-                    <RemainingTime
-                      created={boardData?.created}
-                      expire={boardData?.expire}
-                    />
+                    {boardData.created && (
+                      <RemainingTime
+                        created={boardData?.created}
+                        expire={boardData?.expire}
+                      />
+                    )}
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', py: 1 }}>
