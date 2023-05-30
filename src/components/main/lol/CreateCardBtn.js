@@ -728,6 +728,7 @@ const CreateCardBtn = (props) => {
               size='large'
               sx={{
                 bgcolor: '#808080',
+                p: 0,
                 mr: 1,
                 width: 124,
                 height: 36,
@@ -752,6 +753,7 @@ const CreateCardBtn = (props) => {
                   : true
               }
               sx={{
+                p: 0,
                 height: 36,
                 width: 124,
               }}

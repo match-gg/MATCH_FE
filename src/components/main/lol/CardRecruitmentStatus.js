@@ -14,7 +14,7 @@ const FlexRow = styled(Box)(({ theme }) => ({
 }));
 
 const CardRecruitmentStatus = (props) => {
-  const { isHovering, created, expire, curMembers = 2, totalMembers = 5 } = props;
+  const { isHovering, created, expire, curMembers, totalMembers } = props;
 
   return (
     <Fragment>

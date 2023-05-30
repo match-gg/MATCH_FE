@@ -10,3 +10,11 @@ export const tierInfo = [
   { id: 'CHALLENGER', color: '#F4C875', kor: '챌린저' },
   { id: 'ALL', color: '#000000', kor: '모든티어' },
 ];
+
+export const typeInfo = [
+  { id: 'DUO_RANK', kor: '솔로랭크', maxMember: 2 },
+  { id: 'FREE_RANK', kor: '자유랭크', maxMember: 5 },
+  { id: 'NORMAL', kor: '일반게임', maxMember: 5 },
+  { id: 'ARAM', kor: '칼바람나락', maxMember: 5 },
+  { id: 'ALL', kor: '모든큐', maxMember: 5 },
+];

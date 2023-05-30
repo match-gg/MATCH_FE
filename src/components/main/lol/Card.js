@@ -7,7 +7,7 @@ import CardTitle from './CardTitle';
 import CardRecruitmentStatus from './CardRecruitmentStatus';
 import CardAuthor from './CardAuthor';
 
-import { tierInfo } from './Card.d';
+import { tierInfo, typeInfo } from './Card.d';
 
 const BaseCard = styled(MuiCard)(({ theme }) => ({
   width: 376,
@@ -26,8 +26,17 @@ const FlexCol = styled(Box)(({ theme }) => ({
 }));
 
 const Card = ({ item }) => {
-  const { author, content, expire, created, voice, tier, position, type } =
-    item;
+  const {
+    author,
+    content,
+    expire,
+    created,
+    voice,
+    tier,
+    position,
+    type,
+    memberList,
+  } = item;
 
   const [isHovering, setIsHovering] = useState(false);
 
@@ -64,6 +73,8 @@ const Card = ({ item }) => {
             />
             {/* 모집 현황 */}
             <CardRecruitmentStatus
+              curMembers={memberList.length}
+              totalMembers={typeInfo.find((val) => val.id === type).maxMember}
               isHovering={isHovering}
               created={created}
               expire={expire}
