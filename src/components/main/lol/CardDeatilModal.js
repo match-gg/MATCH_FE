@@ -258,6 +258,7 @@ const CardDeatilModal = () => {
                           chatRoomId={boardData.chatRoomId}
                           fetchBoardDetail={fetchBoardDetail}
                           AuthorOauth2Id={boardData.oauth2Id}
+                          authorName={boardData.author.summonerName}
                         />
                       );
                     })}

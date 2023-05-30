@@ -72,6 +72,10 @@ const PartyMember = (props) => {
               const target = prevMemberList.find(
                 (member) => member.nickname === summonerData.summonerName
               );
+              if (!target) {
+                fetchBoardDetail();
+                return;
+              }
               const prevBannedList = datasnapshot.val().bannedList
                 ? [...datasnapshot.val().bannedList]
                 : [];
@@ -248,13 +252,14 @@ const PartyMember = (props) => {
           </ImageList>
         </Box>
       </Box>
-      {isAuthor && oauth2Id !== props.AuthorOauth2Id && (
-        <Box>
-          <IconButton onClick={kickMember}>
-            <Close color='warning' />
-          </IconButton>
-        </Box>
-      )}
+      {isAuthor &&
+        (oauth2Id !== props.AuthorOauth2Id || name !== props.authorName) && (
+          <Box>
+            <IconButton onClick={kickMember}>
+              <Close color='warning' />
+            </IconButton>
+          </Box>
+        )}
     </Box>
   );
 };
