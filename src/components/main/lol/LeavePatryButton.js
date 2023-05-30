@@ -5,9 +5,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { child, get, getDatabase, ref, update } from 'firebase/database';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
-const LeavePatryButton = (props) => {
+const LeavePartyButton = (props) => {
   // game, chatRoomId, id, targetMember를 props로 받아와야함
-  const { game, chatRoomId, id } = props;
+  const { game, chatRoomId, id, fetchBoardDetail } = props;
+
   const nickname = useSelector((state) => state.user.nickname);
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
   const targetMember = {
@@ -51,7 +52,9 @@ const LeavePatryButton = (props) => {
           //파이어베이스의 Realtime DB에서 제거, 리덕스에서 채팅방 아이디 제거
           removeFirebaseRDB(targetMember, chatRoomId);
         }
-      });
+      })
+      // 카드 상세보기 모달 페이지에서 새로고침을 통해 파티 탈퇴가 반영된 최신 데이터를 가져옴
+      .then(() => fetchBoardDetail());
   };
 
   return (
@@ -77,4 +80,4 @@ const LeavePatryButton = (props) => {
   );
 };
 
-export default LeavePatryButton;
+export default LeavePartyButton;

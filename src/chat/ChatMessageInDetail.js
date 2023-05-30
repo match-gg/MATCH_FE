@@ -4,7 +4,9 @@ import { useSelector } from 'react-redux';
 
 const ChatMessageInDetail = (props) => {
   const { messageInfo, msgBySameSender } = props;
+
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
+  // 내 메세지인지 확인해주는 함수
   const isMessageMine = (messageInfo, oauth2Id) => {
     return messageInfo.user.oauth2Id === oauth2Id;
   };
@@ -15,7 +17,9 @@ const ChatMessageInDetail = (props) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: isMessageMine(messageInfo, oauth2Id) ? 'flex-end' : 'flex-start',
+        alignItems: isMessageMine(messageInfo, oauth2Id)
+          ? 'flex-end'
+          : 'flex-start',
         width: '100%',
       }}
     >
@@ -27,7 +31,9 @@ const ChatMessageInDetail = (props) => {
       <Box
         sx={{
           display: 'flex',
-          flexDirection: isMessageMine(messageInfo, oauth2Id) ? 'row-reverse' : 'row',
+          flexDirection: isMessageMine(messageInfo, oauth2Id)
+            ? 'row-reverse'
+            : 'row',
         }}
       >
         <Box
@@ -41,7 +47,9 @@ const ChatMessageInDetail = (props) => {
             width: 'fit-content',
             maxWidth: '80%',
             borderRadius: 2,
-            backgroundColor: isMessageMine(messageInfo, oauth2Id) ? 'white' : '#e2e2e2',
+            backgroundColor: isMessageMine(messageInfo, oauth2Id)
+              ? 'white'
+              : '#e2e2e2',
             boxShadow: '0 0 1px 1px #ececec',
           }}
         >

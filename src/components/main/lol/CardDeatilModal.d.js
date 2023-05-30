@@ -1,3 +1,20 @@
+export const position = [
+  { id: 'TOP', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/TOP.png', kor: '탑' },
+  { id: 'JUG', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/JUG.png', kor: '정글' },
+  { id: 'MID', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/MID.png', kor: '미드' },
+  { id: 'ADC', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ADC.png', kor: '원딜' },
+  {
+    id: 'SPT',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/SUP.png',
+    kor: '서포터',
+  },
+  {
+    id: 'ALL',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ALL1.png',
+    kor: '상관없음',
+  },
+];
+
 export const tierInfo = [
   { id: 'IRON', color: '#51484A', kor: '아이언' },
   { id: 'BRONZE', color: '#8C513A', kor: '브론즈' },

@@ -4,10 +4,10 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { api } from '../../../api/api';
 
-import { tierInfo, typeInfo, lanes } from './Card.d';
+import { typeInfo, tierInfo, position } from './CardDeatilModal.d';
 
 // mui
-import { Box, Button, Typography, IconButton } from '@mui/material';
+import { Box, Typography, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 // custom components
@@ -15,14 +15,18 @@ import RemainingTime from './RemainingTime';
 import PartyMember from './PartyMember';
 import Recruitment from './Recruitment';
 
-// styled component
-import styled from '@emotion/styled';
+// components
 import JoinPartyButton from './JoinPartyButton';
-import LeavePatryButton from './LeavePatryButton';
+import LeavePartyButton from './LeavePatryButton';
 import ChatInCardDetailModal from '../../../chat/ChatInCardDetailModal';
 import DeletePartyButton from './DeletePartyButton';
+
+// styled component
+import styled from '@emotion/styled';
+
 const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'fixed',
+  overflowY: 'hidden',
   top: 0,
   width: '100%',
   height: '100%',
@@ -39,10 +43,10 @@ const ModalContent = styled(Box)(({ theme }) => ({
   minHeight: 600, // minHeight을 주지않으면 솔로랭크는 두칸이라 답답해 보여서 추가.
 }));
 
-const CardDeatilModal = (props) => {
+const CardDeatilModal = () => {
   //현재 게임 정보
   const location = useLocation();
-  const game = location.pathname.split('/')[1];
+  const game = location.pathname.split('/')[1].toLowerCase();
 
   const navigate = useNavigate();
   const params = useParams();
@@ -50,9 +54,11 @@ const CardDeatilModal = (props) => {
 
   const { isLogin } = useSelector((state) => state.user);
   const { joinedChatRooms } = useSelector((state) => state.chatRoom);
+  const nickname = useSelector((state) => state.user.games[game]);
 
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
+  // 게시글 상세보기 모달의 데이터
   const [boardData, setBoardData] = useState({});
 
   // 게시글 상세조회
@@ -73,7 +79,9 @@ const CardDeatilModal = (props) => {
   };
   //컴포넌트 렌더링 시 게시글 상세 조회 호출
   useEffect(() => {
+    document.body.style.overflow = 'hidden';
     fetchBoardDetail();
+    return () => (document.body.style.overflow = 'unset');
   }, []);
 
   // 방에 대한 인원 수 정보
@@ -114,11 +122,11 @@ const CardDeatilModal = (props) => {
               <Typography component='h1' sx={{ fontSize: 22, fontWeight: 700 }}>
                 {boardData?.name}님의 파티
               </Typography>
-              {!isLogin && !joinedChatRooms.includes(boardData.chatRoomId) && (
-                <IconButton size='small' onClick={() => navigate(`/${game}`)}>
-                  <Close />
-                </IconButton>
-              )}
+              {/* {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && ( */}
+              <IconButton size='small' onClick={() => navigate(`/${game}`)}>
+                <Close />
+              </IconButton>
+              {/* )} */}
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -141,7 +149,13 @@ const CardDeatilModal = (props) => {
                     >
                       모집 내용
                     </Typography>
-                    <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+                    <Typography
+                      sx={{
+                        fontSize: 14,
+                        fontWeight: 600,
+                        wordBreak: 'break-all',
+                      }}
+                    >
                       {boardData?.content}
                     </Typography>
                     <Box sx={{ display: 'flex', pt: 1 }}>
@@ -178,7 +192,7 @@ const CardDeatilModal = (props) => {
                         }}
                       >
                         #
-                        {lanes.find((elem) => elem.id === boardData.position)
+                        {position.find((elem) => elem.id === boardData.position)
                           ?.kor || '포지션'}
                         구함
                       </Typography>
@@ -189,7 +203,7 @@ const CardDeatilModal = (props) => {
                           pl: 2,
                         }}
                       >
-                        {boardData?.mic ? '#음성채팅희망' : ''}
+                        {boardData?.voice ? '#음성채팅희망' : ''}
                       </Typography>
                     </Box>
                   </Box>
@@ -204,10 +218,12 @@ const CardDeatilModal = (props) => {
                     >
                       마감일시
                     </Typography>
-                    <RemainingTime
-                      created={boardData?.created}
-                      expire={boardData?.expire}
-                    />
+                    {boardData.created && (
+                      <RemainingTime
+                        created={boardData?.created}
+                        expire={boardData?.expire}
+                      />
+                    )}
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', py: 1 }}>
@@ -241,6 +257,7 @@ const CardDeatilModal = (props) => {
                           id={boardData.id}
                           chatRoomId={boardData.chatRoomId}
                           fetchBoardDetail={fetchBoardDetail}
+                          AuthorOauth2Id={boardData.oauth2Id}
                         />
                       );
                     })}
@@ -262,17 +279,19 @@ const CardDeatilModal = (props) => {
                         game={game}
                       />
                     ) : (
-                      <LeavePatryButton
+                      <LeavePartyButton
                         chatRoomId={boardData.chatRoomId}
-                        game={'lol'}
+                        game={game}
                         id={boardData.id}
+                        fetchBoardDetail={fetchBoardDetail}
                       />
                     )
                   ) : (
                     <JoinPartyButton
                       chatRoomId={boardData.chatRoomId}
-                      game={'lol'}
+                      game={game}
                       id={boardData.id}
+                      fetchBoardDetail={fetchBoardDetail}
                     />
                   ))}
               </Box>
@@ -281,6 +300,11 @@ const CardDeatilModal = (props) => {
                   <ChatInCardDetailModal
                     chatRoomId={boardData.chatRoomId}
                     game={game}
+                    nickname={
+                      oauth2Id === boardData.oauth2Id
+                        ? boardData.author.summonerName
+                        : nickname
+                    }
                   />
                 </Box>
               )}

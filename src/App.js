@@ -10,6 +10,7 @@ import KakaoLoginRedirect from './pages/KakaoLoginRedirect';
 // Games
 import LeagueofLegends from './pages/LeagueofLegends';
 import Valorant from './pages/Valorant';
+import Overwatch from './pages/Overwatch';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path='/mypage' element={<MyPage />} />
         <Route path='/lol/*' element={<LeagueofLegends />} />
         <Route path='/valorant' element={<Valorant />} />
+        <Route path='/overwatch' element={<Overwatch />} />
       </Routes>
     </Router>
   );

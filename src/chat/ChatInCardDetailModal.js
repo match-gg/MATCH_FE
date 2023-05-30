@@ -28,11 +28,9 @@ import { chatRoomActions } from '../store/chatRoom-slice';
 
 const ChatInCardDetailModal = (props) => {
   const navigate = useNavigate();
-  //props로 해당 파티의 채팅방 id값 가져오기
-  const { chatRoomId, game } = props;
+  //props로 해당 파티의 채팅방 id값, 닉네임 가져오기
+  const { chatRoomId, nickname } = props;
 
-  //닉네임, ouath2Id
-  const nickname = useSelector((state) => state.user.games[`${game.toLowerCase()}`]);
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
   const dispatch = useDispatch();
@@ -87,7 +85,7 @@ const ChatInCardDetailModal = (props) => {
       return;
     }
 
-    //메세지 전송 유효성 테스트(해당 파티에 가입되어 있는지 확인)
+    //종료된 파티인지 확인
     await get(child(chatRoomRef, chatRoomId)).then(async (datasnapshot) => {
       if (datasnapshot.val().isDeleted) {
         alert('종료된 파티입니다.');
@@ -98,9 +96,10 @@ const ChatInCardDetailModal = (props) => {
       //  종료된 채팅방이 아닌 경우 (정상적인 프로세스)
       const members = [...datasnapshot.val().memberList];
       const oauth2IdList = members.map((member) => member.oauth2Id);
-      
-      //유효성 확인 통과 (가입되어 있는 사용자)
+
+      //oauth2Id를 통해 파티에 가입되어 있는지 확인
       if (oauth2IdList.includes(oauth2Id)) {
+        // 해당 파티에 가입되어있는 정상적인 사용자
         await set(push(child(messagesRef, chatRoomId)), createMessage())
           .catch((error) => console.log(error))
           .then(() => {
@@ -111,7 +110,7 @@ const ChatInCardDetailModal = (props) => {
             }, 0);
           });
       } else {
-        // 가입되어있지 않은 사용자
+        // 가입되어있지 않은 사용자 (탈퇴되었거나 스스로 나간 경우)
         alert('유효하지 않은 사용자 입니다.');
         dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
         navigate('/lol');
@@ -171,7 +170,7 @@ const ChatInCardDetailModal = (props) => {
           ref={scrollRef}
           sx={{
             width: '100%',
-            overflow: 'scroll',
+            overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-start',
@@ -179,7 +178,6 @@ const ChatInCardDetailModal = (props) => {
           }}
         >
           {messages.map((message, idx) => {
-            console.log(message);
             const msgBySameSender =
               message.user.nickname === messages[idx - 1]?.user.nickname
                 ? true

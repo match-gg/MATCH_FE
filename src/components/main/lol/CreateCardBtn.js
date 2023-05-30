@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { api } from '../../../api/api';
 import { getDatabase, ref, push, update, child } from 'firebase/database';
@@ -30,21 +30,30 @@ import CloseIcon from '@mui/icons-material/Close';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { typeData, tierData, positionData, expireData } from './CreateCardBtn.d';
+import {
+  typeData,
+  tierData,
+  positionData,
+  expireData,
+} from './CreateCardBtn.d';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const CreateCardBtn = (props) => {
-  const { accessToken } = useSelector((state) => state.token);
   const user = useSelector((state) => state.user);
+
+  //토큰
+  const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 로그인 된 사용자의 기본 닉네임 가져오기.
-  const registeredNickname = user.games['lol'];
+  //해당 게임 종류
+  const location = useLocation();
+  const game = location.pathname.split('/')[1].toLowerCase();
 
-  console.log(registeredNickname);
+  // 로그인 된 사용자의 기본 닉네임 가져오기.
+  const registeredNickname = user.games[`${game}`];
 
   // 닉네임 인증여부 확인에 사용할 state와 함수
   const [isIdChecked, setIsIdChecked] = useState(false);
@@ -53,7 +62,9 @@ const CreateCardBtn = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // 사용자 계정에 연결된 닉네임 사용 여부.
-  const [useExistNickname, setUseExistNickname] = useState(registeredNickname ? true : false);
+  const [useExistNickname, setUseExistNickname] = useState(
+    registeredNickname ? true : false
+  );
 
   // 사용자 input에 변동사항 있는지 확인 -> 모달 닫기 전 확인하는 데에 사용.
   const [isChanged, setIsChanged] = useState(false);
@@ -69,7 +80,7 @@ const CreateCardBtn = (props) => {
   });
 
   const handleName = (e) => {
-    setUserInput({ ...userInput, name: e.target.value.trim() });
+    setUserInput({ ...userInput, name: e.target.value });
     setIsChanged(true);
   };
 
@@ -92,7 +103,9 @@ const CreateCardBtn = (props) => {
       });
     } else if (
       newValue === 'DUO_RANK' &&
-      (userInput.tier === 'MASTER' || userInput.tier === 'ALL' || userInput.position === 'ALL')
+      (userInput.tier === 'MASTER' ||
+        userInput.tier === 'ALL' ||
+        userInput.position === 'ALL')
     ) {
       setUserInput({
         ...userInput,
@@ -147,10 +160,14 @@ const CreateCardBtn = (props) => {
       .get(`/api/lol/user/exist/${userInput.name}`)
       .then(async (response) => {
         if (response.status === 200) {
-          await api.get(`/api/lol/user/${userInput.name}`).then((_response) => {
-            setIsLoading(false);
-            setIsIdChecked(true);
-          });
+          const certifyedNickname = response.data;
+          await api
+            .get(`/api/lol/user/${certifyedNickname}`)
+            .then((_response) => {
+              setIsLoading(false);
+              setIsIdChecked(true);
+              setUserInput({ ...userInput, name: certifyedNickname });
+            });
         } else {
           setIsIdChecked(false);
           setIsLoading(false);
@@ -168,7 +185,11 @@ const CreateCardBtn = (props) => {
   const openModal = () => setOpen(true);
   const closeModalConfirm = () => {
     if (isChanged) {
-      if (window.confirm('현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'))
+      if (
+        window.confirm(
+          '현재 창을 나가면 입력하신 정보가 사라지게됩니다.\n정말 나가시겠습니까?'
+        )
+      )
         closeModal();
     } else {
       closeModal();
@@ -202,7 +223,7 @@ const CreateCardBtn = (props) => {
     const key = push(chatroomRef).key;
     //서버로 보낼 데이터
     const chatRoomInfo = {
-      boardId: Number(boardId),
+      boardId,
       chatRoomId: key,
       totalUser,
     };
@@ -213,28 +234,33 @@ const CreateCardBtn = (props) => {
           'Refresh-Token': refreshToken,
         },
       })
-      .catch((error) => console.log(error))
       .then(async (response) => {
-        //서버 전송 성공시
         if (response.status === 200) {
           //파이어베이스의 Realtime DB에 저장될 객체
           const newChatroom = {
+            game,
             isDeleted: false,
             key,
             roomId: boardId,
-            createdBy: user.games['lol'],
-            memberList: [{ nickname: user.games['lol'], oauth2Id: user.oauth2Id }],
+            createdBy: userInput.name,
+            memberList: [
+              { nickname: userInput.name.trim(), oauth2Id: user.oauth2Id },
+            ],
             timestamp: new Date().toString(),
           };
           //Ref에 접근해서 데이터 update
-          await update(child(chatroomRef, key), newChatroom)
-            .catch((error) => console.log(error))
-            .then((_response) => {
-              dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
-              closeModal();
-            });
+          await update(child(chatroomRef, key), newChatroom).catch((error) =>
+            console.log(error)
+          );
         }
-      });
+      })
+      // redux에 채팅방 id 저장
+      .then((_response) => {
+        dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
+        closeModal();
+      })
+      .then(() => navigate(0))
+      .catch((error) => console.log(error));
   };
 
   //글 작성 완료시 서버로 데이터 전송
@@ -242,25 +268,31 @@ const CreateCardBtn = (props) => {
     setIsPending(true);
 
     await api
-      .post(`/api/lol/board`, userInput, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Refresh-Token': refreshToken,
-        },
-      })
+      .post(
+        `/api/lol/board`,
+        { ...userInput, name: userInput.name.trim() },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Refresh-Token': refreshToken,
+          },
+        }
+      )
       .catch((error) => {
-        alert('게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.');
+        alert(
+          '게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.'
+        );
         console.log(error);
         setIsPending(false);
       })
       .then((response) => {
+        console.log(response);
         const boardId = response.data;
         //채팅방 개설
         createChatroom(boardId, 5);
         // 인원수 제한이 5로 되어있는 것 같은데 5로 고정할 건지 고민좀 해봐야 할 듯
 
         setIsPending(false);
-        navigate('/lol');
       });
   };
 
@@ -319,7 +351,11 @@ const CreateCardBtn = (props) => {
             <Typography component='h1' sx={{ fontSize: 18 }}>
               새 게시글 등록
             </Typography>
-            <CloseIcon color='primary' onClick={closeModalConfirm} sx={{ mr: 1, fontSize: 18 }} />
+            <CloseIcon
+              color='primary'
+              onClick={closeModalConfirm}
+              sx={{ mr: 1, fontSize: 18 }}
+            />
           </Box>
           <Divider sx={{ mb: 1 }} />
           <Box
@@ -464,7 +500,9 @@ const CreateCardBtn = (props) => {
             }}
           >
             <ToggleButtonGroup
-              disabled={isPending ? true : userInput.type === 'ARAM' ? true : false}
+              disabled={
+                isPending ? true : userInput.type === 'ARAM' ? true : false
+              }
               value={userInput.tier}
               onChange={handleTier}
               exclusive
@@ -520,7 +558,9 @@ const CreateCardBtn = (props) => {
               원하는 파티원의 포지션
             </Typography>
             <ToggleButtonGroup
-              disabled={isPending ? true : userInput.type === 'ARAM' ? true : false}
+              disabled={
+                isPending ? true : userInput.type === 'ARAM' ? true : false
+              }
               value={userInput.position}
               exclusive
               onChange={handlePosition}
@@ -563,7 +603,10 @@ const CreateCardBtn = (props) => {
             >
               파티찾기 지속시간
             </Typography>
-            <FormControl sx={{ width: 240 }} disabled={isPending ? true : false}>
+            <FormControl
+              sx={{ width: 240 }}
+              disabled={isPending ? true : false}
+            >
               <Select
                 value={userInput.expire}
                 onChange={handleExpire}
@@ -577,7 +620,11 @@ const CreateCardBtn = (props) => {
               >
                 {expireData.map((data, idx) => {
                   return (
-                    <MenuItem key={idx} value={data.value} sx={{ color: 'grey' }}>
+                    <MenuItem
+                      key={idx}
+                      value={data.value}
+                      sx={{ color: 'grey' }}
+                    >
                       {data.text}
                     </MenuItem>
                   );
@@ -681,6 +728,7 @@ const CreateCardBtn = (props) => {
               size='large'
               sx={{
                 bgcolor: '#808080',
+                p: 0,
                 mr: 1,
                 width: 124,
                 height: 36,
@@ -699,16 +747,22 @@ const CreateCardBtn = (props) => {
               disabled={
                 isPending
                   ? true
-                  : userInput.content.length >= 20 && (isIdChecked || useExistNickname)
+                  : userInput.content.length >= 20 &&
+                    (isIdChecked || useExistNickname)
                   ? false
                   : true
               }
               sx={{
+                p: 0,
                 height: 36,
                 width: 124,
               }}
             >
-              {isPending ? <CircularProgress sx={{ color: 'white' }} size={20} /> : '작성하기'}
+              {isPending ? (
+                <CircularProgress sx={{ color: 'white' }} size={20} />
+              ) : (
+                '작성하기'
+              )}
             </Button>
           </Box>
         </Stack>

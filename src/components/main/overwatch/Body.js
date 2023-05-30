@@ -2,13 +2,14 @@ import { useState, useEffect, Fragment } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import styled from '@emotion/styled';
-import { Button, Container, Typography } from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
 
 import { api } from '../../../api/api';
 
-import BoardsFilter from './BoardsFilter';
+import BoardsFilter from './BoardFilter';
 import Card from './Card';
-import ChatToggleBtn from '../../../chat/ChatToggleBtn';
+
+import { dummyBoards } from './boards.tmp';
 
 const BoardsWrapper = styled('div')({
   width: '100%',
@@ -18,43 +19,34 @@ const BoardsWrapper = styled('div')({
   flexWrap: 'wrap',
   pl: 1,
   pt: 1,
-  // position: 'fixed',
 });
 
 const Body = () => {
   const location = useLocation();
 
-  const [boards, setBoards] = useState([]); // 전체 게시글 저장
+  const [boards, setBoards] = useState(dummyBoards); // 전체 게시글 저장
   const [pageNumber, setPageNumber] = useState(1); // 불러 올 페이지 번호
-  // 서버로부터 받은 게시글이 없는 경우
-  const [isNoBoard, setIsNoBoard] = useState(false);
 
   const [queueType, setQueueType] = useState('ALL'); // 큐 타입
   const [tier, setTier] = useState('ALL'); // 티어
-  const [lane, setLane] = useState('ALL'); // 라인
+  const [position, setPosition] = useState('ALL'); // 포지션
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleQueueType = (event) => {
+  const handleQueueType = event => {
     if (event.target.value === 'ARAM') {
       setTier('ALL');
-      setLane('ALL');
+      setPosition('ALL');
     }
-
-    if (event.target.value === 'DUO_RANK') {
-      setTier('DIAMOND');
-    }
-
     setQueueType(event.target.value);
   };
 
-  const handleTier = (event) => {
+  const handleTier = event => {
     setTier(event.target.value);
   };
 
-  const handleLane = (event) => {
-    setLane(event.target.value);
-    console.log(event);
+  const handlePosition = event => {
+    setPosition(event.target.value);
   };
 
   // 최초 1회 게시글 로딩
@@ -63,47 +55,40 @@ const Body = () => {
       setIsLoading(true);
 
       await api
-        .get('/api/lol/boards', {
-          params: { size: 12, page: 0, position: lane, type: queueType, tier },
+        .get('/api/overwatch/boards', {
+          params: { size: 12, page: 0, position: position, type: queueType, tier }
         })
-        .then((response) => {
+        .then(response => {
           setBoards(response.data.content);
           setPageNumber(1);
           setIsLoading(false);
         })
-        .catch((error) => {
-          setIsLoading(false);
+        .catch(error => {
           console.log(error);
-          if (
-            error.response.status === 404 &&
-            error.response.data.message === '게시글이 존재하지 않습니다.'
-          ) {
-            setBoards([]);
-            setIsNoBoard(true);
-          }
+          setIsLoading(false);
         });
     };
 
-    fetchBoards();
-  }, [queueType, tier, lane]);
+    // fetchBoards();
+  }, [queueType, tier, position]);
 
   // 더 불러오기 버튼 클릭 시
   const moreBoards = async () => {
     await api
-      .get('/api/lol/boards', {
+      .get('/api/overwatch/boards', {
         params: {
           size: 12,
           page: pageNumber,
-          position: lane,
+          position: position,
           type: queueType,
-          tier,
-        },
+          tier
+        }
       })
-      .then((res) => {
+      .then(res => {
         setBoards([...boards, ...res.data.content]);
-        setPageNumber((prevState) => prevState + 1);
+        setPageNumber(prevState => prevState + 1);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   };
@@ -115,9 +100,9 @@ const Body = () => {
     handleQueueType,
     tier,
     handleTier,
-    lane,
-    handleLane,
-    refreshBoards,
+    position,
+    handlePosition,
+    refreshBoards
   };
 
   return (
@@ -125,20 +110,10 @@ const Body = () => {
       <BoardsFilter filterProps={filterProps} />
       <Container maxWidth='xl' sx={{ mt: 2 }}>
         <BoardsWrapper>
-          {!isLoading && isNoBoard && (
-            <Typography>게시글이 존재하지 않습니다.</Typography>
-          )}
           {!isLoading &&
             boards.map((item, _index) => {
               return (
-                <Link
-                  to={`${item.id}`}
-                  state={{ background: location }}
-                  style={{
-                    textDecoration: 'none',
-                    background: 'fixed',
-                  }}
-                >
+                <Link to={`${item.id}`} state={{ background: location }} style={{ textDecoration: 'none' }}>
                   <Card key={item.id} item={item} />
                 </Link>
               );
@@ -146,12 +121,9 @@ const Body = () => {
           {isLoading && <Typography>Loading...</Typography>}
         </BoardsWrapper>
       </Container>
-      {!isNoBoard && (
-        <Button sx={{ mb: 4, color: '#3d3939' }} onClick={moreBoards}>
-          더 불러오기
-        </Button>
-      )}
-      <ChatToggleBtn />
+      <Button sx={{ mb: 4, color: '#3d3939' }} onClick={moreBoards}>
+        더 불러오기
+      </Button>
     </Fragment>
   );
 };
