@@ -39,8 +39,10 @@ import {
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const CreateCardBtn = (props) => {
-  const { accessToken } = useSelector((state) => state.token);
   const user = useSelector((state) => state.user);
+
+  //토큰
+  const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 
   const dispatch = useDispatch();
@@ -48,10 +50,10 @@ const CreateCardBtn = (props) => {
 
   //해당 게임 종류
   const location = useLocation();
-  const game = location.pathname.split('/')[1];
+  const game = location.pathname.split('/')[1].toLowerCase();
 
   // 로그인 된 사용자의 기본 닉네임 가져오기.
-  const registeredNickname = user.games['lol'];
+  const registeredNickname = user.games[`${game}`];
 
   // 닉네임 인증여부 확인에 사용할 state와 함수
   const [isIdChecked, setIsIdChecked] = useState(false);
@@ -78,7 +80,7 @@ const CreateCardBtn = (props) => {
   });
 
   const handleName = (e) => {
-    setUserInput({ ...userInput, name: e.target.value.trim() });
+    setUserInput({ ...userInput, name: e.target.value });
     setIsChanged(true);
   };
 
@@ -158,10 +160,14 @@ const CreateCardBtn = (props) => {
       .get(`/api/lol/user/exist/${userInput.name}`)
       .then(async (response) => {
         if (response.status === 200) {
-          await api.get(`/api/lol/user/${userInput.name}`).then((_response) => {
-            setIsLoading(false);
-            setIsIdChecked(true);
-          });
+          const certifyedNickname = response.data;
+          await api
+            .get(`/api/lol/user/${certifyedNickname}`)
+            .then((_response) => {
+              setIsLoading(false);
+              setIsIdChecked(true);
+              setUserInput({ ...userInput, name: certifyedNickname });
+            });
         } else {
           setIsIdChecked(false);
           setIsLoading(false);
@@ -217,7 +223,7 @@ const CreateCardBtn = (props) => {
     const key = push(chatroomRef).key;
     //서버로 보낼 데이터
     const chatRoomInfo = {
-      boardId: Number(boardId),
+      boardId,
       chatRoomId: key,
       totalUser,
     };
@@ -228,31 +234,33 @@ const CreateCardBtn = (props) => {
           'Refresh-Token': refreshToken,
         },
       })
-      .catch((error) => console.log(error))
       .then(async (response) => {
-        //서버 전송 성공시
         if (response.status === 200) {
           //파이어베이스의 Realtime DB에 저장될 객체
           const newChatroom = {
-            gmae: game.toLowerCase(),
+            game,
             isDeleted: false,
             key,
             roomId: boardId,
-            createdBy: user.games['lol'],
+            createdBy: userInput.name,
             memberList: [
-              { nickname: user.games['lol'], oauth2Id: user.oauth2Id },
+              { nickname: userInput.name.trim(), oauth2Id: user.oauth2Id },
             ],
             timestamp: new Date().toString(),
           };
           //Ref에 접근해서 데이터 update
-          await update(child(chatroomRef, key), newChatroom)
-            .catch((error) => console.log(error))
-            .then((_response) => {
-              dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
-              closeModal();
-            });
+          await update(child(chatroomRef, key), newChatroom).catch((error) =>
+            console.log(error)
+          );
         }
-      });
+      })
+      // redux에 채팅방 id 저장
+      .then((_response) => {
+        dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
+        closeModal();
+      })
+      .then(() => navigate(0))
+      .catch((error) => console.log(error));
   };
 
   //글 작성 완료시 서버로 데이터 전송
@@ -260,12 +268,16 @@ const CreateCardBtn = (props) => {
     setIsPending(true);
 
     await api
-      .post(`/api/lol/board`, userInput, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Refresh-Token': refreshToken,
-        },
-      })
+      .post(
+        `/api/lol/board`,
+        { ...userInput, name: userInput.name.trim() },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Refresh-Token': refreshToken,
+          },
+        }
+      )
       .catch((error) => {
         alert(
           '게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.'
@@ -274,13 +286,13 @@ const CreateCardBtn = (props) => {
         setIsPending(false);
       })
       .then((response) => {
+        console.log(response);
         const boardId = response.data;
         //채팅방 개설
         createChatroom(boardId, 5);
         // 인원수 제한이 5로 되어있는 것 같은데 5로 고정할 건지 고민좀 해봐야 할 듯
 
         setIsPending(false);
-        navigate('/lol');
       });
   };
 
@@ -716,6 +728,7 @@ const CreateCardBtn = (props) => {
               size='large'
               sx={{
                 bgcolor: '#808080',
+                p: 0,
                 mr: 1,
                 width: 124,
                 height: 36,
@@ -740,6 +753,7 @@ const CreateCardBtn = (props) => {
                   : true
               }
               sx={{
+                p: 0,
                 height: 36,
                 width: 124,
               }}

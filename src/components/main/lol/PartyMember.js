@@ -10,11 +10,15 @@ import { Close } from '@mui/icons-material';
 import { mostLaneInfo, rankInfo, tierInfo } from './PartyMember.d';
 
 const PartyMember = (props) => {
-  //토큰 for kick member
+  //내 oauth2Id
+  const oauth2Id = useSelector((state) => state.user.oauth2Id);
+
+  //토큰
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 
-  const { name, type, isAuthor, game, id, chatRoomId, fetchBoardDetail } = props;
+  const { name, type, isAuthor, game, id, chatRoomId, fetchBoardDetail } =
+    props;
 
   const [summonerData, setSummonerData] = useState({
     queueType: 'RANKED_SOLO_5x5',
@@ -29,9 +33,14 @@ const PartyMember = (props) => {
   });
 
   useEffect(() => {
+    //유저 정보 가져오기
     const fetchSummonerData = async () => {
       await api
-        .get(`/api/lol/summoner/${name}/${type === 'FREE_RANK' ? 'free_rank' : 'duo_rank'}`)
+        .get(
+          `/api/lol/summoner/${name}/${
+            type === 'FREE_RANK' ? 'free_rank' : 'duo_rank'
+          }`
+        )
         // 자유랭크의 경우에만 자유랭크 조회, 그 외에 모두 솔로랭크를 기준으로 조회
         .then((res) => {
           setSummonerData(res.data);
@@ -45,6 +54,7 @@ const PartyMember = (props) => {
   }, []);
 
   const kickMember = async () => {
+    //1. 서버에 강퇴 요청
     await api
       .delete(`/api/chat/${game}/${id}/${name}/ban`, {
         headers: {
@@ -54,6 +64,7 @@ const PartyMember = (props) => {
       })
       .then(async (response) => {
         if (response.status === 200) {
+          //FIrebase RDB의 멤버리스트에서 제거, 벤리스트에 추가
           const chatRoomRef = ref(getDatabase(), 'chatRooms');
           await get(child(chatRoomRef, chatRoomId))
             .then(async (datasnapshot) => {
@@ -80,8 +91,12 @@ const PartyMember = (props) => {
       });
   };
 
-  const totalPlayed = summonerData ? summonerData.wins + summonerData.losses : 999;
-  const winRate = summonerData ? Math.round((summonerData.wins / totalPlayed) * 100) : 999;
+  const totalPlayed = summonerData
+    ? summonerData.wins + summonerData.losses
+    : 999;
+  const winRate = summonerData
+    ? Math.round((summonerData.wins / totalPlayed) * 100)
+    : 999;
 
   return (
     <Box
@@ -121,7 +136,10 @@ const PartyMember = (props) => {
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
           <Box
             component='img'
-            src={mostLaneInfo.find((elem) => elem.id === summonerData.mostLane)?.image}
+            src={
+              mostLaneInfo.find((elem) => elem.id === summonerData.mostLane)
+                ?.image
+            }
             loading='lazy'
             alt={summonerData.lane}
             sx={{
@@ -132,12 +150,17 @@ const PartyMember = (props) => {
             }}
           />
           <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-            {mostLaneInfo.find((elem) => elem.id === summonerData.mostLane)?.kor}
+            {
+              mostLaneInfo.find((elem) => elem.id === summonerData.mostLane)
+                ?.kor
+            }
           </Typography>
         </Box>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
-        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>티어</Typography>
+        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+          티어
+        </Typography>
         <Box sx={{ display: 'flex' }}>
           <Box
             sx={{
@@ -171,7 +194,9 @@ const PartyMember = (props) => {
           >
             <Typography
               sx={{ fontSize: 14, fontWeight: 500 }}
-              color={tierInfo.find((elem) => elem.id === summonerData.tier)?.color}
+              color={
+                tierInfo.find((elem) => elem.id === summonerData.tier)?.color
+              }
             >
               {summonerData.tier.slice(0, 1)}
               {summonerData.rank === 'I'
@@ -199,7 +224,9 @@ const PartyMember = (props) => {
         </Box>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 160 }}>
-        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>모스트 챔피언</Typography>
+        <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
+          모스트 챔피언
+        </Typography>
         <Box sx={{ display: 'flex' }}>
           <ImageList sx={{ m: 0, p: 0 }} cols={3} gap={1}>
             {summonerData.mostChampion.map((item, index) => (
@@ -221,7 +248,7 @@ const PartyMember = (props) => {
           </ImageList>
         </Box>
       </Box>
-      {isAuthor && (
+      {isAuthor && oauth2Id !== props.AuthorOauth2Id && (
         <Box>
           <IconButton onClick={kickMember}>
             <Close color='warning' />
