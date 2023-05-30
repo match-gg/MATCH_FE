@@ -261,7 +261,14 @@ const CardDeatilModal = () => {
                         />
                       );
                     })}
-                  {Array(totalMember - currentMember).fill(<Recruitment />)}
+                  {Array(totalMember - currentMember).fill(
+                    <Recruitment
+                      isAuthor={oauth2Id === boardData.oauth2Id}
+                      fetchBoardDetail={fetchBoardDetail}
+                      game={game}
+                      id={boardData.id}
+                    />
+                  )}
                 </Box>
                 {isLogin &&
                   (joinedChatRooms.includes(boardData.chatRoomId) ? (
@@ -292,6 +299,7 @@ const CardDeatilModal = () => {
                 <Box sx={{ ml: 2 }}>
                   <ChatInCardDetailModal
                     chatRoomId={boardData.chatRoomId}
+                    game={game}
                     nickname={
                       oauth2Id === boardData.oauth2Id
                         ? boardData.author.summonerName
