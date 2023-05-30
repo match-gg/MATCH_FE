@@ -5,6 +5,7 @@ import {
   OutlinedInput,
   CircularProgress,
 } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useState } from 'react';
@@ -47,6 +48,10 @@ const RecruitmentForMember = () => {
 
 //방장의 경우
 const RecruitmentForAuthor = (props) => {
+  //토큰
+  const { accessToken } = useSelector((state) => state.token);
+  const refreshToken = localStorage.getItem('matchGG_refreshToken');
+
   // CardDetailModal을 새로고침 하는 함수와 해당 파티의 게임종류, boardId
   const { fetchBoardDetail, game, id } = props;
   //추가하기 버튼과 닉네임 입력창을 전환할 state
@@ -70,14 +75,24 @@ const RecruitmentForAuthor = (props) => {
       .get(`/api/lol/user/exist/${name.trim()}`)
       .then(async (response) => {
         if (response.status === 200) {
+          const certifyedNickname = response.data;
           await api
             // 라이엇 계정 정보 최신화 및 DB 저장
-            .get(`/api/${game.toLowerCase()}/user/${name}`)
+            .get(`/api/${game.toLowerCase()}/user/${certifyedNickname}`)
             .then(async (response) => {
               if (response.status === 200) {
                 await api
                   // 채팅방? 파티? 입장 요청
-                  .post(`/api/chat/${game.toLowerCase}/${id}/${name}`)
+                  .post(
+                    `/api/chat/${game.toLowerCase()}/${id}/${certifyedNickname}`,
+                    null,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        'Refresh-Token': refreshToken,
+                      },
+                    }
+                  )
                   .then((response) => {
                     if (response.status === 200) {
                       // 최종 성공
@@ -93,7 +108,7 @@ const RecruitmentForAuthor = (props) => {
       })
       .catch((error) => {
         alert(
-          '파티원을 추가하는 과정에서 문제가 발생하였습니다. \n 다시 한번 시도해주시기 바랍니다.'
+          '파티원을 추가하는 과정에서 문제가 발생하였습니다. \n 다시 시도해주시기 바랍니다.'
         );
         console.log(error);
         setName('');
@@ -158,7 +173,7 @@ const RecruitmentForAuthor = (props) => {
 const Recruitment = (props) => {
   //방장인지 여부
   const { isAuthor, fetchBoardDetail, game, id } = props;
-  return !isAuthor ? (
+  return isAuthor ? (
     <RecruitmentForAuthor
       fetchBoardDetail={fetchBoardDetail}
       game={game}
