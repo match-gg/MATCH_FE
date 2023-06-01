@@ -5,22 +5,16 @@ import CloseIcon from '@mui/icons-material/Close';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 import ChatCard from './ChatCard';
-import ChatRoom from './ChatRoom';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { getDatabase, off, onChildAdded, ref } from 'firebase/database';
-import { chatRoomActions } from '../store/chatRoom-slice';
-import { api } from '../api/api';
 
 const ChatList = (props) => {
-  //리덕스에 저장되어있는 내가 가입한 채팅방 Id
-  const joinedChatRooms = useSelector(
-    (state) => state.chatRoom.joinedChatRooms
-  );
-  //토큰
-  const { accessToken } = useSelector((state) => state.token);
-  const refreshToken = localStorage.getItem('matchGG_refreshToken');
-  const dispatch = useDispatch();
+  //handleOpen이 ChatList 닫는 함수
+  const { open, handleOpen } = props;
+
+  //리덕스에 저장되어있는 내가 가입한 채팅방 Id 리스트
+  const { joinedChatRooms } = useSelector((state) => state.chatRoom);
 
   //로딩중 관리 state
   const [loading, setLoading] = useState(true);
@@ -47,47 +41,10 @@ const ChatList = (props) => {
     };
   }, []);
 
-  const { open, handleOpen } = props;
-
-  const [chatOpen, setChatOpen] = useState(false);
-  const [header, setHeader] = useState('현재 참여중인 파티');
-
-  const handleChatOpen = (name) => {
-    setChatOpen(true);
-    setHeader(`${name} 님의 파티`);
-  };
-
-  const closeChatOpen = () => {
-    dispatch(chatRoomActions.SET_CURRENT_CHATROOM(null));
-    setChatOpen(false);
-    setHeader('현재 참여중인 파티');
-  };
-
-  useEffect(() => {
-    const getChatRooms = async () => {
-      await api
-        .get(`/api/chat/rooms`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Refresh-Token': refreshToken,
-          },
-        })
-        .catch((error) => console.log(error))
-        .then((response) => {
-          response.data.chatRoomList.forEach((item, _index) => {
-            dispatch(chatRoomActions.ADD_JOINED_CHATROOM(item.chatRoomId));
-          });
-        });
-    };
-
-    getChatRooms();
-  }, []);
-
   return (
     <Zoom in={open}>
       <Box
         sx={{
-          display: open ? 'block' : 'none',
           position: 'fixed',
           bottom: '40px',
           right: '40px',
@@ -120,23 +77,8 @@ const ChatList = (props) => {
               alignItems: 'center',
             }}
           >
-            <NavigateBeforeIcon
-              sx={{
-                cursor: 'pointer',
-                display: chatOpen ? 'block' : 'none',
-                position: 'absolute',
-                left: '20px',
-                color: '#3c3939',
-                '&:hover': {
-                  borderRadius: '5px',
-                  backgroundColor: 'rgba(60, 57, 57, 0.5)',
-                  color: 'white',
-                },
-              }}
-              onClick={closeChatOpen}
-            />
             <Typography sx={{ fontWeight: 'bold', color: '#3c3939' }}>
-              {header}
+              {'현재 참여중인 파티'}
             </Typography>
             <CloseIcon
               sx={{
@@ -152,48 +94,44 @@ const ChatList = (props) => {
               }}
               onClick={() => {
                 handleOpen();
-                closeChatOpen();
               }}
             />
           </Box>
           {/* 컨텐츠 */}
-          {/* 나중에 현재 참여중인 파티 뿌려줘야함 일단은 테스트 컴포넌트 */}
-          {chatOpen ? (
-            <ChatRoom closeChatOpen={closeChatOpen} />
-          ) : (
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                maxHeight: '530px',
-                overflowY: 'auto',
-              }}
-            >
-              {!loading ? (
-                chatRooms
-                  .filter((chatroom) => joinedChatRooms.includes(chatroom.key))
-                  .map((filteredChatRoom, idx) => {
-                    return (
-                      <ChatCard
-                        chatRoomInfo={filteredChatRoom}
-                        key={filteredChatRoom.roomId}
-                        name={filteredChatRoom.createdBy}
-                        handleChatOpen={handleChatOpen}
-                      />
-                    );
-                  })
-              ) : (
-                <Stack spacing={1}>
-                  <Skeleton variant='rounded' width={250} height={80} />
-                  <Skeleton variant='rounded' width={250} height={80} />
-                  <Skeleton variant='rounded' width={250} height={80} />
-                  <Skeleton variant='rounded' width={250} height={80} />
-                </Stack>
-              )}
-            </Box>
-          )}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              maxHeight: '530px',
+              overflowY: 'auto',
+            }}
+          >
+            {!loading ? (
+              chatRooms
+                .filter(
+                  (chatroom) =>
+                    joinedChatRooms.includes(chatroom.key) &&
+                    chatroom.isDeleted === false
+                )
+                .map((filteredChatRoom, _idx) => {
+                  return (
+                    <ChatCard
+                      chatRoomInfo={filteredChatRoom}
+                      key={filteredChatRoom.roomId}
+                    />
+                  );
+                })
+            ) : (
+              <Stack spacing={1}>
+                <Skeleton variant='rounded' width={250} height={80} />
+                <Skeleton variant='rounded' width={250} height={80} />
+                <Skeleton variant='rounded' width={250} height={80} />
+                <Skeleton variant='rounded' width={250} height={80} />
+              </Stack>
+            )}
+          </Box>
         </Box>
       </Box>
     </Zoom>

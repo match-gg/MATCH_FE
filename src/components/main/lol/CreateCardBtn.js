@@ -247,17 +247,17 @@ const CreateCardBtn = (props) => {
               { nickname: userInput.name.trim(), oauth2Id: user.oauth2Id },
             ],
             timestamp: new Date().toString(),
+            content: userInput.content,
           };
           //Ref에 접근해서 데이터 update
-          await update(child(chatroomRef, key), newChatroom).catch((error) =>
-            console.log(error)
-          );
+          await update(child(chatroomRef, key), newChatroom)
+            // redux에 채팅방 id 저장
+            .then((_response) => {
+              dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
+              closeModal();
+            })
+            .catch((error) => console.log(error));
         }
-      })
-      // redux에 채팅방 id 저장
-      .then((_response) => {
-        dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
-        closeModal();
       })
       .then(() => navigate(0))
       .catch((error) => console.log(error));
@@ -286,7 +286,6 @@ const CreateCardBtn = (props) => {
         setIsPending(false);
       })
       .then((response) => {
-        console.log(response);
         const boardId = response.data;
         //채팅방 개설
         createChatroom(boardId, 5);
