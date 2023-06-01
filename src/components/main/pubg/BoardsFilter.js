@@ -9,6 +9,8 @@ import { Grid, FormControl, Select, MenuItem, Button } from '@mui/material';
 // mui icons
 import { Refresh } from '@mui/icons-material';
 
+import CreateCardBtn from './CreateCardBtn';
+
 // data for filter
 import { platformList, typeList, tierList } from './BoardsFilter.d';
 
@@ -82,6 +84,7 @@ const BoardsFilter = ({ filterProps }) => {
           justifyContent: 'flex-end',
         }}
       >
+        {isLogin && <CreateCardBtn />}
         <Button sx={{ height: 40, color: '#3d3939' }} onClick={null}>
           새로고침
           <Refresh />

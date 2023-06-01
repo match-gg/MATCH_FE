@@ -66,7 +66,7 @@ const CardDeatilModal = (props) => {
     voice: 'Y',
     content: '같이 경쟁 스쿼드 돌릴 사람 구합니다. 마이크 가능하신 분이면 좋겠습니다.',
     expire: 'FIFTEEN_M',
-    created: '2023-05-24 19:20:45',
+    created: '2023-05-30 16:00:45',
     author: {
       name: 'Dsquad2', // 위의 name 과 동일
       ratingPoint: 2239,

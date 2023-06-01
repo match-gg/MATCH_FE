@@ -4,9 +4,9 @@ export const platformList = [
 ];
 
 export const typeList = [
-  { value: 'NORMAL_DUO', label: '일반-듀오' },
-  { value: 'NORMAL_SQUAD', label: '일반-스쿼드' },
-  { value: 'RANK_SQUAD', label: '경쟁전-스쿼드' },
+  { value: 'NORMAL_DUO', label: '일반(듀오)' },
+  { value: 'NORMAL_SQUAD', label: '일반(스쿼드)' },
+  { value: 'RANK_SQUAD', label: '경쟁전(스쿼드)' },
   { value: 'DeathMatch', label: '팀 데스매치' },
 ];
 
