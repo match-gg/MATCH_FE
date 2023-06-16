@@ -8,7 +8,8 @@ import { api } from '../../../api/api';
 
 import BoardsFilter from './BoardsFilter';
 import Card from './Card';
-import ChatToggleBtn from '../../../chat/ChatToggleBtn';
+import ChatToggleBtn from '../../../shortcut/ShortcutButton';
+import ShortcutButton from '../../../shortcut/ShortcutButton';
 
 const BoardsWrapper = styled('div')({
   width: '100%',
@@ -148,7 +149,7 @@ const Body = () => {
           더 불러오기
         </Button>
       )}
-      <ChatToggleBtn />
+      <ShortcutButton />
     </Fragment>
   );
 };

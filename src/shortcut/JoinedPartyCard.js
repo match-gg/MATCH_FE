@@ -1,16 +1,13 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 import { Box, Button, Stack, Typography } from '@mui/material';
-import ChatIcon from '@mui/icons-material/Chat';
-import { useDispatch } from 'react-redux';
-import { chatRoomActions } from '../store/chatRoom-slice';
 
 import lolImg from '../components/Register/logo_images/LoL_Icon_Flat_BLACK.png';
 import pubgImg from '../components/Register/logo_images/Pubg_Logo.png';
 import lostarkImg from '../components/Register/logo_images/lost_Ark_Logo.png';
 import overwatchImg from '../components/Register/logo_images/overwatch_logo.png';
 import maplestoryImg from '../components/Register/logo_images/maplestory_logo.png';
-import { Link, useLocation } from 'react-router-dom';
 
 const gameImg = {
   lol: lolImg,
@@ -20,7 +17,7 @@ const gameImg = {
   lostark: lostarkImg,
 };
 
-const ChatCard = (props) => {
+const JoinedPartyCard = (props) => {
   const { chatRoomInfo } = props;
 
   const location = useLocation();
@@ -136,4 +133,4 @@ const ChatCard = (props) => {
   );
 };
 
-export default ChatCard;
+export default JoinedPartyCard;

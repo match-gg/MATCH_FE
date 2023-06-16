@@ -1,9 +1,9 @@
 import { Fragment, useState } from 'react';
-import ChatList from './ChatList';
-import ChatBtn from './ChatBtn';
+import ChatList from './JoinedPartyList';
+import ChatBtn from './ShortcutIconButton';
 import { useSelector } from 'react-redux';
 
-const ChatToggleBtn = () => {
+const ShortcutButton = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(!open);
@@ -18,4 +18,4 @@ const ChatToggleBtn = () => {
   );
 };
 
-export default ChatToggleBtn;
+export default ShortcutButton;

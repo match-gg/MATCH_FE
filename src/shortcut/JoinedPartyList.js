@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { Box, Skeleton, Stack, Typography, Zoom } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
-import ChatCard from './ChatCard';
-
-import { useSelector, useDispatch } from 'react-redux';
 import { getDatabase, off, onChildAdded, ref } from 'firebase/database';
 
-const ChatList = (props) => {
+import JoinedPartyCard from './JoinedPartyCard';
+
+const JoinedPartyList = (props) => {
   //handleOpen이 ChatList 닫는 함수
   const { open, handleOpen } = props;
 
@@ -117,7 +116,7 @@ const ChatList = (props) => {
                 )
                 .map((filteredChatRoom, _idx) => {
                   return (
-                    <ChatCard
+                    <JoinedPartyCard
                       chatRoomInfo={filteredChatRoom}
                       key={filteredChatRoom.roomId}
                     />
@@ -138,4 +137,4 @@ const ChatList = (props) => {
   );
 };
 
-export default ChatList;
+export default JoinedPartyList;
