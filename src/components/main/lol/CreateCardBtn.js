@@ -243,6 +243,7 @@ const CreateCardBtn = (props) => {
             key,
             roomId: boardId,
             createdBy: userInput.name,
+            maxMember: totalUser,
             memberList: [
               { nickname: userInput.name.trim(), oauth2Id: user.oauth2Id },
             ],
@@ -287,8 +288,9 @@ const CreateCardBtn = (props) => {
       })
       .then((response) => {
         const boardId = response.data;
+        const maxMember = userInput.type === 'DUO_RANK' ? 2 : 5;
         //채팅방 개설
-        createChatroom(boardId, 5);
+        createChatroom(boardId, maxMember);
         // 인원수 제한이 5로 되어있는 것 같은데 5로 고정할 건지 고민좀 해봐야 할 듯
 
         setIsPending(false);
