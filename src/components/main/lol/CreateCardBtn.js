@@ -243,21 +243,22 @@ const CreateCardBtn = (props) => {
             key,
             roomId: boardId,
             createdBy: userInput.name,
+            maxMember: totalUser,
             memberList: [
               { nickname: userInput.name.trim(), oauth2Id: user.oauth2Id },
             ],
             timestamp: new Date().toString(),
+            content: userInput.content,
           };
           //Ref에 접근해서 데이터 update
-          await update(child(chatroomRef, key), newChatroom).catch((error) =>
-            console.log(error)
-          );
+          await update(child(chatroomRef, key), newChatroom)
+            // redux에 채팅방 id 저장
+            .then((_response) => {
+              dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
+              closeModal();
+            })
+            .catch((error) => console.log(error));
         }
-      })
-      // redux에 채팅방 id 저장
-      .then((_response) => {
-        dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
-        closeModal();
       })
       .then(() => navigate(0))
       .catch((error) => console.log(error));
@@ -286,10 +287,10 @@ const CreateCardBtn = (props) => {
         setIsPending(false);
       })
       .then((response) => {
-        console.log(response);
         const boardId = response.data;
+        const maxMember = userInput.type === 'DUO_RANK' ? 2 : 5;
         //채팅방 개설
-        createChatroom(boardId, 5);
+        createChatroom(boardId, maxMember);
         // 인원수 제한이 5로 되어있는 것 같은데 5로 고정할 건지 고민좀 해봐야 할 듯
 
         setIsPending(false);

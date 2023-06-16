@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialChatroomState = {
   currentChatRoom: null,
   joinedChatRooms: [''],
-  cardDetailChatRoom: null,
 };
 
 const chatRoomSlice = createSlice({
@@ -26,12 +25,6 @@ const chatRoomSlice = createSlice({
     },
     REMOVE_ALL_JOINED_CHATROOM: (state, _action) => {
       state.joinedChatRooms = [];
-    },
-    SET_CARD_DETAIL_CHATROOM: (state, action) => {
-      state.cardDetailChatRoom = action.payload;
-    },
-    REMOVE_CARD_DETAIL_CHATROOM: (state, _action) => {
-      state.cardDetailChatRoom = null;
     },
   },
 });

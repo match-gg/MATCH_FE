@@ -18,7 +18,7 @@ import Recruitment from './Recruitment';
 // components
 import JoinPartyButton from './JoinPartyButton';
 import LeavePartyButton from './LeavePatryButton';
-import ChatInCardDetailModal from '../../../chat/ChatInCardDetailModal';
+import ChatRoom from '../../../chat/ChatRoom';
 import DeletePartyButton from './DeletePartyButton';
 
 // styled component
@@ -298,7 +298,7 @@ const CardDeatilModal = () => {
               </Box>
               {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
                 <Box sx={{ ml: 2 }}>
-                  <ChatInCardDetailModal
+                  <ChatRoom
                     chatRoomId={boardData.chatRoomId}
                     game={game}
                     nickname={
