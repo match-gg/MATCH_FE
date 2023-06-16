@@ -71,12 +71,11 @@ const JoinedPartyCard = (props) => {
                 marginRight: '5px',
               }}
             />
-            <Typography
-              variant='subtitle1'
-              textAlign='center'
-              sx={{ ml: 1, fontSize: '14px' }}
-            >
+            <Typography sx={{ ml: 1, fontSize: '14px' }}>
               <strong>{chatRoomInfo.createdBy}</strong>님의 파티
+            </Typography>
+            <Typography sx={{ ml: 2, color: '#5383e8', fontWeight: 'bold' }}>
+              {`[${chatRoomInfo.memberList.length} / ${chatRoomInfo.maxMember}]`}
             </Typography>
           </Box>
         </Box>
