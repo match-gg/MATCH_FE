@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { api } from '../../../api/api';
 import { getDatabase, ref, push, update, child } from 'firebase/database';
@@ -40,6 +40,7 @@ import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const CreateCardBtn = (props) => {
   const user = useSelector((state) => state.user);
+  const params = useParams();
 
   //토큰
   const { accessToken } = useSelector((state) => state.token);
@@ -210,12 +211,19 @@ const CreateCardBtn = (props) => {
     });
     setIsIdChecked(false);
     setUseExistNickname(registeredNickname ? true : false);
+    navigate('/lol', { replace: true });
   };
 
   //모달 창 외부 클릭 시 나가지는 동작을 막는 함수
   const handleBackdropClick = (e) => {
     e.stopPropagation();
   };
+
+  useEffect(() => {
+    if (params['*'] === 'new') {
+      setOpen(true);
+    }
+  }, []);
 
   //채팅방 생성 함수
   const createChatroom = async (boardId, totalUser) => {
@@ -260,7 +268,10 @@ const CreateCardBtn = (props) => {
             .catch((error) => console.log(error));
         }
       })
-      .then(() => navigate(0))
+      .then(() => {
+        navigate('/lol', { replace: true });
+        window.location.reload();
+      })
       .catch((error) => console.log(error));
   };
 
@@ -302,22 +313,24 @@ const CreateCardBtn = (props) => {
 
   return (
     <Fragment>
-      <Button
-        variant='outlined'
-        sx={{
-          height: 36,
-          borderColor: '#dddddd',
-          color: 'black',
-          '&:hover': {
+      <Link to='new'>
+        <Button
+          variant='outlined'
+          sx={{
+            height: 36,
             borderColor: '#dddddd',
             color: 'black',
-            backgroundColor: '#f3f3f3',
-          },
-        }}
-        onClick={openModal}
-      >
-        글 작성하기
-      </Button>
+            '&:hover': {
+              borderColor: '#dddddd',
+              color: 'black',
+              backgroundColor: '#f3f3f3',
+            },
+          }}
+          onClick={openModal}
+        >
+          글 작성하기
+        </Button>
+      </Link>
       <Modal
         open={open}
         onClose={closeModal}
@@ -355,7 +368,7 @@ const CreateCardBtn = (props) => {
             <CloseIcon
               color='primary'
               onClick={closeModalConfirm}
-              sx={{ mr: 1, fontSize: 18 }}
+              sx={{ mr: 1, fontSize: 18, cursor: 'pointer' }}
             />
           </Box>
           <Divider sx={{ mb: 1 }} />
