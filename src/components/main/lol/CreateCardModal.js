@@ -38,7 +38,7 @@ import {
 } from './CreateCardBtn.d';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
-const CreateCardBtn = (props) => {
+const CreateCardModal = (props) => {
   const user = useSelector((state) => state.user);
   const params = useParams();
 
@@ -313,26 +313,8 @@ const CreateCardBtn = (props) => {
 
   return (
     <Fragment>
-      <Link to='new'>
-        <Button
-          variant='outlined'
-          sx={{
-            height: 36,
-            borderColor: '#dddddd',
-            color: 'black',
-            '&:hover': {
-              borderColor: '#dddddd',
-              color: 'black',
-              backgroundColor: '#f3f3f3',
-            },
-          }}
-          onClick={openModal}
-        >
-          글 작성하기
-        </Button>
-      </Link>
       <Modal
-        open={open}
+        open={true}
         onClose={closeModal}
         disableEscapeKeyDown
         sx={{
@@ -785,4 +767,4 @@ const CreateCardBtn = (props) => {
   );
 };
 
-export default CreateCardBtn;
+export default CreateCardModal;

@@ -12,13 +12,20 @@ import {
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { queueTypeList, tierList, PositionList } from './BoardsFilter.d';
 
-import CreateCardBtn from './CreateCardBtn';
+import CreateCardButton from './CreateCardButton';
 
 const BoardsFilter = ({ filterProps }) => {
   const { isLogin } = useSelector((state) => state.user);
 
-  const { handleLane, handleQueueType, handleTier, lane, queueType, tier, refreshBoards } =
-    filterProps;
+  const {
+    handleLane,
+    handleQueueType,
+    handleTier,
+    lane,
+    queueType,
+    tier,
+    refreshBoards,
+  } = filterProps;
 
   return (
     <Grid
@@ -34,7 +41,11 @@ const BoardsFilter = ({ filterProps }) => {
     >
       <Grid item xs={6} sm={3.5} md={2} lg={1.5} sx={{ pr: 1 }}>
         <FormControl sx={{ width: '100%' }} size='small'>
-          <Select id='queue-type-select' value={queueType} onChange={handleQueueType}>
+          <Select
+            id='queue-type-select'
+            value={queueType}
+            onChange={handleQueueType}
+          >
             {queueTypeList.map((item, _index) => {
               return (
                 <MenuItem key={item.value} value={item.value}>
@@ -102,7 +113,7 @@ const BoardsFilter = ({ filterProps }) => {
           gap: 1,
         }}
       >
-        {isLogin && <CreateCardBtn />}
+        {isLogin && <CreateCardButton />}
         <Button sx={{ height: 40, color: '#3d3939' }} onClick={refreshBoards}>
           새로고침
           <RefreshIcon />
