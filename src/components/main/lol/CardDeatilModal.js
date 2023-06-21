@@ -7,7 +7,7 @@ import { api } from '../../../api/api';
 import { typeInfo, tierInfo, position } from './CardDeatilModal.d';
 
 // mui
-import { Box, Typography, IconButton } from '@mui/material';
+import { Box, Typography, IconButton, Stack } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 // custom components
@@ -23,6 +23,7 @@ import DeletePartyButton from './DeletePartyButton';
 
 // styled component
 import styled from '@emotion/styled';
+import EditPartyButton from './EditPartyButton';
 
 const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'fixed',
@@ -274,11 +275,14 @@ const CardDeatilModal = () => {
                 {isLogin &&
                   (joinedChatRooms.includes(boardData.chatRoomId) ? (
                     oauth2Id === boardData.oauth2Id ? (
-                      <DeletePartyButton
-                        chatRoomId={boardData.chatRoomId}
-                        id={boardData.id}
-                        game={game}
-                      />
+                      <Stack direction='row' spacing={2} mt={1}>
+                        <DeletePartyButton
+                          chatRoomId={boardData.chatRoomId}
+                          id={boardData.id}
+                          game={game}
+                        />
+                        <EditPartyButton id={boardData.id} />
+                      </Stack>
                     ) : (
                       <LeavePartyButton
                         chatRoomId={boardData.chatRoomId}

@@ -22,11 +22,14 @@ const LeagueofLegends = () => {
               <MainHeader game={'lol'} />
               <MainBodyWrapper game={'lol'}>
                 <Body />
+                <Outlet />
               </MainBodyWrapper>
               <MainFooter />
             </Fragment>
           }
         >
+          <Route path='new' element={<CreateCardModal />} />
+          <Route path='edit' element={<CreateCardModal />} />
           <Route path={`:id`} element={<CardDeatilModal />} />
         </Route>
       </Routes>
