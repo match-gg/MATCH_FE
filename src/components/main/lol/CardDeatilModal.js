@@ -281,7 +281,10 @@ const CardDeatilModal = () => {
                           id={boardData.id}
                           game={game}
                         />
-                        <EditPartyButton id={boardData.id} />
+                        <EditPartyButton
+                          id={boardData.id}
+                          chatRoomId={boardData.chatRoomId}
+                        />
                       </Stack>
                     ) : (
                       <LeavePartyButton

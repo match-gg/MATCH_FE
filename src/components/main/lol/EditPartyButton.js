@@ -4,10 +4,10 @@ import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const EditPartyButton = (props) => {
-  const { id } = props;
+  const { id, chatRoomId } = props;
   return (
     <Link
-      to={`/lol/edit?id=${id}`}
+      to={`/lol/edit?id=${id}&chatroomid=${chatRoomId}`}
       style={{ width: '100%' }}
       state={{ background: '/lol' }}
     >

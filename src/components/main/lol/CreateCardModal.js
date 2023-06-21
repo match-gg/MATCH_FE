@@ -1,15 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { api } from '../../../api/api';
-import { getDatabase, ref, push, update, child } from 'firebase/database';
+import { getDatabase, ref, push, update, child, get } from 'firebase/database';
 
 import {
   Button,
@@ -279,11 +273,10 @@ const CreateCardModal = () => {
       })
       .catch((error) => console.log(error));
   };
-
   //글 작성 완료시 서버로 데이터 전송
   const postModalInfo = async () => {
     setIsPending(true);
-    //수정인 경우
+    //게시글 수정인 경우
     if (isEdit) {
       await api
         .put(
@@ -299,16 +292,37 @@ const CreateCardModal = () => {
             },
           }
         )
-        .then((res) => {
+        .then(async (res) => {
           if (res.status === 200) {
-            alert('수정이 완료되었습니다.');
-            navigate('/lol', { replace: true });
-            window.location.reload();
+            //파이어베이스 수정
+            const chatRoomId = searchParams.get('chatroomid');
+            const chatRoomRef = ref(getDatabase(), 'chatRooms');
+            await get(child(chatRoomRef, chatRoomId))
+              .then(async (datasnapshot) => {
+                const prevMemberList = [];
+                prevMemberList.push(...datasnapshot.val().memberList);
+                const master = prevMemberList[0];
+                const modifiedMemberList = [
+                  { nickname: userInput.name, oauth2Id: master.oauth2Id },
+                ].concat(...prevMemberList.slice(1));
+                await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
+                  memberList: modifiedMemberList,
+                  createdBy: userInput.name,
+                });
+              })
+              .then(() => {
+                //파이어베이스 수정 완료
+                alert('수정이 완료되었습니다.');
+                navigate('/lol', { replace: true });
+                window.location.reload();
+              });
           }
         })
         .catch((error) => console.log(error));
       setIsPending(false);
-    } else {
+    }
+    // 게시글 작성인 경우
+    else {
       await api
         .post(
           `/api/lol/board`,
@@ -343,13 +357,15 @@ const CreateCardModal = () => {
   //수정 관련
   //쿼리스트링 가져오기
   const [searchParams, setSearchParams] = useSearchParams();
+
+  //수정 페이지이면 true
   const [isEdit, setIsEdit] = useState(false);
-  console.log(userInput);
+  //쿼리스트링으로 가져온 boardId 값으로 게시글 정보 가져오기
   const fetchBoardDetail = async (boardId) => {
     await api
       .get(`/api/${game}/boards/${boardId}`)
       .then((res) => {
-        console.log(res.data);
+        // 가져온 정보로 모달의 인풋 값 변경
         const { name, type, tier, position, voice, content, expire } = res.data;
         setUserInput({
           name,
@@ -364,7 +380,6 @@ const CreateCardModal = () => {
         setIsIdChecked(true);
       })
       .catch((err) => {
-        // 게시글 상세조회 실패
         console.log(err);
         alert(
           "게시글에 대한 정보를 불러오는 데 실패했습니다.\n'확인'을 누르면 메인페이지로 이동합니다."
