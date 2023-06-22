@@ -35,7 +35,7 @@ import {
   tierData,
   positionData,
   expireData,
-} from './CreateCardBtn.d';
+} from './CreateCardModal.d';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const CreateCardModal = () => {
@@ -388,7 +388,6 @@ const CreateCardModal = () => {
         window.location.reload();
       });
   };
-  console.log(userInput.name);
   useEffect(() => {
     if (location.pathname.match('edit')) {
       setIsEdit(true);

@@ -1,10 +1,26 @@
 export const position = [
-  { id: 'TOP', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/TOP.png', kor: '탑' },
-  { id: 'JUG', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/JUG.png', kor: '정글' },
-  { id: 'MID', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/MID.png', kor: '미드' },
-  { id: 'ADC', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ADC.png', kor: '원딜' },
   {
-    id: 'SPT',
+    id: 'TOP',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/TOP.png',
+    kor: '탑',
+  },
+  {
+    id: 'JUNGLE',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/JUG.png',
+    kor: '정글',
+  },
+  {
+    id: 'MIDDLE',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/MID.png',
+    kor: '미드',
+  },
+  {
+    id: 'BOTTOM',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ADC.png',
+    kor: '원딜',
+  },
+  {
+    id: 'UTILITY',
     image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/SUP.png',
     kor: '서포터',
   },

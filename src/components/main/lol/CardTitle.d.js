@@ -1,10 +1,28 @@
 export const positionList = [
-  { id: 'ALL', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ALL.png' },
-  { id: 'TOP', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/TOP.png' },
-  { id: 'JUG', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/JUG.png' },
-  { id: 'MID', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/MID.png' },
-  { id: 'ADC', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ADC.png' },
-  { id: 'SUP', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/SUP.png' },
+  {
+    id: 'ALL',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ALL.png',
+  },
+  {
+    id: 'TOP',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/TOP.png',
+  },
+  {
+    id: 'JUNGLE',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/JUG.png',
+  },
+  {
+    id: 'MIDDLE',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/MID.png',
+  },
+  {
+    id: 'BOTTOM',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ADC.png',
+  },
+  {
+    id: 'UTILITY',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/SUP.png',
+  },
 ];
 
 export const typeList = [
@@ -26,4 +44,3 @@ export const tierList = [
   { id: 'CHALLENGER', color: '#F4C875', kor: '챌린저' },
   { id: 'ALL', color: '#000000', kor: '모든티어' },
 ];
-
