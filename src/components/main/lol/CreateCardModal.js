@@ -388,6 +388,7 @@ const CreateCardModal = () => {
         window.location.reload();
       });
   };
+  console.log(userInput.name);
   useEffect(() => {
     if (location.pathname.match('edit')) {
       setIsEdit(true);
@@ -485,7 +486,7 @@ const CreateCardModal = () => {
               value={userInput.name}
               size='small'
               placeholder='소환사 명을 입력하세요.'
-              disabled={isPending ? true : useExistNickname}
+              disabled={isEdit || isPending ? true : useExistNickname}
               onChange={handleName}
               error={isIdChecked ? false : true}
               endAdornment={
