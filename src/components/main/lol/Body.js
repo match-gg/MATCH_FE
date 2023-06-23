@@ -130,6 +130,7 @@ const Body = () => {
             boards.map((item, _index) => {
               return (
                 <Link
+                  key={item.id}
                   to={`${item.id}`}
                   state={{ background: location }}
                   style={{
