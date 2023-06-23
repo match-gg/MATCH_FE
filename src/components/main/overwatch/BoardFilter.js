@@ -12,8 +12,6 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 
 import { queueTypeList, tierList, positionList } from './Body.d';
 
-// import CreateCardBtn from './CreateCardBtn';s
-
 const BoardsFilter = ({ filterProps }) => {
   const {
     queueType,
@@ -110,7 +108,6 @@ const BoardsFilter = ({ filterProps }) => {
           gap: 1,
         }}
       >
-        {/* <CreateCardBtn /> */}
         <Button sx={{ height: 40, color: '#3d3939' }} onClick={refreshBoards}>
           새로고침
           <RefreshIcon />

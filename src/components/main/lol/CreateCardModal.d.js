@@ -58,19 +58,19 @@ export const positionData = [
     text: '탑',
   },
   {
-    value: 'JUG',
+    value: 'JUNGLE',
     text: '정글',
   },
   {
-    value: 'MID',
+    value: 'MIDDLE',
     text: '미드',
   },
   {
-    value: 'ADC',
+    value: 'BOTTOM',
     text: '원딜',
   },
   {
-    value: 'SUP',
+    value: 'UTILITY',
     text: '서포터',
   },
   {

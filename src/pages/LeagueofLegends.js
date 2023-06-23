@@ -6,6 +6,7 @@ import MainFooter from '../components/main/MainFooter';
 import MainBodyWrapper from '../components/main/MainBodyWrapper';
 import Body from '../components/main/lol/Body';
 import CardDeatilModal from '../components/main/lol/CardDeatilModal';
+import CreateCardModal from '../components/main/lol/CreateCardModal';
 
 const LeagueofLegends = () => {
   const location = useLocation();
@@ -21,16 +22,21 @@ const LeagueofLegends = () => {
               <MainHeader game={'lol'} />
               <MainBodyWrapper game={'lol'}>
                 <Body />
+                <Outlet />
               </MainBodyWrapper>
               <MainFooter />
             </Fragment>
           }
         >
+          <Route path='new' element={<CreateCardModal />} />
+          <Route path='edit' element={<CreateCardModal />} />
           <Route path={`:id`} element={<CardDeatilModal />} />
         </Route>
       </Routes>
       {background && (
         <Routes>
+          <Route path='new' element={<CreateCardModal />} />
+          <Route path='edit' element={<CreateCardModal />} />
           <Route path={`:id`} element={<CardDeatilModal />} />
         </Routes>
       )}

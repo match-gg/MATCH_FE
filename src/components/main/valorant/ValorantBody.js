@@ -15,7 +15,6 @@ import {
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 import { api } from '../../../api/api';
-// import CreateCardBtn from './CreateCardBtn';
 
 const ValorantBody = () => {
   const [boards, setBoards] = useState([]); // 전체 게시글 저장
@@ -98,7 +97,11 @@ const ValorantBody = () => {
       >
         <Grid item xs={6} sm={3.5} md={2} lg={1.5} sx={{ pr: 1 }}>
           <FormControl sx={{ width: '100%' }} size='small'>
-            <Select id='queue-type-select' value={queueType} onChange={handleQueueType}>
+            <Select
+              id='queue-type-select'
+              value={queueType}
+              onChange={handleQueueType}
+            >
               <MenuItem value={'ALL'}>모든 큐</MenuItem>
               <MenuItem value={'COMPETITIVE'}>경쟁전</MenuItem>
               <MenuItem value={'UNRATED'}>일반전</MenuItem>
@@ -157,7 +160,6 @@ const ValorantBody = () => {
             gap: 1,
           }}
         >
-          {/* <CreateCardBtn /> */}
           <Button sx={{ height: 40, color: '#3d3939' }}>
             새로고침
             <RefreshIcon />

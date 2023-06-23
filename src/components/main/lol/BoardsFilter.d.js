@@ -23,8 +23,8 @@ export const tierList = [
 export const PositionList = [
   { value: 'ALL', label: '전체' },
   { value: 'TOP', label: '탑' },
-  { value: 'JUG', label: '정글' },
-  { value: 'MID', label: '미드' },
-  { value: 'ADC', label: '원딜' },
-  { value: 'SUP', label: '서포터' },
+  { value: 'JUNGLE', label: '정글' },
+  { value: 'MIDDLE', label: '미드' },
+  { value: 'BOTTOM', label: '원딜' },
+  { value: 'UTILITY', label: '서포터' },
 ];

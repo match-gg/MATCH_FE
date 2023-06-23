@@ -46,12 +46,12 @@ const DeletePartyButton = (props) => {
     <Button
       variant='outlined'
       size='small'
+      color='warning'
       sx={{
+        width: '100%',
         p: 1,
-        mt: 1,
         height: 40,
         borderColor: '#CCCCCC',
-        color: '#5C5C5C',
         fontWeight: 700,
         ':hover': {
           borderColor: '#dddddd',
