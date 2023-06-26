@@ -7,9 +7,12 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Button,
+  Switch,
+  FormControlLabel,
 } from '@mui/material';
 import { PieChart } from 'react-minimal-pie-chart';
+import { useDispatch, useSelector } from 'react-redux';
+import { notificationActions } from '../../store/notification-slice';
 
 const MyInfo = ({ userInfo }) => {
   const { matchCount, likeCount, dislikeCount, email, created } = userInfo;
@@ -18,16 +21,27 @@ const MyInfo = ({ userInfo }) => {
   const totalRated = likeCount + dislikeCount;
   const likeRate = (100 * (likeCount / totalRated)).toFixed(1);
 
+  // 알림 허용 여부
+  const isNotificationPermissioned = useSelector(
+    (state) => state.notification.isNotificationPermissioned
+  );
+  const dispatch = useDispatch();
+
   //알림 요청 받기
-  const requestPermission = () => {
-    console.log('요청중...');
-    Notification.requestPermission().then((permission) => {
-      if (permission === 'granted') {
-        alert('알림 요청이 허용되었습니다.');
-      } else {
-        alert('알림 요청이 거절되었습니다,');
-      }
-    });
+  const handleRequestPermission = () => {
+    if (isNotificationPermissioned === false) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          alert('알림 요청이 허용되었습니다.');
+          dispatch(notificationActions.SET_NOTIFICATION_PERMISSIONED());
+        } else {
+          alert('알림 요청이 거절되었습니다,');
+        }
+      });
+    } else {
+      // 웹상에서 deny 시키는 방법은 없는거같음
+      dispatch(notificationActions.SET_NOTIFICATION_DENIED());
+    }
   };
 
   return (
@@ -204,10 +218,14 @@ const MyInfo = ({ userInfo }) => {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: ' center',
-              border: '1px solid red',
             }}
           >
-            <Button onClick={requestPermission}>알림 받기</Button>
+            <FormControlLabel
+              control={<Switch />}
+              label='알림 허용'
+              checked={isNotificationPermissioned}
+              onChange={handleRequestPermission}
+            />
           </Box>
         </Box>
       </Box>
