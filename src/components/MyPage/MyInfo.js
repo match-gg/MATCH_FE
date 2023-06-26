@@ -7,6 +7,7 @@ import {
   TableBody,
   TableCell,
   TableRow,
+  Button,
 } from '@mui/material';
 import { PieChart } from 'react-minimal-pie-chart';
 
@@ -16,6 +17,18 @@ const MyInfo = ({ userInfo }) => {
   // 받은 평가 중 좋아요 비율
   const totalRated = likeCount + dislikeCount;
   const likeRate = (100 * (likeCount / totalRated)).toFixed(1);
+
+  //알림 요청 받기
+  const requestPermission = () => {
+    console.log('요청중...');
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        alert('알림 요청이 허용되었습니다.');
+      } else {
+        alert('알림 요청이 거절되었습니다,');
+      }
+    });
+  };
 
   return (
     <Box
@@ -49,9 +62,13 @@ const MyInfo = ({ userInfo }) => {
           }}
         >
           <Box sx={{ flexBasis: 96 }}>
-            {likeCount + dislikeCount === 0 ? '받은 평가 없음' : (
+            {likeCount + dislikeCount === 0 ? (
+              '받은 평가 없음'
+            ) : (
               <PieChart
-                data={[{ value: `${likeRate}`, color: '#5383e8', name: 'likeRate' }]}
+                data={[
+                  { value: `${likeRate}`, color: '#5383e8', name: 'likeRate' },
+                ]}
                 reveal={parseInt(likeRate)} // 퍼센트 치수
                 lineWidth={30} // 두께
                 startAngle={270}
@@ -177,6 +194,21 @@ const MyInfo = ({ userInfo }) => {
           >
             {created.slice(0, 10) || '가입 일자'}
           </Typography>
+        </Box>
+        <Box>
+          <Typography variant='h6' sx={{ color: 'black', fontWeight: '600' }}>
+            알림
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: ' center',
+              border: '1px solid red',
+            }}
+          >
+            <Button onClick={requestPermission}>알림 받기</Button>
+          </Box>
         </Box>
       </Box>
     </Box>
