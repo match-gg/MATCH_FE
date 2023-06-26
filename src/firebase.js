@@ -1,5 +1,4 @@
 import { initializeApp } from 'firebase/app';
-import { getMessaging } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -13,7 +12,5 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-const messaging = getMessaging(app);
 
 export default app;
