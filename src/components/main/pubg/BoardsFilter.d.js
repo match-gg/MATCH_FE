@@ -1,5 +1,5 @@
 export const platformList = [
-  { value: 'ALL', label: '플랫폼' },
+  { value: 'ALL', label: '모든 플랫폼' },
   { value: 'STEAM', label: '스팀' },
   { value: 'KAKAO', label: '카카오' },
 ];

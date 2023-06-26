@@ -33,7 +33,7 @@ const BoardsFilter = ({ filterProps }) => {
         p: 1
       }}
     >
-      <Grid item xs={4} sm={3} md={2} lg={1.1} sx={{ pr: 1 }}>
+      <Grid item xs={4} sm={3} md={2} lg={1.5} sx={{ pr: 1 }}>
         <FormControl sx={{ width: '100%' }} size='small'>
           <Select id='platform-select' value={platform} onChange={platformHandler}>
             {platformList.map((item, _index) => {
@@ -46,7 +46,7 @@ const BoardsFilter = ({ filterProps }) => {
           </Select>
         </FormControl>
       </Grid>
-      <Grid item xs={4} sm={3} md={2} lg={1.5} sx={{ pr: 1 }}>
+      <Grid item xs={4} sm={3} md={2} lg={1.4} sx={{ pr: 1 }}>
         <FormControl sx={{ width: '100%' }} size='small'>
           <Select id='game-type-select' value={type} onChange={typeHandler}>
             {typeList.map((item, index) => {
