@@ -38,18 +38,24 @@ import { notificationActions } from '../../store/notification-slice';
 
 const NotiMenuItem = (props) => {
   const { handleNotiClose, title, body } = props;
+  const navigate = useNavigate();
   return (
     <MenuItem
       // onClick={handleNotiClose}
-      onClick={() => console.log(props.msg.from)}
+      // boardId 값을 가져와야 하네
+      onClick={() => navigate('/lol/61')}
       sx={{ borderBottom: '1px solid lightgrey', height: '60px' }}
     >
       <Stack>
         <ListItemText>
-          {!title || `알림 제목 : ${'여기가 알림 제목'}`}
+          <Typography sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+            {title || `알림 제목 : ${'여기가 알림 제목'}`}
+          </Typography>
         </ListItemText>
         <ListItemText>
-          {!body || `알림 내용 : ${'여기는 알림 내용'}`}
+          <Typography sx={{ fontSize: '14px', color: 'gray' }}>
+            {body || `알림 내용 : ${'여기는 알림 내용'}`}
+          </Typography>
         </ListItemText>
       </Stack>
     </MenuItem>
