@@ -44,6 +44,7 @@ const CreateCardModal = () => {
   //토큰
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
+  const notiToken = useSelector((state) => state.notification.notiToken);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -252,7 +253,7 @@ const CreateCardModal = () => {
             createdBy: userInput.name,
             maxMember: totalUser,
             memberList: [
-              { nickname: userInput.name.trim(), oauth2Id: user.oauth2Id },
+              { nickname: userInput.name, oauth2Id: user.oauth2Id, notiToken },
             ],
             timestamp: new Date().toString(),
             content: userInput.content,

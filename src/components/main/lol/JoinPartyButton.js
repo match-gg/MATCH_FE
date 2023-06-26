@@ -6,6 +6,7 @@ import { ref, child, get, getDatabase, update } from 'firebase/database';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const JoinPartyButton = (props) => {
+  const notiToken = useSelector((state) => state.notification.notiToken);
   const dispatch = useDispatch();
   const { game, chatRoomId, id, fetchBoardDetail } = props;
 
@@ -16,6 +17,7 @@ const JoinPartyButton = (props) => {
   const newMember = {
     nickname,
     oauth2Id,
+    notiToken,
   };
   //현재 게임
 
