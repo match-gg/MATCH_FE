@@ -21,8 +21,9 @@ import {
   ListItemText,
   Link,
   SwipeableDrawer,
+  Badge,
 } from '@mui/material';
-
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import LoginIcon from '@mui/icons-material/Login';
 import Logout from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -33,11 +34,38 @@ import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../store/user-slice';
 import { tokenActions } from '../../store/token-slice';
 import { GameList } from './GameList.d';
+import { notificationActions } from '../../store/notification-slice';
+
+const NotiMenuItem = (props) => {
+  const { handleNotiClose, title, body } = props;
+  return (
+    <MenuItem
+      // onClick={handleNotiClose}
+      onClick={() => console.log(props.msg.from)}
+      sx={{ borderBottom: '1px solid lightgrey', height: '60px' }}
+    >
+      <Stack>
+        <ListItemText>
+          {!title || `알림 제목 : ${'여기가 알림 제목'}`}
+        </ListItemText>
+        <ListItemText>
+          {!body || `알림 내용 : ${'여기는 알림 내용'}`}
+        </ListItemText>
+      </Stack>
+    </MenuItem>
+  );
+};
 
 const MainHeader = ({ game }) => {
-  const { isLogin, profile_imageUrl, nickname, representative } = useSelector((state) => state.user);
+  const { isLogin, profile_imageUrl, nickname, representative } = useSelector(
+    (state) => state.user
+  );
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
+
+  const foregroundMessages = useSelector(
+    (state) => state.notification.foregroundMessages
+  );
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -75,6 +103,7 @@ const MainHeader = ({ game }) => {
       .then((response) => {
         dispatch(userActions.DELETE_USER());
         dispatch(tokenActions.DELETE_TOKEN());
+        dispatch(notificationActions.DELETE_NOTITOKEN());
         navigate('/login');
       })
       .catch((error) => {
@@ -98,8 +127,24 @@ const MainHeader = ({ game }) => {
   const CurrentGame = GameList.find((elem) => elem.id === game)?.fullName_Kor;
 
   const linkToLogin = () => {
-    navigate('/login')
-  }
+    navigate('/login');
+  };
+
+  // 알림 관련
+  const [notiAnchorEl, setNotiAnchorEl] = useState(null);
+  const notiOpen = Boolean(notiAnchorEl);
+
+  const handleNotiClick = (e) => {
+    setNotiAnchorEl(e.currentTarget);
+  };
+
+  const handleNotiClose = () => {
+    setNotiAnchorEl(null);
+  };
+
+  const deleteAllForegroundMsg = () => {
+    dispatch(notificationActions.CLEAR_FOREGROUND_MSG());
+  };
 
   return (
     <AppBar
@@ -116,7 +161,13 @@ const MainHeader = ({ game }) => {
         <Toolbar disableGutters>
           <Button
             onClick={handleDrawerOpen}
-            sx={{ display: { xs: 'flex', md: 'none' }, p: 0, minWidth: 0, minHeight: 0, mr: 2 }}
+            sx={{
+              display: { xs: 'flex', md: 'none' },
+              p: 0,
+              minWidth: 0,
+              minHeight: 0,
+              mr: 2,
+            }}
           >
             <MenuIcon
               sx={{
@@ -278,7 +329,8 @@ const MainHeader = ({ game }) => {
               >
                 {GameList.map((aGame, index) => {
                   return (
-                    <MenuItem key={index}
+                    <MenuItem
+                      key={index}
                       onClick={() => {
                         navigate(`/${aGame.id}`);
                       }}
@@ -314,7 +366,13 @@ const MainHeader = ({ game }) => {
           </Box>
           {isLogin && (
             <>
-              <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                }}
+              >
                 <Tooltip title='Profile Settings'>
                   <IconButton
                     onClick={handleClick}
@@ -337,7 +395,8 @@ const MainHeader = ({ game }) => {
                     <Box
                       component='img'
                       src={
-                        profile_imageUrl || 'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg'
+                        profile_imageUrl ||
+                        'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg'
                       }
                       sx={{
                         width: { xs: 32, sm: 40 },
@@ -411,19 +470,91 @@ const MainHeader = ({ game }) => {
           )}
           {!isLogin && (
             <IconButton onClick={linkToLogin}>
-              <LoginIcon sx={{mr: 1, color: 'white'}}/>
+              <LoginIcon sx={{ mr: 1, color: 'white' }} />
               <Typography
-                      sx={{
-                        display: { xs: 'none', sm: 'flex' },
-                        color: 'white',
-                        fontSize: { xs: 14, sm: 16 },
-                        fontWeight: '500',
-                      }}
-                    >
-                      로그인 / 회원가입
-                    </Typography>
+                sx={{
+                  display: { xs: 'none', sm: 'flex' },
+                  color: 'white',
+                  fontSize: { xs: 14, sm: 16 },
+                  fontWeight: '500',
+                }}
+              >
+                로그인 / 회원가입
+              </Typography>
             </IconButton>
           )}
+          <Tooltip title='알림'>
+            <IconButton onClick={handleNotiClick}>
+              <Badge
+                badgeContent={
+                  foregroundMessages.length > 99
+                    ? '99+'
+                    : foregroundMessages.length
+                }
+                color='warning'
+              >
+                <NotificationsIcon fontSize='large' sx={{ color: 'white' }} />
+              </Badge>
+            </IconButton>
+          </Tooltip>
+          <Menu
+            anchorEl={notiAnchorEl}
+            id='notification-menu'
+            open={notiOpen}
+            onClose={handleNotiClose}
+            onClick={handleNotiClose}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: 'visible',
+                filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                mt: 1,
+                '& .MuiAvatar-root': {
+                  width: 32,
+                  height: 32,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                '&:before': {
+                  content: '""',
+                  display: 'block',
+                  position: 'absolute',
+                  top: 0,
+                  right: 20,
+                  width: 10,
+                  height: 10,
+                  bgcolor: 'background.paper',
+                  transform: 'translateY(-50%) rotate(45deg)',
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          >
+            <Box sx={{ maxHeight: '80vh', overflowY: 'auto' }}>
+              {foregroundMessages.map((msg, idx) => {
+                return (
+                  <NotiMenuItem
+                    msg={msg}
+                    key={idx}
+                    handleNotiClose={handleNotiClose}
+                    title={msg.notification.title}
+                    body={msg.notification.body}
+                  />
+                );
+              })}
+            </Box>
+            <MenuItem
+            // onClick={deleteAllForegroundMsg}
+            >
+              <ListItemText sx={{ textAlign: 'center' }}>
+                <Typography sx={{ fontWeight: 'bold', color: 'orangered' }}>
+                  모두 지우기(지금은 함수 주석처리함)
+                </Typography>
+              </ListItemText>
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </Container>
     </AppBar>
