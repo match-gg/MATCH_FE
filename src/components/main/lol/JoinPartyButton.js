@@ -13,11 +13,15 @@ const JoinPartyButton = (props) => {
   const nickname = useSelector((state) => state.user.games[`${game}`]);
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
+  const isNotificationPermissioned = useSelector(
+    (state) => state.notification.isNotificationPermissioned
+  );
+
   // 채팅방에 참여할 사용자 객체
   const newMember = {
     nickname,
     oauth2Id,
-    notiToken,
+    notiToken: isNotificationPermissioned ? notiToken : '',
   };
   //현재 게임
 
