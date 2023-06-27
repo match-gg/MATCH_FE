@@ -35,6 +35,7 @@ import { userActions } from '../../store/user-slice';
 import { tokenActions } from '../../store/token-slice';
 import { GameList } from './GameList.d';
 import { notificationActions } from '../../store/notification-slice';
+import { chatRoomActions } from '../../store/chatRoom-slice';
 
 const NotiMenuItem = (props) => {
   const { handleNotiClose, title, body } = props;
@@ -110,6 +111,7 @@ const MainHeader = ({ game }) => {
         dispatch(userActions.DELETE_USER());
         dispatch(tokenActions.DELETE_TOKEN());
         dispatch(notificationActions.DELETE_NOTITOKEN());
+        dispatch(chatRoomActions.REMOVE_ALL_JOINED_CHATROOM());
         navigate('/login');
       })
       .catch((error) => {

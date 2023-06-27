@@ -17,31 +17,28 @@ import app from './firebase';
 import { getMessaging, onMessage, getToken } from 'firebase/messaging';
 import { useDispatch, useSelector } from 'react-redux';
 import { notificationActions } from './store/notification-slice';
+import { api } from './api/api';
+import { chatRoomActions } from './store/chatRoom-slice';
 
 export default function App() {
+  //토큰
+  const { accessToken } = useSelector((state) => state.token);
+  const refreshToken = localStorage.getItem('matchGG_refreshToken');
+
   // 로그인 여부
   const isLogin = useSelector((state) => state.user.isLogin);
+
   //리덕스의 notiToken
   const notiToken = useSelector((state) => state.notification.notiToken);
 
-  const backgroundMSG = useSelector(
-    (state) => state.notification.backgroundMessages
+  const joinedChatRooms = useSelector(
+    (state) => state.chatRoom.joinedChatRooms
   );
-
-  const foregroundMessages = useSelector(
-    (state) => state.notification.foregroundMessages
-  );
+  console.log(joinedChatRooms);
 
   const dispatch = useDispatch();
 
   const messaging = getMessaging(app);
-
-  // 포그라운드 상태에서 메세지 수신
-  onMessage(messaging, (message) => {
-    console.log('메세지왔음: ', message);
-    // 리덕스에 메세지 저장
-    dispatch(notificationActions.ADD_FOREGROUND_MSG(message));
-  });
 
   // 토큰 발급
   const activateMessages = async () => {
@@ -55,16 +52,36 @@ export default function App() {
     } else {
       console.log('토큰 없음...');
     }
-    // 포그라운드 상태에서 메세지 수신
+  };
+
+  // 로그인, 로그아웃 시 리덕스의 joinedChatRooms 관리
+  const joinedChatRoomsHandler = () => {
+    if (isLogin) {
+      api
+        .get(`/api/chat/rooms`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Refresh-Token': refreshToken,
+          },
+        })
+        .then((response) => {
+          response.data.chatRoomList.forEach((chatroom) => {
+            dispatch(chatRoomActions.ADD_JOINED_CHATROOM(chatroom.chatRoomId));
+          });
+        });
+    }
+  };
+
+  useEffect(() => {
+    isLogin && !notiToken && activateMessages();
+
+    joinedChatRoomsHandler();
+
     onMessage(messaging, (message) => {
       console.log('메세지왔음: ', message);
       // 리덕스에 메세지 저장
       dispatch(notificationActions.ADD_FOREGROUND_MSG(message));
     });
-  };
-
-  useEffect(() => {
-    isLogin && !notiToken && activateMessages();
   }, [isLogin]);
 
   return (
