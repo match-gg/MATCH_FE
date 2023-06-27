@@ -17,8 +17,6 @@ import app from './firebase';
 import { getMessaging, onMessage, getToken } from 'firebase/messaging';
 import { useDispatch, useSelector } from 'react-redux';
 import { notificationActions } from './store/notification-slice';
-import { api } from './api/api';
-import { chatRoomActions } from './store/chatRoom-slice';
 
 export default function App() {
   //토큰
@@ -54,28 +52,8 @@ export default function App() {
     }
   };
 
-  // 로그인, 로그아웃 시 리덕스의 joinedChatRooms 관리
-  const joinedChatRoomsHandler = () => {
-    if (isLogin) {
-      api
-        .get(`/api/chat/rooms`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Refresh-Token': refreshToken,
-          },
-        })
-        .then((response) => {
-          response.data.chatRoomList.forEach((chatroom) => {
-            dispatch(chatRoomActions.ADD_JOINED_CHATROOM(chatroom.chatRoomId));
-          });
-        });
-    }
-  };
-
   useEffect(() => {
     isLogin && !notiToken && activateMessages();
-
-    joinedChatRoomsHandler();
 
     onMessage(messaging, (message) => {
       console.log('메세지왔음: ', message);
