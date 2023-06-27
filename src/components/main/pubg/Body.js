@@ -25,12 +25,15 @@ const BoardsWrapper = styled('div')({
 const Body = () => {
   const location = useLocation();
 
-  const [boards, setBoards] = useState(temp_boards);
+  const [boards, setBoards] = useState([]); // 전체 게시글 저장
+  const [pageNumber, setPageNumber] = useState(1); // 불러 올 페이지 번호
 
   // platform, type, tier state
-  const [platform, setPlatform] = useState('ALL');
-  const [type, setType] = useState('ALL');
-  const [tier, setTier] = useState('ALL');
+  const [platform, setPlatform] = useState('ALL');  // 플랫폼
+  const [type, setType] = useState('ALL');  // 큐 타입
+  const [tier, setTier] = useState('ALL');  // 티어
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // handler for platform, type, tier
   const platformHandler = (event) => {
@@ -44,6 +47,55 @@ const Body = () => {
   const tierHandler = (event) => {
     setTier(event.target.value);
   };
+
+  // 최초 1회 게시글 로딩
+  useEffect(() => {
+    const fetchBoards = async () => {
+      setIsLoading(true);
+
+      await api
+        .get('/api/pubg/boards', {
+          params: { size: 12, page: 0, platform: platform, type: type, tier },
+        })
+        .then((response) => {
+          setBoards(response.data.content);
+          setPageNumber(1);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsLoading(false);
+          if (error.status === 404) {
+            setBoards([]);
+          }
+        });
+    };
+
+    fetchBoards();
+  }, [platform, type, tier]);
+
+  // 더 불러오기 버튼 클릭 시
+  const moreBoards = async () => {
+    await api
+      .get('/api/pubg/boards', {
+        params: {
+          size: 12,
+          page: pageNumber,
+          platform: platform,
+          type: type,
+          tier,
+        },
+      })
+      .then((res) => {
+        setBoards([...boards, ...res.data.content]);
+        setPageNumber((prevState) => prevState + 1);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const refreshBoards = async () => {};
 
   const filterProps={
     platform,
@@ -59,7 +111,7 @@ const Body = () => {
       <BoardsFilter filterProps={filterProps} />
       <Container maxWidth='xl' sx={{ mt: 2 }}>
         <BoardsWrapper>
-          {/* {!isLoading &&
+          {!isLoading &&
             boards.map((item, _index) => {
               return (
                 <Link
@@ -71,8 +123,8 @@ const Body = () => {
                 </Link>
               );
             })}
-          {isLoading && <Typography>Loading...</Typography>} */}
-          {boards.map((item, _index) => {
+          {isLoading && <Typography>Loading...</Typography>}
+          {/* {boards.map((item, _index) => {
             return (
               <Link
               to={`${item.id}`}
@@ -82,10 +134,10 @@ const Body = () => {
                 <Card key={item.id} item={item} />
               </Link>
             )
-          })}
+          })} */}
         </BoardsWrapper>
       </Container>
-      <Button sx={{ mb: 4, color: '#3d3939' }} onClick={null}>
+      <Button sx={{ mb: 4, color: '#3d3939' }} onClick={moreBoards}>
         더 불러오기
       </Button>
       <ChatToggleBtn />
