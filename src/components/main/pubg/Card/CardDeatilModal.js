@@ -83,25 +83,25 @@ const CardDeatilModal = (props) => {
   });
 
   // 게시글 상세조회
-  // const fetchBoardDetail = async () => {
-  //   await api
-  //     .get(`/api/${game}/boards/${boardId}`)
-  //     .then((res) => {
-  //       setBoardData(res.data);
-  //     })
-  //     .catch((err) => {
-  //       // 게시글 상세조회 실패
-  //       console.log(err);
-  //       alert(
-  //         "게시글에 대한 정보를 불러오는 데 실패했습니다.\n'확인'을 누르면 메인페이지로 이동합니다."
-  //       );
-  //       navigate(0);
-  //     });
-  // };
-  // //컴포넌트 렌더링 시 게시글 상세 조회 호출
-  // useEffect(() => {
-  //   fetchBoardDetail();
-  // }, []);
+  const fetchBoardDetail = async () => {
+    await api
+      .get(`/api/${game}/boards/${boardId}`)
+      .then((res) => {
+        setBoardData(res.data);
+      })
+      .catch((err) => {
+        // 게시글 상세조회 실패
+        console.log(err);
+        alert(
+          "게시글에 대한 정보를 불러오는 데 실패했습니다.\n'확인'을 누르면 메인페이지로 이동합니다."
+        );
+        navigate(0);
+      });
+  };
+  //컴포넌트 렌더링 시 게시글 상세 조회 호출
+  useEffect(() => {
+    fetchBoardDetail();
+  }, []);
 
   // 방에 대한 인원 수 정보
   const totalMember = typeList.find((elem) => elem.id === boardData.type)?.maxMember || 0;

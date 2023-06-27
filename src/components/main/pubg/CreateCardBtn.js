@@ -217,7 +217,7 @@ const CreateCardBtn = (props) => {
   //   setIsPending(true);
 
   //   await api
-  //     .post(`/api/lol/board`, userInput, {
+  //     .post(`/api/pubg/board`, userInput, {
   //       headers: {
   //         Authorization: `Bearer ${accessToken}`,
   //         'Refresh-Token': refreshToken,
