@@ -7,9 +7,6 @@ importScripts(
   'https://www.gstatic.com/firebasejs/9.19.1/firebase-messaging-compat.js'
 );
 
-const firebaseConfig = {
-};
-
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
