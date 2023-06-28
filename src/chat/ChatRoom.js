@@ -27,6 +27,7 @@ import {
 } from 'firebase/database';
 import ChatMessageInDetail from './ChatMessage';
 import { chatRoomActions } from '../store/chatRoom-slice';
+import SystemMessage from './SystemMessage';
 
 const ChatRoom = (props) => {
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ const ChatRoom = (props) => {
   //파이어베이스로 전송할 메세지 객체 생성 함수
   const createMessage = () => {
     const message = {
+      type: 'chat',
       timestamp: serverTimestamp(),
       user: {
         nickname,
@@ -61,10 +63,9 @@ const ChatRoom = (props) => {
     };
     return message;
   };
-  //파이어베이스
-  const chatRoomRef = ref(getDatabase(), 'chatRooms');
+  //파이어베이스 Ref
 
-  //메세지 Ref
+  const chatRoomRef = ref(getDatabase(), 'chatRooms');
   const messagesRef = ref(getDatabase(), 'messages');
 
   //메세지들을 가져올 리스너 함수
@@ -103,23 +104,25 @@ const ChatRoom = (props) => {
       if (oauth2IdList.includes(oauth2Id)) {
         // 해당 파티에 가입되어있는 정상적인 사용자
         await set(push(child(messagesRef, chatRoomId)), createMessage())
-          .catch((error) => console.log(error))
           .then(() => {
             setContent('');
             setMessageSending(false);
             setTimeout(() => {
               inputRef.current.querySelector('input').focus();
             }, 0);
-          });
+          })
+          .catch((error) => console.log(error));
       } else {
         // 가입되어있지 않은 사용자 (탈퇴되었거나 스스로 나간 경우)
         alert('유효하지 않은 사용자 입니다.');
         dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
         navigate('/lol');
+        window.location.reload();
         return;
       }
     });
   };
+
   //컴포넌트 렌더링 시 메세지 가져오기
   useEffect(() => {
     addMessagesListener(chatRoomId);
@@ -184,13 +187,17 @@ const ChatRoom = (props) => {
               message.user.nickname === messages[idx - 1]?.user.nickname
                 ? true
                 : false;
-            return (
-              <ChatMessageInDetail
-                key={idx}
-                messageInfo={message}
-                msgBySameSender={msgBySameSender}
-              />
-            );
+            if (message.type === 'chat') {
+              return (
+                <ChatMessageInDetail
+                  key={idx}
+                  messageInfo={message}
+                  msgBySameSender={msgBySameSender}
+                />
+              );
+            } else {
+              return <SystemMessage key={idx} messageInfo={message} />;
+            }
           })}
         </Box>
         {/* 메세지 인풋 영역 */}
