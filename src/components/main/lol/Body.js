@@ -8,7 +8,6 @@ import { api } from '../../../api/api';
 
 import BoardsFilter from './BoardsFilter';
 import Card from './Card';
-import ChatToggleBtn from '../../../shortcut/ShortcutButton';
 import ShortcutButton from '../../../shortcut/ShortcutButton';
 
 const BoardsWrapper = styled('div')({
