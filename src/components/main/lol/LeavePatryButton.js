@@ -2,19 +2,29 @@ import { Button } from '@mui/material';
 import React from 'react';
 import { api } from '../../../api/api';
 import { useSelector, useDispatch } from 'react-redux';
-import { child, get, getDatabase, ref, update } from 'firebase/database';
+import {
+  child,
+  get,
+  getDatabase,
+  push,
+  ref,
+  serverTimestamp,
+  set,
+  update,
+} from 'firebase/database';
 import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const LeavePartyButton = (props) => {
-  // game, chatRoomId, id, targetMember를 props로 받아와야함
   const { game, chatRoomId, id, fetchBoardDetail } = props;
 
-  const nickname = useSelector((state) => state.user.nickname);
+  const nickname = useSelector((state) => state.user.games[game]);
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
+
   const targetMember = {
     nickname,
     oauth2Id,
   };
+
   //토큰
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
@@ -23,6 +33,8 @@ const LeavePartyButton = (props) => {
 
   const removeFirebaseRDB = async (targetMember, chatRoomId) => {
     const chatRoomRef = ref(getDatabase(), 'chatRooms');
+    const messagesRef = ref(getDatabase(), 'messages');
+
     await get(child(chatRoomRef, `${chatRoomId}/memberList`))
       .then(async (datasnapshot) => {
         const prevMemberList = [...datasnapshot.val()];
@@ -31,9 +43,18 @@ const LeavePartyButton = (props) => {
         });
         await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
           memberList: removedMemberList,
-        }).then(() =>
-          dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId))
-        );
+        }).then(async () => {
+          await set(push(child(messagesRef, chatRoomId)), {
+            type: 'system',
+            timestamp: serverTimestamp(),
+            user: {
+              nickname,
+              oauth2Id,
+            },
+            content: `${nickname} 님이 퇴장하였습니다.`,
+          });
+          dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
+        });
       })
       .catch((error) => console.log(error));
   };
