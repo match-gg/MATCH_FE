@@ -19,20 +19,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { notificationActions } from './store/notification-slice';
 
 export default function App() {
-  //토큰
-  const { accessToken } = useSelector((state) => state.token);
-  const refreshToken = localStorage.getItem('matchGG_refreshToken');
-
   // 로그인 여부
   const isLogin = useSelector((state) => state.user.isLogin);
 
   //리덕스의 notiToken
   const notiToken = useSelector((state) => state.notification.notiToken);
-
-  const joinedChatRooms = useSelector(
-    (state) => state.chatRoom.joinedChatRooms
-  );
-  console.log(joinedChatRooms);
 
   const dispatch = useDispatch();
 
@@ -58,7 +49,7 @@ export default function App() {
     onMessage(messaging, (message) => {
       console.log('메세지왔음: ', message);
       // 리덕스에 메세지 저장
-      dispatch(notificationActions.ADD_FOREGROUND_MSG(message));
+      dispatch(notificationActions.HANDLE_MSG(message.data));
     });
   }, [isLogin]);
 

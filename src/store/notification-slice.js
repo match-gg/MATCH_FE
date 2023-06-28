@@ -3,8 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isNotificationPermissioned: false,
   notiToken: '',
-  foregroundMessages: [],
-  backgroundMessages: [],
+  foregroundMessages: {},
 };
 
 const notificationSlice = createSlice({
@@ -28,38 +27,34 @@ const notificationSlice = createSlice({
       state.notiToken = '';
     },
     // 포그라운드 메세지 추가
-    ADD_FOREGROUND_MSG: (state, action) => {
-      state.foregroundMessages = [...state.foregroundMessages, action.payload];
+    // ADD_FOREGROUND_MSG: (state, action) => {
+    //   state.foregroundMessages = [...state.foregroundMessages, action.payload];
+    // },
+    // // 포그라운드 메세지 전체 삭제
+    // CLEAR_FOREGROUND_MSG: (state, _action) => {
+    //   state.foregroundMessages = [];
+    // },
+    HANDLE_MSG: (state, action) => {
+      const { roomId } = action.payload;
+      if (state.foregroundMessages[roomId]) {
+        state.foregroundMessages[roomId] = [
+          action.payload,
+          ...state.foregroundMessages[roomId],
+        ];
+      } else {
+        state.foregroundMessages[roomId] = [action.payload];
+      }
     },
-    // 포그라운드 메세지 삭제
-    // 메세지 별로 id가 있다는 가정 하에 id로 삭제
-    DELETE_FOREGROUND_MSG: (state, action) => {
-      state.foregroundMessages = [
-        ...state.foregroundMessages.filter(
-          (msg) => msg.id !== action.payload.id
-        ),
-      ];
+    CLEAR_MSG_WITH_ID: (state, action) => {
+      const { roomId } = action.payload;
+      state.foregroundMessages[roomId] = [];
     },
-    // 포그라운드 메세지 전체 삭제
-    CLEAR_FOREGROUND_MSG: (state, _action) => {
-      state.foregroundMessages = [];
-    },
-    // 백그라운드 메세지 추가
-    ADD_BACKGROUND_MSG: (state, action) => {
-      state.backgroundMessages = [...state.backgroundMessages, action.payload];
-    },
-    // 백그라운드 메세지 삭제
-    // 메세지별로 id가 있다는 가정 하에 id로 삭제
-    DELETE_BACKGROUND_MSG: (state, action) => {
-      state.backgroundMessages = [
-        ...state.backgroundMessages.filter(
-          (msg) => msg.id !== action.payload.id
-        ),
-      ];
-    },
-    // 백그라운드 메세지 전체 삭제
-    CLEAR_BACKGROUND_MSG: (state, action) => {
-      state.backgroundMessages = [];
+    CLEAR_ALL_MSG: (state, action) => {
+      // for (let id in state.foregroundMessages) {
+      //   console.log(id);
+      //   state.foregroundMessages[id] = [];
+      // }
+      state.foregroundMessages = {};
     },
   },
 });
