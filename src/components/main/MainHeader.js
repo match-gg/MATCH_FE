@@ -22,6 +22,7 @@ import {
   Link,
   SwipeableDrawer,
   Badge,
+  Accordion,
 } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import LoginIcon from '@mui/icons-material/Login';
@@ -37,25 +38,58 @@ import { GameList } from './GameList.d';
 import { notificationActions } from '../../store/notification-slice';
 import { chatRoomActions } from '../../store/chatRoom-slice';
 
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+// img
+import lolImg from '../../components/Register/logo_images/LoL_Icon_Flat_BLACK.png';
+import pubgImg from '../../components/Register/logo_images/Pubg_Logo.png';
+import lostarkImg from '../../components/Register/logo_images/lost_Ark_Logo.png';
+import overwatchImg from '../../components/Register/logo_images/overwatch_logo.png';
+import maplestoryImg from '../../components/Register/logo_images/maplestory_logo.png';
+
 const NotiMenuItem = (props) => {
-  const { handleNotiClose, title, body } = props;
+  const { data } = props;
   const navigate = useNavigate();
   return (
     <MenuItem
-      // onClick={handleNotiClose}
-      // boardId 값을 가져와야 하네
-      onClick={() => navigate('/lol/61')}
-      sx={{ borderBottom: '1px solid lightgrey', height: '60px' }}
+      onClick={() => navigate(`/lol/${data.roomId}`)}
+      sx={{
+        // borderBottom: '1px solid lightgrey',
+        height: '60px',
+      }}
     >
       <Stack>
         <ListItemText>
-          <Typography sx={{ fontWeight: 'bold', fontSize: '16px' }}>
-            {title || `알림 제목 : ${'여기가 알림 제목'}`}
+          <Typography
+            sx={{
+              minWidth: '320px',
+              maxWidth: '320px',
+              fontWeight: 'bold',
+              fontSize: '16px',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {`${data.type === 'chat' ? '[메세지]' : '[알림]'} ${data.content}`}
           </Typography>
         </ListItemText>
         <ListItemText>
-          <Typography sx={{ fontSize: '14px', color: 'gray' }}>
-            {body || `알림 내용 : ${'여기는 알림 내용'}`}
+          <Typography
+            sx={{
+              fontSize: '14px',
+              color: 'gray',
+              minWidth: '320px',
+              maxWidth: '320px',
+              fontWeight: 'bold',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {`작성자 : ${data.user_nickname}`}
           </Typography>
         </ListItemText>
       </Stack>
@@ -64,15 +98,13 @@ const NotiMenuItem = (props) => {
 };
 
 const MainHeader = ({ game }) => {
+  const { foregroundMessages } = useSelector((state) => state.notification);
+
   const { isLogin, profile_imageUrl, nickname, representative } = useSelector(
     (state) => state.user
   );
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
-
-  const foregroundMessages = useSelector(
-    (state) => state.notification.foregroundMessages
-  );
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -151,7 +183,14 @@ const MainHeader = ({ game }) => {
   };
 
   const deleteAllForegroundMsg = () => {
-    dispatch(notificationActions.CLEAR_FOREGROUND_MSG());
+    dispatch(notificationActions.CLEAR_ALL_MSG());
+  };
+
+  // Accordion 관련
+  const [expanded, setExpanded] = useState(false);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
   };
 
   return (
@@ -492,25 +531,27 @@ const MainHeader = ({ game }) => {
             </IconButton>
           )}
           <Tooltip title='알림'>
-            <IconButton onClick={handleNotiClick}>
-              <Badge
-                badgeContent={
-                  foregroundMessages.length > 99
-                    ? '99+'
-                    : foregroundMessages.length
-                }
-                color='warning'
-              >
-                <NotificationsIcon fontSize='large' sx={{ color: 'white' }} />
-              </Badge>
-            </IconButton>
+            {/* <IconButton onClick={handleNotiClick}> */}
+            <Badge
+              // badgeContent={
+              //   Object.keys(foregroundMessages).length > 99
+              //     ? '99+'
+              //     : Object.keys(foregroundMessages).length
+              // }
+              variant={
+                Object.keys(foregroundMessages).length ? 'dot' : undefined
+              }
+              color='warning'
+            >
+              <NotificationsIcon sx={{ color: 'white', fontSize: '28px' }} />
+            </Badge>
+            {/* </IconButton> */}
           </Tooltip>
           <Menu
             anchorEl={notiAnchorEl}
             id='notification-menu'
             open={notiOpen}
             onClose={handleNotiClose}
-            onClick={handleNotiClose}
             PaperProps={{
               elevation: 0,
               sx: {
@@ -540,25 +581,44 @@ const MainHeader = ({ game }) => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <Box sx={{ maxHeight: '80vh', overflowY: 'auto' }}>
-              {foregroundMessages.map((msg, idx) => {
+            <Box sx={{ width: '360px', maxHeight: '70vh', overflowY: 'auto' }}>
+              {Object.keys(foregroundMessages).map((id) => {
                 return (
-                  <NotiMenuItem
-                    msg={msg}
-                    key={idx}
-                    handleNotiClose={handleNotiClose}
-                    title={msg.notification.title}
-                    body={msg.notification.body}
-                  />
+                  <Accordion
+                    sx={{
+                      margin: '8px',
+                      boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                    }}
+                    expanded={expanded === id}
+                    onChange={handleChange(id)}
+                  >
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Box
+                        component='img'
+                        src={foregroundMessages[id][0].game === 'lol' && lolImg}
+                        sx={{
+                          width: '24px',
+                          height: '24px',
+                          marginRight: '12px',
+                        }}
+                      ></Box>
+                      <Typography>
+                        {`[${foregroundMessages[id][0].createdBy}] 님의 파티`}
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      {Object.values(foregroundMessages[id]).map((msg, idx) => {
+                        return <NotiMenuItem key={idx} data={msg} />;
+                      })}
+                    </AccordionDetails>
+                  </Accordion>
                 );
               })}
             </Box>
-            <MenuItem
-            // onClick={deleteAllForegroundMsg}
-            >
+            <MenuItem onClick={deleteAllForegroundMsg}>
               <ListItemText sx={{ textAlign: 'center' }}>
                 <Typography sx={{ fontWeight: 'bold', color: 'orangered' }}>
-                  모두 지우기(지금은 함수 주석처리함)
+                  모두 지우기
                 </Typography>
               </ListItemText>
             </MenuItem>
