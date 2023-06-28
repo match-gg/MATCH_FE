@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
+// pages
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -14,8 +16,7 @@ import Overwatch from './pages/Overwatch';
 
 //  notification
 import app from './firebase';
-import { getMessaging, onMessage, getToken } from 'firebase/messaging';
-import { useDispatch, useSelector } from 'react-redux';
+import { getMessaging, getToken } from 'firebase/messaging';
 import { notificationActions } from './store/notification-slice';
 
 export default function App() {
@@ -27,9 +28,9 @@ export default function App() {
 
   const dispatch = useDispatch();
 
+  // 토큰 발급
   const messaging = getMessaging(app);
 
-  // 토큰 발급
   const activateMessages = async () => {
     const token = await getToken(messaging, {
       vapidKey: process.env.REACT_APP_FIREBASE_VAPID_KEY,
@@ -38,6 +39,7 @@ export default function App() {
     if (token) {
       dispatch(notificationActions.SET_NOTITOKEN(token));
       console.log('notiToken 발급 완료');
+      console.log(token);
     } else {
       console.log('토큰 없음...');
     }
@@ -45,12 +47,6 @@ export default function App() {
 
   useEffect(() => {
     isLogin && !notiToken && activateMessages();
-
-    onMessage(messaging, (message) => {
-      console.log('메세지왔음: ', message);
-      // 리덕스에 메세지 저장
-      dispatch(notificationActions.HANDLE_MSG(message.data));
-    });
   }, [isLogin]);
 
   return (
