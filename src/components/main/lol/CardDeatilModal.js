@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { api } from '../../../api/api';
@@ -24,6 +24,7 @@ import DeletePartyButton from './DeletePartyButton';
 // styled component
 import styled from '@emotion/styled';
 import EditPartyButton from './EditPartyButton';
+import { notificationActions } from '../../../store/notification-slice';
 
 const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'fixed',
@@ -78,11 +79,16 @@ const CardDeatilModal = () => {
         navigate('/lol');
       });
   };
+  const dispatch = useDispatch();
   //컴포넌트 렌더링 시 게시글 상세 조회 호출
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     fetchBoardDetail();
-    return () => (document.body.style.overflow = 'unset');
+    dispatch(notificationActions.SET_IN_CHAT_ROOM_TRUE());
+    return () => {
+      document.body.style.overflow = 'unset';
+      dispatch(notificationActions.SET_IN_CHAT_ROOM_FALSE());
+    };
   }, []);
 
   // 방에 대한 인원 수 정보

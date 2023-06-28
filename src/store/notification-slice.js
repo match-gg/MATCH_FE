@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isNotificationPermissioned: false,
   notiToken: '',
-  foregroundMessages: {},
+  inChatRoom: false,
 };
 
 const notificationSlice = createSlice({
@@ -26,35 +26,11 @@ const notificationSlice = createSlice({
     DELETE_NOTITOKEN: (state, action) => {
       state.notiToken = '';
     },
-    // 포그라운드 메세지 추가
-    // ADD_FOREGROUND_MSG: (state, action) => {
-    //   state.foregroundMessages = [...state.foregroundMessages, action.payload];
-    // },
-    // // 포그라운드 메세지 전체 삭제
-    // CLEAR_FOREGROUND_MSG: (state, _action) => {
-    //   state.foregroundMessages = [];
-    // },
-    HANDLE_MSG: (state, action) => {
-      const { roomId } = action.payload;
-      if (state.foregroundMessages[roomId]) {
-        state.foregroundMessages[roomId] = [
-          action.payload,
-          ...state.foregroundMessages[roomId],
-        ];
-      } else {
-        state.foregroundMessages[roomId] = [action.payload];
-      }
+    SET_IN_CHAT_ROOM_TRUE: (state, action) => {
+      state.inChatRoom = true;
     },
-    CLEAR_MSG_WITH_ID: (state, action) => {
-      const { roomId } = action.payload;
-      state.foregroundMessages[roomId] = [];
-    },
-    CLEAR_ALL_MSG: (state, action) => {
-      // for (let id in state.foregroundMessages) {
-      //   console.log(id);
-      //   state.foregroundMessages[id] = [];
-      // }
-      state.foregroundMessages = {};
+    SET_IN_CHAT_ROOM_FALSE: (state, action) => {
+      state.inChatRoom = false;
     },
   },
 });
