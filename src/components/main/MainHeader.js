@@ -21,10 +21,7 @@ import {
   ListItemText,
   Link,
   SwipeableDrawer,
-  Badge,
-  Accordion,
 } from '@mui/material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import LoginIcon from '@mui/icons-material/Login';
 import Logout from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -38,68 +35,9 @@ import { GameList } from './GameList.d';
 import { notificationActions } from '../../store/notification-slice';
 import { chatRoomActions } from '../../store/chatRoom-slice';
 
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-// img
-import lolImg from '../../components/Register/logo_images/LoL_Icon_Flat_BLACK.png';
-import pubgImg from '../../components/Register/logo_images/Pubg_Logo.png';
-import lostarkImg from '../../components/Register/logo_images/lost_Ark_Logo.png';
-import overwatchImg from '../../components/Register/logo_images/overwatch_logo.png';
-import maplestoryImg from '../../components/Register/logo_images/maplestory_logo.png';
-
-const NotiMenuItem = (props) => {
-  const { data } = props;
-  const navigate = useNavigate();
-  return (
-    <MenuItem
-      onClick={() => navigate(`/lol/${data.roomId}`)}
-      sx={{
-        // borderBottom: '1px solid lightgrey',
-        height: '60px',
-      }}
-    >
-      <Stack>
-        <ListItemText>
-          <Typography
-            sx={{
-              minWidth: '320px',
-              maxWidth: '320px',
-              fontWeight: 'bold',
-              fontSize: '16px',
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {`${data.type === 'chat' ? '[메세지]' : '[알림]'} ${data.content}`}
-          </Typography>
-        </ListItemText>
-        <ListItemText>
-          <Typography
-            sx={{
-              fontSize: '14px',
-              color: 'gray',
-              minWidth: '320px',
-              maxWidth: '320px',
-              fontWeight: 'bold',
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {`작성자 : ${data.user_nickname}`}
-          </Typography>
-        </ListItemText>
-      </Stack>
-    </MenuItem>
-  );
-};
+import Notification from '../../notification/Notification';
 
 const MainHeader = ({ game }) => {
-  const { foregroundMessages } = useSelector((state) => state.notification);
-
   const { isLogin, profile_imageUrl, nickname, representative } = useSelector(
     (state) => state.user
   );
@@ -170,27 +108,14 @@ const MainHeader = ({ game }) => {
     navigate('/login');
   };
 
-  // 알림 관련
+  // notification
   const [notiAnchorEl, setNotiAnchorEl] = useState(null);
   const notiOpen = Boolean(notiAnchorEl);
-
   const handleNotiClick = (e) => {
     setNotiAnchorEl(e.currentTarget);
   };
-
   const handleNotiClose = () => {
     setNotiAnchorEl(null);
-  };
-
-  const deleteAllForegroundMsg = () => {
-    dispatch(notificationActions.CLEAR_ALL_MSG());
-  };
-
-  // Accordion 관련
-  const [expanded, setExpanded] = useState(false);
-
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
   };
 
   return (
@@ -530,99 +455,14 @@ const MainHeader = ({ game }) => {
               </Typography>
             </IconButton>
           )}
-          <Tooltip title='알림'>
-            {/* <IconButton onClick={handleNotiClick}> */}
-            <Badge
-              // badgeContent={
-              //   Object.keys(foregroundMessages).length > 99
-              //     ? '99+'
-              //     : Object.keys(foregroundMessages).length
-              // }
-              variant={
-                Object.keys(foregroundMessages).length ? 'dot' : undefined
-              }
-              color='warning'
-            >
-              <NotificationsIcon sx={{ color: 'white', fontSize: '28px' }} />
-            </Badge>
-            {/* </IconButton> */}
-          </Tooltip>
-          <Menu
-            anchorEl={notiAnchorEl}
-            id='notification-menu'
-            open={notiOpen}
-            onClose={handleNotiClose}
-            PaperProps={{
-              elevation: 0,
-              sx: {
-                overflow: 'visible',
-                filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                mt: 1,
-                '& .MuiAvatar-root': {
-                  width: 32,
-                  height: 32,
-                  ml: -0.5,
-                  mr: 1,
-                },
-                '&:before': {
-                  content: '""',
-                  display: 'block',
-                  position: 'absolute',
-                  top: 0,
-                  right: 20,
-                  width: 10,
-                  height: 10,
-                  bgcolor: 'background.paper',
-                  transform: 'translateY(-50%) rotate(45deg)',
-                  zIndex: 0,
-                },
-              },
-            }}
-            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          >
-            <Box sx={{ width: '360px', maxHeight: '70vh', overflowY: 'auto' }}>
-              {Object.keys(foregroundMessages).map((id) => {
-                return (
-                  <Accordion
-                    sx={{
-                      margin: '8px',
-                      boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                    }}
-                    expanded={expanded === id}
-                    onChange={handleChange(id)}
-                  >
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Box
-                        component='img'
-                        src={foregroundMessages[id][0].game === 'lol' && lolImg}
-                        sx={{
-                          width: '24px',
-                          height: '24px',
-                          marginRight: '12px',
-                        }}
-                      ></Box>
-                      <Typography>
-                        {`[${foregroundMessages[id][0].createdBy}] 님의 파티`}
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      {Object.values(foregroundMessages[id]).map((msg, idx) => {
-                        return <NotiMenuItem key={idx} data={msg} />;
-                      })}
-                    </AccordionDetails>
-                  </Accordion>
-                );
-              })}
-            </Box>
-            <MenuItem onClick={deleteAllForegroundMsg}>
-              <ListItemText sx={{ textAlign: 'center' }}>
-                <Typography sx={{ fontWeight: 'bold', color: 'orangered' }}>
-                  모두 지우기
-                </Typography>
-              </ListItemText>
-            </MenuItem>
-          </Menu>
+          {isLogin && (
+            <Notification
+              handleNotiClick={handleNotiClick}
+              notiAnchorEl={notiAnchorEl}
+              notiOpen={notiOpen}
+              handleNotiClose={handleNotiClose}
+            />
+          )}
         </Toolbar>
       </Container>
     </AppBar>
