@@ -38,8 +38,6 @@ export default function App() {
 
     if (token) {
       dispatch(notificationActions.SET_NOTITOKEN(token));
-      console.log('notiToken 발급 완료');
-      console.log(token);
     } else {
       console.log('토큰 없음...');
     }
