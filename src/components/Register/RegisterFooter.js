@@ -17,9 +17,8 @@ const RegisterFooter = (props) => {
 
   const { phase, increasePhase, decreasePhase } = props;
 
-  const { firstTerm, secondTerm, games, gamesCheck, representative } = useSelector(
-    (state) => state.register
-  );
+  const { firstTerm, secondTerm, games, gamesCheck, representative } =
+    useSelector((state) => state.register);
 
   const [isPending, setIsPending] = useState(false);
 
@@ -58,7 +57,7 @@ const RegisterFooter = (props) => {
 
     // 사용자 닉네임으로 DB 채우기 작업 필요
     // 현재 롤만
-    api.get(`/api/lol/user/${games['lol']}`);
+    // api.get(`/api/lol/user/${games['lol']}`);
 
     // send request
     const response = await api
@@ -132,7 +131,11 @@ const RegisterFooter = (props) => {
       </Button>
       <Button
         disabled={
-          phase === 0 ? !firstTerm || !secondTerm : phase === 1 ? !phaseOneNextBtn : isPending
+          phase === 0
+            ? !firstTerm || !secondTerm
+            : phase === 1
+            ? !phaseOneNextBtn
+            : isPending
         }
         onClick={() => {
           if (phase === 2) {
