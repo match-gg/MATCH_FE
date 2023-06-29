@@ -44,10 +44,10 @@ const ReviewModal = () => {
 
   const nickname = useSelector((state) => state.user.games[game]);
 
-  // 게시글 상세보기 모달의 데이터
+  // 리뷰 모달의 데이터
   const [boardData, setBoardData] = useState({});
 
-  // 게시글 상세조회
+  // 게시글 상세보기 api로 멤버 리스트 불러오기
   const fetchBoardDetail = async () => {
     await api
       .get(`/api/${game}/boards/${boardId}`)
@@ -63,16 +63,13 @@ const ReviewModal = () => {
         navigate(0);
       });
   };
-  //컴포넌트 렌더링 시 게시글 상세 조회 호출
+
+  // 컴포넌트 렌더링 시 게시글 상세 조회를 호출해 memberList 받아옴
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     fetchBoardDetail();
     return () => (document.body.style.overflow = 'unset');
   }, []);
-
-  // // 자신을 제외한 멤버리스트
-  // const memberList = boardData.memberList.filter(e => e !== nickname) 
-  console.log(boardData.memberList);
 
   return (
     <ModalContainer onClick={() => navigate(`/${game}`)}>
@@ -103,6 +100,7 @@ const ReviewModal = () => {
             <Typography component='h2' sx={{ fontSize: 12, fontWeight: 700, color: 'grey', pb: 2 }}>
               평가는 상대방이 알 수 없어요.
             </Typography>
+            {/* memberList에 있는 닉네임들 중 자신을 제외한 닉네임들을 전달 */}
             {boardData &&
               boardData.memberList &&
               boardData.memberList.map((elem, idx) => {
