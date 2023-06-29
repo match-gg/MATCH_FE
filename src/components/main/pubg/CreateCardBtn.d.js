@@ -21,11 +21,7 @@ export const typeData = [
   {
     value: 'RANK_SQUAD',
     text: '경쟁전(스쿼드)'
-  },
-  {
-    value: 'DeathMatch',
-    text: '팀 데스매치'
-  },
+  }
 ];
 
 export const tierData = [
