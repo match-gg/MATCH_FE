@@ -102,14 +102,14 @@ const CardAuthor = (props) => {
               fontSize: 16,
               fontWeight: 700,
               color:
-                author.kill_summary / author.death_summary > 4
+                author.kills / author.deaths > 4
                   ? 'red'
-                  : author.kill_summary / author.death_summary > 2.5
+                  : author.kills / author.deaths > 2.5
                   ? 'orange'
                   : 'black',
             }}
           >
-            {(author.kill_summary / author.death_summary).toFixed(2)}
+            {(author.kills / author.deaths).toFixed(2)}
           </Typography>
         </FlexCol>
         <FlexCol sx={{ width: 101 }}>
@@ -121,10 +121,10 @@ const CardAuthor = (props) => {
               fontSize: 16,
               fontWeight: 700,
               color:
-                author.avgDmgDealt > 400 ? 'red' : author.avgDmgDealt > 250 ? 'orange' : 'black',
+                author.avgDmg > 400 ? 'red' : author.avgDmg > 250 ? 'orange' : 'black',
             }}
           >
-            {author.avgDmgDealt.toFixed(2)}
+            {author.avgDmg.toFixed(2)}
           </Typography>
         </FlexCol>
         <FlexCol
@@ -134,13 +134,13 @@ const CardAuthor = (props) => {
         >
           <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>Top 1%</Typography>
           <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
-            {((author.totalWin / author.totalPlayed) * 100).toFixed(1)}%
+            {((author.wins / author.totalPlayed) * 100).toFixed(1)}%
           </Typography>
         </FlexCol>
         <FlexCol sx={{ width: 86 }}>
           <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>Top 10%</Typography>
           <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
-            {((author.totalTop10 / author.totalPlayed) * 100).toFixed(1)}%
+            {((author.top10 / author.totalPlayed) * 100).toFixed(1)}%
           </Typography>
         </FlexCol>
       </FlexRow>
