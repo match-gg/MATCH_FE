@@ -430,7 +430,7 @@ const MainHeader = ({ game }) => {
                     handleClose();
                     // request to /logout endpoint
                     logoutHandler();
-                    dispatch(notificationActions.REMOVE_ALL_MESSAGES);
+                    // dispatch(notificationActions.REMOVE_ALL_MESSAGES);
                   }}
                 >
                   <ListItemIcon>
