@@ -42,13 +42,19 @@ const CardTitle = (props) => {
               mixBlendMode: 'exclusion',
             }}
           />
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+            }}
+          >
             <Box sx={{ display: 'flex' }}>
               <Typography
                 sx={{
                   fontSize: 12,
                   fontWeight: 700,
-                  pl: 1,
+                  pr: 0.5,
                 }}
               >
                 #{typeList.find((elem) => elem.id === type).kor}
