@@ -55,7 +55,7 @@ const Body = () => {
 
       await api
         .get('/api/pubg/boards', {
-          params: { size: 12, page: 0, platform: platform, type: type, tier },
+          params: { size: 12, page: 0, platform: platform, type: type, tier: tier },
         })
         .then((response) => {
           setBoards(response.data.content);
@@ -83,7 +83,7 @@ const Body = () => {
           page: pageNumber,
           platform: platform,
           type: type,
-          tier,
+          tier: tier,
         },
       })
       .then((res) => {
