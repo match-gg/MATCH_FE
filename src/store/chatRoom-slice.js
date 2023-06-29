@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialChatroomState = {
   currentChatRoom: null,
-  joinedChatRooms: [''],
+  joinedChatRooms: [],
 };
 
 const chatRoomSlice = createSlice({

@@ -4,6 +4,8 @@ const initialState = {
   isNotificationPermissioned: false,
   notiToken: '',
   inChatRoom: false,
+  messagesForNoti: {},
+  lastIndex: {},
 };
 
 const notificationSlice = createSlice({
@@ -31,6 +33,28 @@ const notificationSlice = createSlice({
     },
     SET_IN_CHAT_ROOM_FALSE: (state, action) => {
       state.inChatRoom = false;
+    },
+    ADD_MESSAGE: (state, action) => {
+      if (state.messagesForNoti[action.payload.chatRoomId]) {
+        state.messagesForNoti[action.payload.chatRoomId] = [
+          ...new Set([
+            ...state.messagesForNoti[action.payload.chatRoomId],
+            action.payload.message,
+          ]),
+        ];
+      } else {
+        state.messagesForNoti[action.payload.chatRoomId] = [
+          action.payload.message,
+        ];
+      }
+      state.lastIndex[action.payload.chatRoomId] = 0;
+    },
+    REMOVE_MESSAGES: (state, action) => {
+      state.messagesForNoti[action.payload.chatRoomId] = [];
+      // state.lastIndex[action.payload.chatRoomId] = action.payload.lastIndex;
+    },
+    REMOVE_ALL_MESSAGES: (state, action) => {
+      state.messagesForNoti = {};
     },
   },
 });
