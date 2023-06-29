@@ -25,7 +25,7 @@ const BoardsWrapper = styled('div')({
 const Body = () => {
   const location = useLocation();
 
-  const [boards, setBoards] = useState([]); // 전체 게시글 저장
+  const [boards, setBoards] = useState(temp_boards); // 전체 게시글 저장
   const [pageNumber, setPageNumber] = useState(1); // 불러 올 페이지 번호
 
   // platform, type, tier state
