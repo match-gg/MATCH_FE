@@ -6,9 +6,9 @@ export const platformList = [
 
 export const typeList = [
   { value: 'ALL', label: '모든 큐' },
-  { value: 'NORMAL_DUO', label: '일반(듀오)' },
-  { value: 'NORMAL_SQUAD', label: '일반(스쿼드)' },
-  { value: 'RANK_SQUAD', label: '경쟁전(스쿼드)' }
+  { value: 'DUO', label: '일반(듀오)' },
+  { value: 'SQUAD', label: '일반(스쿼드)' },
+  { value: 'RANKED_SQUAD', label: '경쟁전(스쿼드)' }
 ];
 
 export const tierList = [

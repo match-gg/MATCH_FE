@@ -4,9 +4,9 @@ export const platformList = [
 ];
 
 export const typeList = [
-  { value: 'NORMAL_DUO', label: '일반(듀오)', maxMember: 2 },
-  { value: 'NORMAL_SQUAD', label: '일반(스쿼드)', maxMember: 4},
-  { value: 'RANK_SQUAD', label: '경쟁전(스쿼드)', maxMember: 4 }
+  { value: 'DUO', label: '일반(듀오)', maxMember: 2 },
+  { value: 'SQUAD', label: '일반(스쿼드)', maxMember: 4},
+  { value: 'RANKED_SQUAD', label: '경쟁전(스쿼드)', maxMember: 4 }
 ];
 
 export const tierList = [

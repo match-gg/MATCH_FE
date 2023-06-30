@@ -11,15 +11,15 @@ export const platformData = [
 
 export const typeData = [
   {
-    value: 'NORMAL_DUO',
+    value: 'DUO',
     text: '일반(듀오)'
   },
   {
-    value: 'NORMAL_SQUAD',
+    value: 'SQUAD',
     text: '일반(스쿼드)'
   },
   {
-    value: 'RANK_SQUAD',
+    value: 'RANKED_SQUAD',
     text: '경쟁전(스쿼드)'
   }
 ];
