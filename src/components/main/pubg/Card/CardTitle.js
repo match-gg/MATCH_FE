@@ -58,7 +58,7 @@ const CardTitle = (props) => {
                 sx={{
                   fontSize: 12,
                   fontWeight: 700,
-                  pl: 1,
+                  pl: 0.5,
                 }}
               >
                 #{tierList.find((elem) => elem.value === tier).label}
