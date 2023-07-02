@@ -23,7 +23,6 @@ import { notificationActions } from '../store/notification-slice';
 
 const Notification = (props) => {
   const { notiAnchorEl, notiOpen, handleNotiClick, handleNotiClose } = props;
-  const { isLogin } = useSelector((state) => state.user);
 
   const { messagesForNoti } = useSelector((state) => state.notification);
 
@@ -52,17 +51,23 @@ const Notification = (props) => {
 
   const getJoinedChatRoomsInfo = async () => {
     if (reduxChatRooms.length === 0) {
-      console.log('no redux chatroom...');
+      console.log('리덕스에 저장된 채팅방에 대한 정보가 없음');
       return;
     }
-    const chatRoomData = [];
+    // 파이어베이스에서 가져온 채팅방 정보
+    let chatRoomData = {};
     await get(chatRoomRef).then(async (datasnapshot) => {
-      chatRoomData.push(datasnapshot.val());
+      // chatRoomData.push(datasnapshot.val());
+      chatRoomData = datasnapshot.val();
     });
 
-    const joinedChatRoomInfo = Object.values(chatRoomData[0]);
-    setJoinedChatRooms(joinedChatRoomInfo);
-    return joinedChatRoomInfo;
+    const joinedChatRoomInfo = Object.values(chatRoomData);
+    const filteredChatRooms = joinedChatRoomInfo.filter(
+      (chatroom) =>
+        chatroom.isDeleted === false && reduxChatRooms.includes(chatroom.key)
+    );
+    setJoinedChatRooms(filteredChatRooms);
+    return filteredChatRooms;
   };
 
   useEffect(() => {
@@ -78,6 +83,15 @@ const Notification = (props) => {
   const [expanded, setExpanded] = useState(false);
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
+  };
+
+  const removeAllMessages = () => {
+    reduxChatRooms.forEach((chatRoomId) => {
+      window.localStorage.setItem(
+        chatRoomId,
+        messagesForNoti[chatRoomId].length
+      );
+    });
   };
 
   return (

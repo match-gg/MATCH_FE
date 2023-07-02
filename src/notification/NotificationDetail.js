@@ -12,14 +12,12 @@ import { notificationActions } from '../store/notification-slice';
 const NotificationDetail = (props) => {
   const { chatRoomId } = props;
   const lastIndex = window.localStorage.getItem(chatRoomId);
-  console.log(lastIndex);
 
   const { messagesForNoti } = useSelector((state) => state.notification);
 
   const [messages, setMessages] = useState([]);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const removeMessages = () => {
     dispatch(notificationActions.REMOVE_MESSAGES(chatRoomId));
@@ -29,6 +27,7 @@ const NotificationDetail = (props) => {
   useEffect(() => {
     setMessages(messagesForNoti[chatRoomId]);
   }, [messagesForNoti]);
+
   return (
     <AccordionDetails>
       {messages &&
