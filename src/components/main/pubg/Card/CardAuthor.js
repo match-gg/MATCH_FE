@@ -4,6 +4,8 @@ import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import MicIcon from '@mui/icons-material/Mic';
 
+import { rankInfo } from './CardAuthor.d';
+
 const FlexRow = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
@@ -27,19 +29,15 @@ const CardAuthor = (props) => {
         <FlexCol
           sx={{
             width: 171,
-            alignItems: 'flex-start',
-          }}
-        >
-          <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
-            작성자 닉네임
-          </Typography>
+            alignItems: 'flex-start'
+          }}>
+          <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>닉네임</Typography>
           <Box
             sx={{
               display: 'flex',
               flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
+              alignItems: 'center'
+            }}>
             <Typography component='span' sx={{ fontSize: 16, fontWeight: 700 }}>
               {author.name}
             </Typography>
@@ -52,93 +50,77 @@ const CardAuthor = (props) => {
         </FlexCol>
         <FlexCol
           sx={{
-            width: 171,
-          }}
-        >
+            width: 171
+          }}>
           <FlexRow>
-            <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
-              RP(Rating Point)
-            </Typography>
+            <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>RP(Rating Point)</Typography>
           </FlexRow>
           <Box
             sx={{
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'flex-start',
-            }}
-          >
-            <Box
-              component='img'
-              src={'https://opgg-pubg-static.akamaized.net/images/tier/competitive/Gold-3.png'}
-              loading='lazy'
-              alt={author.mostLane}
-              sx={{
-                height: 24,
-                width: 24,
-                mr: 1,
-              }}
-            />
-            {/* 랭크 이미지는 이미지 CDN 작업 이후에 추가할 예정 */}
+              justifyContent: 'flex-start'
+            }}>
+            {author.currentRankPoint !== 0 && (
+              <Box
+                component='img'
+                src={rankInfo[author.tier.toUpperCase() + author.subTier]}
+                loading='lazy'
+                alt={author.tier}
+                sx={{
+                  height: 24,
+                  width: 24,
+                  mr: 0.5
+                }}
+              />
+            )}
             <Typography component='span' sx={{ fontSize: 16, fontWeight: 700 }}>
-              {author.ratingPoint}
+              {author.currentRankPoint === 0 ? '랭크 정보 없음' : author.currentRankPoint}
             </Typography>
           </Box>
         </FlexCol>
       </FlexRow>
       <FlexRow
         sx={{
-          pt: 1,
-        }}
-      >
+          pt: 2
+        }}>
         <FlexCol
           sx={{
-            width: 70,
-          }}
-        >
+            width: 70
+          }}>
           <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>K/D</Typography>
           <Typography
             sx={{
               fontSize: 16,
               fontWeight: 700,
-              color:
-                author.kills / author.deaths > 4
-                  ? 'red'
-                  : author.kills / author.deaths > 2.5
-                  ? 'orange'
-                  : 'black',
-            }}
-          >
+              color: author.kills / author.deaths > 4 ? 'red' : author.kills / author.deaths > 2.5 ? 'orange' : 'black'
+            }}>
             {(author.kills / author.deaths).toFixed(2)}
           </Typography>
         </FlexCol>
         <FlexCol sx={{ width: 101 }}>
-          <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>
-            경기 당 데미지
-          </Typography>
+          <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>경기 당 데미지</Typography>
           <Typography
             sx={{
               fontSize: 16,
               fontWeight: 700,
-              color:
-                author.avgDmg > 400 ? 'red' : author.avgDmg > 250 ? 'orange' : 'black',
-            }}
-          >
+              color: author.avgDmg > 400 ? 'red' : author.avgDmg > 250 ? 'orange' : 'black'
+            }}>
             {author.avgDmg.toFixed(2)}
           </Typography>
         </FlexCol>
         <FlexCol
           sx={{
-            width: 85,
-          }}
-        >
-          <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>Top 1%</Typography>
+            width: 85
+          }}>
+          <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>Top 1</Typography>
           <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
             {((author.wins / author.totalPlayed) * 100).toFixed(1)}%
           </Typography>
         </FlexCol>
         <FlexCol sx={{ width: 86 }}>
-          <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>Top 10%</Typography>
+          <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>Top 10</Typography>
           <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
             {((author.top10 / author.totalPlayed) * 100).toFixed(1)}%
           </Typography>

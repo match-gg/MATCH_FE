@@ -4,6 +4,7 @@ import { Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import { platformList, typeList, tierList } from './Card.d';
+import { platformInfo } from './CardTitle.d';
 
 const FlexRow = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -20,27 +21,24 @@ const CardTitle = (props) => {
       <FlexRow
         sx={{
           alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
+          justifyContent: 'space-between'
+        }}>
         <FlexRow
           sx={{
             height: 48,
             alignItems: 'center',
-            justifyContent: 'flex-start',
-          }}
-        >
-          {/* platform image */}
+            justifyContent: 'flex-start'
+          }}>
           <Box
             component='img'
-            src={'https://static.vecteezy.com/system/resources/previews/020/975/558/original/steam-logo-steam-icon-transparent-free-png.png'}
+            src={platformInfo[platform]}
             loading='lazy'
             alt={platform + '_image'}
             sx={{
               height: 32,
               width: 32,
               mr: 1,
-              mixBlendMode: 'exclusion',
+              borderRadius: '50%'
             }}
           />
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -49,19 +47,17 @@ const CardTitle = (props) => {
                 sx={{
                   fontSize: 12,
                   fontWeight: 700,
-                  pl: 1,
-                }}
-              >
-                #{typeList.find((elem) => elem.value === type).label}
+                  pl: 1
+                }}>
+                #{typeList.find(elem => elem.value === type).label}
               </Typography>
               <Typography
                 sx={{
                   fontSize: 12,
                   fontWeight: 700,
-                  pl: 0.5,
-                }}
-              >
-                #{tierList.find((elem) => elem.value === tier).label}
+                  pl: 0.5
+                }}>
+                #{tierList.find(elem => elem.value === tier).label}
               </Typography>
             </Box>
             <Typography
@@ -73,9 +69,8 @@ const CardTitle = (props) => {
                 overflow: 'hidden',
                 WebkitBoxOrient: 'vertical',
                 WebkitLineClamp: 1,
-                pl: 1,
-              }}
-            >
+                pl: 1
+              }}>
               {content}
             </Typography>
           </Box>
