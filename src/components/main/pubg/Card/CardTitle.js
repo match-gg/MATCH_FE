@@ -43,11 +43,19 @@ const CardTitle = (props) => {
           />
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <Box sx={{ display: 'flex' }}>
-              <Typography
+            <Typography
                 sx={{
                   fontSize: 12,
                   fontWeight: 700,
                   pl: 1
+                }}>
+                #{platformList.find(elem => elem.value === platform).label}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  pl: 0.5
                 }}>
                 #{typeList.find(elem => elem.value === type).label}
               </Typography>
@@ -57,7 +65,7 @@ const CardTitle = (props) => {
                   fontWeight: 700,
                   pl: 0.5
                 }}>
-                #{tierList.find(elem => elem.value === tier).label}
+                #{tierList.find(elem => elem.value === tier).label} 구함
               </Typography>
             </Box>
             <Typography

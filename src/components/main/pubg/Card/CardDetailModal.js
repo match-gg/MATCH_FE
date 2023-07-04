@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { api } from '../../../../api/api';
 
-import { platformList, typeList, tierList } from './Card.d';
+import { platformList, typeList, tierList } from './CardDetailModal.d';
 
 // mui
 import { Box, Button, Typography, IconButton } from '@mui/material';
@@ -54,33 +54,7 @@ const CardDeatilModal = (props) => {
 
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
-  const [boardData, setBoardData] = useState({
-    id: 2,
-    oauth2Id: 'kakao2668291200',
-    name: 'Dsquad2',
-    // 구하고자 하는 사람의 정보 하위 3개
-    platform: 'STEAM',
-    type: 'RANK_SQUAD',
-    tier: 'GOLD',
-    // ---
-    voice: 'Y',
-    content: '같이 경쟁 스쿼드 돌릴 사람 구합니다. 마이크 가능하신 분이면 좋겠습니다.',
-    expire: 'FIFTEEN_M',
-    created: '2023-05-30 16:00:45',
-    author: {
-      name: 'Dsquad2', // 위의 name 과 동일
-      ratingPoint: 2239,
-      kill_summary: 93, // 전체 킬
-      death_summary: 35, // 전체 데스
-      // 위 두개로 킬퍼데스 ( pubg 에서 계산해서 던져주면 그냥 줘도 됨)
-      avgDmgDealt: 418.45, // 매치당 평균 딜량 ( 1킬이 100 데미지)
-      totalPlayed: 121, // 이번시즌 판수
-      totalWin: 12, // 치킨 횟수
-      totalTop10: 30 // 탑10 횟수
-    },
-    chatRoomId: '1234',
-    memberList: ['Dsquad2']
-  });
+  const [boardData, setBoardData] = useState({});
 
   // 게시글 상세조회
   const fetchBoardDetail = async () => {
@@ -104,7 +78,8 @@ const CardDeatilModal = (props) => {
   }, []);
 
   // 방에 대한 인원 수 정보
-  const totalMember = typeList.find((elem) => elem.id === boardData.type)?.maxMember || 0;
+  const totalMember =
+    typeList.find((elem) => elem.id === boardData.type)?.maxMember || 0;
   const currentMember = boardData?.memberList?.length || 0;
 
   return (
@@ -185,8 +160,7 @@ const CardDeatilModal = (props) => {
                           fontWeight: 700,
                           pl: 1
                         }}>
-                        #{tierList.find(elem => elem.value === boardData.tier)?.label || '티어'}
-                        구함
+                        #{tierList.find(elem => elem.value === boardData.tier)?.label || '티어'} 구함
                       </Typography>
                       <Typography
                         sx={{
@@ -232,20 +206,17 @@ const CardDeatilModal = (props) => {
                         <PartyMember
                           key={elem}
                           name={elem}
+                          platform={boardData.platform}
                           type={boardData.type}
                           isAuthor={oauth2Id === boardData.oauth2Id}
                           game={game}
                           id={boardData.id}
                           chatRoomId={boardData.chatRoomId}
-                          // fetchBoardDetail={fetchBoardDetail}
+                          fetchBoardDetail={fetchBoardDetail}
                         />
                       );
                     })}
-                    <Recruitment />
-                    <Recruitment />
-                    <Recruitment />
-                    <Recruitment />
-                  {/* {Array(totalMember - currentMember).fill(<Recruitment />)} */}
+                  {Array(totalMember - currentMember).fill(<Recruitment />)}
                 </Box>
                 {/* {isLogin &&
                   (joinedChatRooms.includes(boardData.chatRoomId) ? (

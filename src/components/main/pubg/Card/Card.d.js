@@ -16,4 +16,5 @@ export const tierList = [
   { value: 'GOLD', label: '골드' },
   { value: 'SILVER', label: '실버' },
   { value: 'BRONZE', label: '브론즈' },
+  { value: 'ALL', label: '아무나'}
 ]

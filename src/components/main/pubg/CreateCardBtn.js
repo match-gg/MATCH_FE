@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { api } from '../../../api/api';
-// import { getDatabase, ref, push, update, child } from 'firebase/database';
+import { getDatabase, ref, push, update, child } from 'firebase/database';
 
 import {
   Button,
@@ -42,9 +42,7 @@ const CreateCardBtn = (props) => {
   const navigate = useNavigate();
 
   // 로그인 된 사용자의 기본 닉네임 가져오기.
-  const registeredNickname = user.games['lol'];
-
-  console.log(registeredNickname);
+  const registeredNickname = user.games['pubg'];
 
   // 닉네임 인증여부 확인에 사용할 state와 함수
   const [isIdChecked, setIsIdChecked] = useState(false);
@@ -61,17 +59,12 @@ const CreateCardBtn = (props) => {
   const [userInput, setUserInput] = useState({
     name: registeredNickname ? registeredNickname : '',
     platform: 'STEAM',
-    type: 'NORMAL_DUO',
-    tier: 'BRONZE',
+    type: 'DUO',
+    tier: 'ALL',
     expire: 'FIFTEEN_M',
     voice: 'n',
     content: '',
   });
-
-  const handleName = (e) => {
-    setUserInput({ ...userInput, name: e.target.value.trim() });
-    setIsChanged(true);
-  };
 
   const handlePlatform = (e, newValue) => {
     if (newValue === null) {
@@ -81,8 +74,20 @@ const CreateCardBtn = (props) => {
     setIsChanged(true);
   };
 
+  const handleName = (e) => {
+    setUserInput({ ...userInput, name: e.target.value.trim() });
+    setIsChanged(true);
+  };
+
   const handleType = (_e, newValue) => {
-    if (newValue === null) return;
+    if (newValue === null) {return}
+    else if (newValue === 'DUO') {
+      setUserInput({
+        ...userInput,
+        type: newValue,
+        tier: 'ALL'
+      })
+    }
     setUserInput({ ...userInput, type: newValue });
     setIsChanged(true);
   };
@@ -115,28 +120,28 @@ const CreateCardBtn = (props) => {
   };
 
   // 새로 입력한 닉네임 조회하기
-  // const certifyNickname = async () => {
-  //   setIsLoading(true);
+  const certifyNickname = async () => {
+    setIsLoading(true);
 
-  //   await api
-  //     .get(`/api/pubg/user/exist/${userInput.name}`)
-  //     .then(async (response) => {
-  //       if (response.status === 200) {
-  //         await api.get(`/api/lol/user/${userInput.name}`).then((_response) => {
-  //           setIsLoading(false);
-  //           setIsIdChecked(true);
-  //         });
-  //       } else {
-  //         setIsIdChecked(false);
-  //         setIsLoading(false);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  //   setIsLoading(false);
-  //   setIsChanged(true);
-  // };
+    await api
+      .get(`/api/pubg/user/exist/${userInput.name}/${userInput.platform}`)
+      .then(async (response) => {
+        if (response.status === 200) {
+          await api.get(`/api/pubg/user/${userInput.name}/${userInput.platform}`).then((_response) => {
+            setIsLoading(false);
+            setIsIdChecked(true);
+          });
+        } else {
+          setIsIdChecked(false);
+          setIsLoading(false);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    setIsLoading(false);
+    setIsChanged(true);
+  };
 
   //Modal 관련 state와 함수
   const [open, setOpen] = useState(false);
@@ -156,7 +161,7 @@ const CreateCardBtn = (props) => {
     setUserInput({
       name: registeredNickname ? registeredNickname : '',
       platform: 'STEAM',
-      type: 'NORMAL_DUO',
+      type: 'DUO',
       tier: 'BRONZE',
       expire: 'FIFTEEN_M',
       voice: 'n',
@@ -172,72 +177,72 @@ const CreateCardBtn = (props) => {
   };
 
   //채팅방 생성 함수
-  // const createChatroom = async (boardId, totalUser) => {
-  //   const chatroomRef = ref(getDatabase(), 'chatRooms');
-  //   const key = push(chatroomRef).key;
-  //   //서버로 보낼 데이터
-  //   const chatRoomInfo = {
-  //     boardId: Number(boardId),
-  //     chatRoomId: key,
-  //     totalUser,
-  //   };
-  //   await api
-  //     .post(`/api/chat/lol`, chatRoomInfo, {
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //         'Refresh-Token': refreshToken,
-  //       },
-  //     })
-  //     .catch((error) => console.log(error))
-  //     .then(async (response) => {
-  //       //서버 전송 성공시
-  //       if (response.status === 200) {
-  //         //파이어베이스의 Realtime DB에 저장될 객체
-  //         const newChatroom = {
-  //           isDeleted: false,
-  //           key,
-  //           roomId: boardId,
-  //           createdBy: user.games['lol'],
-  //           memberList: [{ nickname: user.games['lol'], oauth2Id: user.oauth2Id }],
-  //           timestamp: new Date().toString(),
-  //         };
-  //         //Ref에 접근해서 데이터 update
-  //         await update(child(chatroomRef, key), newChatroom)
-  //           .catch((error) => console.log(error))
-  //           .then((_response) => {
-  //             dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
-  //             closeModal();
-  //           });
-  //       }
-  //     });
-  // };
+  const createChatroom = async (boardId, totalUser) => {
+    const chatroomRef = ref(getDatabase(), 'chatRooms');
+    const key = push(chatroomRef).key;
+    //서버로 보낼 데이터
+    const chatRoomInfo = {
+      boardId: Number(boardId),
+      chatRoomId: key,
+      totalUser,
+    };
+    await api
+      .post(`/api/chat/pubg`, chatRoomInfo, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Refresh-Token': refreshToken,
+        },
+      })
+      .catch((error) => console.log(error))
+      .then(async (response) => {
+        //서버 전송 성공시
+        if (response.status === 200) {
+          //파이어베이스의 Realtime DB에 저장될 객체
+          const newChatroom = {
+            isDeleted: false,
+            key,
+            roomId: boardId,
+            createdBy: user.games['lol'],
+            memberList: [{ nickname: user.games['pubg'], oauth2Id: user.oauth2Id }],
+            timestamp: new Date().toString(),
+          };
+          //Ref에 접근해서 데이터 update
+          await update(child(chatroomRef, key), newChatroom)
+            .catch((error) => console.log(error))
+            .then((_response) => {
+              dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
+              closeModal();
+            });
+        }
+      });
+  };
 
-  // //글 작성 완료시 서버로 데이터 전송
-  // const postModalInfo = async () => {
-  //   setIsPending(true);
+  //글 작성 완료시 서버로 데이터 전송
+  const postModalInfo = async () => {
+    setIsPending(true);
 
-  //   await api
-  //     .post(`/api/pubg/board`, userInput, {
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //         'Refresh-Token': refreshToken,
-  //       },
-  //     })
-  //     .catch((error) => {
-  //       alert('게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.');
-  //       console.log(error);
-  //       setIsPending(false);
-  //     })
-  //     .then((response) => {
-  //       const boardId = response.data;
-  //       //채팅방 개설
-  //       createChatroom(boardId, 5);
-  //       // 인원수 제한이 5로 되어있는 것 같은데 5로 고정할 건지 고민좀 해봐야 할 듯
+    await api
+      .post(`/api/pubg/board`, userInput, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Refresh-Token': refreshToken,
+        },
+      })
+      .catch((error) => {
+        alert('게시글 작성중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.');
+        console.log(error);
+        setIsPending(false);
+      })
+      .then((response) => {
+        const boardId = response.data;
+        //채팅방 개설
+        createChatroom(boardId, 5);
+        // 인원수 제한이 5로 되어있는 것 같은데 5로 고정할 건지 고민좀 해봐야 할 듯
 
-  //       setIsPending(false);
-  //       navigate(0);
-  //     });
-  // };
+        setIsPending(false);
+        navigate(0);
+      });
+  };
 
   // 게시글 등록 과정 대기 상태 관리
   const [isPending, setIsPending] = useState(false);
@@ -296,6 +301,47 @@ const CreateCardBtn = (props) => {
           <Box
             sx={{
               display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mt: 1
+            }}>
+            <Typography
+              component='h2'
+              sx={{
+                fontSize: 16,
+                fontWeight: 400,
+                color: 'grey'
+              }}>
+              플레이할 플랫폼 타입
+            </Typography>
+            <ToggleButtonGroup
+              exclusive
+              disabled={isPending ? true : false}
+              value={userInput.platform}
+              onChange={handlePlatform}
+              sx={{
+                '& .MuiToggleButton-root.Mui-selected': {
+                  backgroundColor: '#4f90db',
+                  color: 'white'
+                },
+                '& > *': {
+                  height: 36,
+                  px: '10px',
+                  fontSize: 14
+                }
+              }}>
+              {platformData.map((data, idx) => {
+                return (
+                  <ToggleButton key={idx} value={data.value}>
+                    {data.text}
+                  </ToggleButton>
+                );
+              })}
+            </ToggleButtonGroup>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
               flexDirection: 'row-reverse',
               alignItems: 'center',
               justifyContent: 'flex-start'
@@ -343,7 +389,7 @@ const CreateCardBtn = (props) => {
                   <Button
                     position='end'
                     sx={{ whiteSpace: 'nowrap' }}
-                    // onClick={certifyNickname}
+                    onClick={certifyNickname}
                     disabled={isPending ? true : useExistNickname}>
                     {isIdChecked ? '인증완료' : '인증하기'}
                   </Button>
@@ -356,47 +402,6 @@ const CreateCardBtn = (props) => {
                 color: isIdChecked ? 'primary' : 'grey'
               }}
             />
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              mt: 2
-            }}>
-            <Typography
-              component='h2'
-              sx={{
-                fontSize: 16,
-                fontWeight: 400,
-                color: 'grey'
-              }}>
-              플레이할 플랫폼 타입
-            </Typography>
-            <ToggleButtonGroup
-              exclusive
-              disabled={isPending ? true : false}
-              value={userInput.platform}
-              onChange={handlePlatform}
-              sx={{
-                '& .MuiToggleButton-root.Mui-selected': {
-                  backgroundColor: '#4f90db',
-                  color: 'white'
-                },
-                '& > *': {
-                  height: 36,
-                  px: '10px',
-                  fontSize: 14
-                }
-              }}>
-              {platformData.map((data, idx) => {
-                return (
-                  <ToggleButton key={idx} value={data.value}>
-                    {data.text}
-                  </ToggleButton>
-                );
-              })}
-            </ToggleButtonGroup>
           </Box>
           <Box
             sx={{
@@ -472,6 +477,7 @@ const CreateCardBtn = (props) => {
               mt: 1
             }}>
             <ToggleButtonGroup
+              disabled={isPending ? true : userInput.type === 'DUO' || userInput.type === 'SQUAD' ? true : false}
               value={userInput.tier}
               exclusive
               onChange={handleTier}
@@ -633,7 +639,7 @@ const CreateCardBtn = (props) => {
               뒤로가기
             </Button>
             <Button
-              // onClick={postModalInfo}
+              onClick={postModalInfo}
               startIcon={!isPending && <EditIcon />}
               variant='contained'
               size='large'

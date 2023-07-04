@@ -76,7 +76,7 @@ const CardAuthor = (props) => {
               />
             )}
             <Typography component='span' sx={{ fontSize: 16, fontWeight: 700 }}>
-              {author.currentRankPoint === 0 ? '랭크 정보 없음' : author.currentRankPoint}
+              {author.currentRankPoint === 0 ? '정보 없음' : author.currentRankPoint}
             </Typography>
           </Box>
         </FlexCol>
