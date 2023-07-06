@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import {
   Grid,
   FormControl,
@@ -10,20 +9,17 @@ import {
   Button,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { queueTypeList, tierList, PositionList } from './BoardsFilter.d';
 
-import CreateCardButton from './CreateCardButton';
+import { queueTypeList, tierList, positionList } from './Body.d';
 
 const BoardsFilter = ({ filterProps }) => {
-  const { isLogin } = useSelector((state) => state.user);
-
   const {
-    handleLane,
-    handleQueueType,
-    handleTier,
-    lane,
     queueType,
+    handleQueueType,
     tier,
+    handleTier,
+    position,
+    handlePosition,
     refreshBoards,
   } = filterProps;
 
@@ -86,14 +82,14 @@ const BoardsFilter = ({ filterProps }) => {
       <Grid item xs={12} sm={7} md={4.5} lg={3.5} sx={{ pr: 1, pb: 1 }}>
         <ToggleButtonGroup
           fullWidth
-          value={lane}
-          onChange={handleLane}
+          value={position}
+          onChange={handlePosition}
           sx={{
             height: 40,
           }}
           disabled={queueType === 'ARAM' ? true : false}
         >
-          {PositionList.map((item, _index) => {
+          {positionList.map((item, _index) => {
             return (
               <ToggleButton key={item.value} value={item.value} sx={{ p: 0 }}>
                 {item.label}
@@ -103,17 +99,15 @@ const BoardsFilter = ({ filterProps }) => {
         </ToggleButtonGroup>
       </Grid>
       <Grid
-        item
         sm
         sx={{
           p: 0,
-          padding: 0,
           display: { xs: 'none', sm: 'flex' },
           alignItems: 'center',
           justifyContent: 'flex-end',
+          gap: 1,
         }}
       >
-        {isLogin && <CreateCardButton />}
         <Button sx={{ height: 40, color: '#3d3939' }} onClick={refreshBoards}>
           새로고침
           <RefreshIcon />

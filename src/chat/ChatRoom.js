@@ -1,76 +1,62 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, OutlinedInput, Tooltip } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
-// import ChatEnter from './ChatEnter';
-import ChatMessage from './ChatMessage';
+
+import { useNavigate } from 'react-router-dom';
+
 import { useDispatch, useSelector } from 'react-redux';
+
+//mui
 import {
-  getDatabase,
-  onChildAdded,
+  Box,
+  Typography,
+  TextField,
+  InputAdornment,
+  IconButton,
+} from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+
+import {
   ref,
+  getDatabase,
   child,
+  serverTimestamp,
+  get,
   set,
   push,
-  get,
-  serverTimestamp,
 } from 'firebase/database';
+import ChatMessageInDetail from './ChatMessage';
 import { chatRoomActions } from '../store/chatRoom-slice';
+import SystemMessage from './SystemMessage';
 
 const ChatRoom = (props) => {
-  const { closeChatOpen } = props;
-  const nickname = useSelector((state) => state.user.games['lol']);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  //props로 해당 파티의 채팅방 id값, 닉네임 가져오기
+  const { chatRoomId, nickname } = props;
+
+  // 리덕스에 저장되어있는 메세지 가져오기
+  const currentChatRoomMessages = useSelector(
+    (state) => state.messages.messages[chatRoomId]
+  );
+
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
-  const dispatch = useDispatch();
-  const currentChatRoom = useSelector(
-    (state) => state.chatRoom.currentChatRoom
-  );
-  //파이어베이스의 messages ref
-  const messagesRef = ref(getDatabase(), 'messages');
-
-  //파이어베이스에서 가져온 메세지들을 담을 리스트
-  const [messages, setMessages] = useState([]);
-
-  //파이어베이스의 메세지들을 가져올 리스너 함수
-  const addMessagesListener = (chatRoomId) => {
-    const messagesArray = [];
-    onChildAdded(child(messagesRef, chatRoomId), (DataSnapshot) => {
-      messagesArray.push(DataSnapshot.val());
-      setMessages([...messagesArray]);
-    });
-  };
-
-  //컴포넌트 생성 시 메세지 가져와서 보여주기
-  useEffect(() => {
-    if (currentChatRoom) {
-      addMessagesListener(currentChatRoom.key);
-    }
-  }, []);
-
-  //에러를 보여줄 툴팁
-  const [tooltip, setTooltip] = useState(false);
-  const handleTooltipOpen = () => {
-    setTooltip(true);
-  };
-  const handleTooltipClose = () => {
-    setTooltip(false);
-  };
-
-  //메세지 전송중 state
+  //메세지 전송중 state (true이면 전송중)
   const [messageSending, setMessageSending] = useState(false);
 
-  //메세지 인풋 state
+  //메세지 인풋 state, 핸들러 함수
   const [content, setContent] = useState('');
   const handleContent = (e) => {
     setContent(e.target.value);
   };
 
-  //메세지 입력창에 포커스 되도록 Ref
+  //메세지 인풋에 포커스 되도록 Ref
   const inputRef = useRef(null);
-
-  const createMessage = () => {
+  //파이어베이스로 전송할 메세지 객체 생성 함수
+  const createMessage = (timestamp) => {
     const message = {
-      timestamp: serverTimestamp(),
+      type: 'chat',
+      timestamp: timestamp,
       user: {
         nickname,
         oauth2Id,
@@ -79,131 +65,186 @@ const ChatRoom = (props) => {
     };
     return message;
   };
-  //메세지 전송
+  //파이어베이스 Ref
+
+  const chatRoomRef = ref(getDatabase(), 'chatRooms');
+  const messagesRef = ref(getDatabase(), 'messages');
+
+  //메세지 전송 함수
   const postMessage = async () => {
     setMessageSending(true);
+
     if (!content) {
-      handleTooltipOpen();
       setTimeout(() => {
-        handleTooltipClose();
         inputRef.current.querySelector('input').focus();
-      }, 2000);
+      }, 1000);
       setMessageSending(false);
       return;
     }
-    //메세지 전송 유효성 테스트 (해당 파티에 가입되어 있는지 확인)
-    const chatroomRef = ref(getDatabase(), 'chatRooms');
-    await get(child(chatroomRef, currentChatRoom.key))
-      .then(async (snapshot) => {
-        const members = [...snapshot.val().memberList];
-        const oauth2IdList = members.map((member) => member.oauth2Id);
-        //유효성 확인 통과 (파티에 가입되어있는 사용자)
-        if (oauth2IdList.includes(oauth2Id)) {
-          await set(
-            push(child(messagesRef, currentChatRoom.key)),
-            createMessage()
-          )
-            .catch((error) => console.log(error))
-            .then(() => {
-              setContent('');
-              setMessageSending(false);
-              setTimeout(() => {
-                inputRef.current.querySelector('input').focus();
-              }, 0);
-            });
-        } else {
-          alert('유효하지 않은 사용자입니다. 3초후 채팅방에서 나가집니당');
-          setTimeout(() => {
-            closeChatOpen();
-          }, 3000);
-          dispatch(chatRoomActions.SET_CURRENT_CHATROOM(null));
-        }
-      })
-      .catch((error) => console.log(error));
+
+    // 종료된 파티인지 확인
+    await get(child(chatRoomRef, chatRoomId)).then(async (datasnapshot) => {
+      if (datasnapshot.val().isDeleted) {
+        alert('종료된 파티입니다.');
+        navigate('/lol');
+        return;
+      }
+
+      //  종료된 채팅방이 아닌 경우 (정상적인 프로세스)
+      const members = [...datasnapshot.val().memberList];
+      const oauth2IdList = members.map((member) => member.oauth2Id);
+      const timestamp = Date.now();
+
+      //oauth2Id를 통해 파티에 가입되어 있는지 확인
+      if (oauth2IdList.includes(oauth2Id)) {
+        // 해당 파티에 가입되어있는 정상적인 사용자
+        await updateLastRead(timestamp);
+        await set(
+          push(child(messagesRef, chatRoomId)),
+          createMessage(timestamp)
+        )
+          .then(async () => {
+            setContent('');
+            setMessageSending(false);
+            setTimeout(() => {
+              inputRef.current.querySelector('input').focus();
+            }, 0);
+          })
+          .catch((error) => console.log(error));
+      } else {
+        // 가입되어있지 않은 사용자 (탈퇴되었거나 스스로 나간 경우)
+        alert('유효하지 않은 사용자 입니다.');
+        dispatch(chatRoomActions.LEAVE_JOINED_CHATROOMS_ID(chatRoomId));
+        navigate('/lol');
+        window.location.reload();
+        return;
+      }
+    });
   };
-  //엔터키로 메세지 전송
+
+  //엔터키 입력 시 메세지 전송
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       postMessage();
     }
   };
-
-  //자동으로 하단으로 스크롤 되도록 Ref
+  // 자동으로 채팅창의 하당으로 스크롤 되도록 Ref
   const scrollRef = useRef();
   useEffect(() => {
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  }, [messages]);
+
+    updateLastRead(Date.now());
+  }, [currentChatRoomMessages]);
+
+  const updateLastRead = async (timestamp) => {
+    const lastReadRef = ref(getDatabase(), 'lastRead');
+    await set(child(lastReadRef, `${oauth2Id}/${chatRoomId}`), timestamp).catch(
+      (error) => console.log(error)
+    );
+  };
+
+  const [thisMessages, setThisMessages] = useState([]);
+
+  useEffect(() => {
+    updateLastRead(Date.now());
+    setThisMessages(currentChatRoomMessages);
+  }, [thisMessages]);
+
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        height: '530px',
-        maxHeight: '530px',
-        width: '300px',
-        backgroundColor: '#ffffff',
-        borderRadius: '20px',
-        padding: '5px',
+        width: '100%',
+        height: '100%',
+        pb: 1,
       }}
     >
-      {/* 메세지 영역 */}
-      <Box
-        ref={scrollRef}
+      <Typography
         sx={{
-          padding: '5px',
-          width: '100%',
-          maxHeight: '460px',
-          overflowY: 'auto',
-          position: 'relative',
+          color: 'grey',
+          fontSize: 14,
+          fontWeight: 600,
         }}
       >
-        {messages.map((message, idx) => {
-          return <ChatMessage key={idx} messageInfo={message} />;
-        })}
-      </Box>
-      {/* 입력 영역 */}
-      <Tooltip
-        arrow
-        title='메세지를 입력해주세요'
-        open={tooltip}
-        placement='top'
-        leaveDelay={3000}
+        파티 전용 채팅
+      </Typography>
+      <Box
+        sx={{
+          backgroundColor: 'rgba(236, 236, 236, 0.5)',
+          minWidth: 360,
+          maxWidth: 360,
+          minHeight: 480,
+          position: 'relative',
+          borderRadius: 1,
+          p: 1,
+        }}
       >
-        <OutlinedInput
+        {/* 채탕 매세지 영역 */}
+        <Box
+          ref={scrollRef}
+          sx={{
+            width: '100%',
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            maxHeight: 480,
+            overflowX: 'hidden',
+          }}
+        >
+          {currentChatRoomMessages &&
+            currentChatRoomMessages.map((message, idx) => {
+              const msgBySameSender =
+                message.user.nickname ===
+                currentChatRoomMessages[idx - 1]?.user.nickname
+                  ? true
+                  : false;
+              if (message.type === 'chat') {
+                return (
+                  <ChatMessageInDetail
+                    key={idx}
+                    messageInfo={message}
+                    msgBySameSender={msgBySameSender}
+                  />
+                );
+              } else {
+                return <SystemMessage key={idx} messageInfo={message} />;
+              }
+            })}
+        </Box>
+        {/* 메세지 인풋 영역 */}
+      </Box>
+      <Box
+        sx={{
+          backgroundColor: 'white',
+          width: '100%',
+          height: 40,
+        }}
+      >
+        <TextField
+          label='메세지를 입력해주세요.'
+          disabled={messageSending}
           value={content}
           onChange={handleContent}
           onKeyDown={handleKeyDown}
-          size='small'
           autoComplete='off'
-          placeholder='메세지를 입력해주세요.'
-          disabled={messageSending}
           autoFocus
           ref={inputRef}
           sx={{
-            position: 'absolute',
-            bottom: '30px',
-            width: '80%',
-            borderColor: '#3c3939',
+            mt: 1,
+            width: '100%',
+            height: 40,
           }}
-          endAdornment={
-            <SendIcon
-              onClick={postMessage}
-              sx={{
-                cursor: 'pointer',
-                padding: '3px',
-                color: '#3c3939',
-                '&:hover': {
-                  cursor: 'pointer',
-                  borderRadius: '5px',
-                  backgroundColor: 'rgba(60, 57, 57, 0.5)',
-                },
-              }}
-            />
-          }
-        ></OutlinedInput>
-      </Tooltip>
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position='end'>
+                <IconButton size='small' onClick={postMessage}>
+                  <SendIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
     </Box>
   );
 };

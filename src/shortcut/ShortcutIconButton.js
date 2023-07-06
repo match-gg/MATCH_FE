@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@mui/material';
 import GroupsIcon from '@mui/icons-material/Groups';
 
-const ChatButton = (props) => {
+const ShortcutIconButton = (props) => {
   const { open, handleOpen } = props;
 
   return (
@@ -29,4 +29,4 @@ const ChatButton = (props) => {
   );
 };
 
-export default ChatButton;
+export default ShortcutIconButton;

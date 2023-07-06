@@ -1,5 +1,9 @@
-export const mostLaneInfo = [
-  { id: 'TOP', image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/TOP.png', kor: '탑' },
+export const position = [
+  {
+    id: 'TOP',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/TOP.png',
+    kor: '탑',
+  },
   {
     id: 'JUNGLE',
     image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/JUG.png',
@@ -20,6 +24,11 @@ export const mostLaneInfo = [
     image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/SUP.png',
     kor: '서포터',
   },
+  {
+    id: 'ALL',
+    image: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/lane_icons/ALL1.png',
+    kor: '상관없음',
+  },
 ];
 
 export const tierInfo = [
@@ -35,14 +44,10 @@ export const tierInfo = [
   { id: 'ALL', color: '#000000', kor: '모든티어' },
 ];
 
-export const rankInfo = {
-  CHALLENGER: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/ranked_emblems/challenger.png',
-  GRANDMASTER: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/ranked_emblems/grandmaster.png',
-  MASTER: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/ranked_emblems/master.png',
-  DIAMOND: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/ranked_emblems/diamond.png',
-  PLATINUM: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/ranked_emblems/platinum.png',
-  GOLD: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/ranked_emblems/gold.png',
-  SILVER: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/ranked_emblems/silver.png',
-  BRONZE: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/ranked_emblems/bronze.png',
-  IRON: 'https://d18ghgbbpc0qi2.cloudfront.net/lol/ranked_emblems/iron.png',
-};
+export const typeInfo = [
+  { id: 'DUO_RANK', kor: '솔로랭크', maxMember: 2 },
+  { id: 'FREE_RANK', kor: '자유랭크', maxMember: 5 },
+  { id: 'NORMAL', kor: '일반게임', maxMember: 5 },
+  { id: 'ARAM', kor: '칼바람나락', maxMember: 5 },
+  { id: 'ALL', kor: '모든큐', maxMember: 5 },
+];

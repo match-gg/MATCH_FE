@@ -7,7 +7,7 @@ import CardTitle from './CardTitle';
 import CardRecruitmentStatus from './CardRecruitmentStatus';
 import CardAuthor from './CardAuthor';
 
-import { tierInfo, typeInfo } from './Card.d';
+import { tierInfo } from './Card.d';
 
 const BaseCard = styled(MuiCard)(({ theme }) => ({
   width: 376,
@@ -26,17 +26,7 @@ const FlexCol = styled(Box)(({ theme }) => ({
 }));
 
 const Card = ({ item }) => {
-  const {
-    author,
-    content,
-    expire,
-    created,
-    voice,
-    tier,
-    position,
-    type,
-    memberList,
-  } = item;
+  const { author, content, expire, created, voice, tier, position, type } = item;
 
   const [isHovering, setIsHovering] = useState(false);
 
@@ -49,9 +39,7 @@ const Card = ({ item }) => {
       <BaseCard
         sx={{
           '&:hover': {
-            border: `1px solid ${
-              tierInfo.find((elem) => elem.id === tier).color
-            }`,
+            border: `1px solid ${tierInfo.find((elem) => elem.id === tier).color}`,
             boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)',
           },
         }}
@@ -65,24 +53,13 @@ const Card = ({ item }) => {
         >
           <FlexCol>
             {/* 모집하는 사람 정보 */}
-            <CardTitle
-              content={content}
-              tier={tier}
-              position={position}
-              type={type}
-            />
+            <CardTitle content={content} tier={tier} position={position} type={type} />
             {/* 모집 현황 */}
-            <CardRecruitmentStatus
-              curMembers={memberList.length}
-              totalMembers={typeInfo.find((val) => val.id === type).maxMember}
-              isHovering={isHovering}
-              created={created}
-              expire={expire}
-            />
+            <CardRecruitmentStatus isHovering={isHovering} created={created} expire={expire} />
             <Divider sx={{ my: 1 }} />
             {/* 파티장 정보 */}
-            <CardAuthor author={author} voice={voice} position={position} />
-          </FlexCol>
+            <CardAuthor author={author} voice={voice} />
+          </FlexCol> 
         </CardContent>
       </BaseCard>
     </div>

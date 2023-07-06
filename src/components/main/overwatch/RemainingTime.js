@@ -2,16 +2,7 @@ import { Typography } from '@mui/material';
 
 import Countdown from 'react-countdown';
 
-const expiredTime = {
-  FIFTEEN_M: 15 * 60 * 1000,
-  THIRTY_M: 30 * 60 * 1000,
-  ONE_H: 1 * 60 * 60 * 1000,
-  TWO_H: 2 * 60 * 60 * 1000,
-  THREE_H: 3 * 60 * 60 * 1000,
-  SIX_H: 6 * 60 * 60 * 1000,
-  TWELVE_H: 12 * 60 * 60 * 1000,
-  TWENTY_FOUR_H: 24 * 60 * 60 * 1000,
-};
+import { expiredTime } from './Card.d';
 
 const RemainingTime = (props) => {
   const {created = '2000-12-31 23:59:59', expire = 'FIFTEEN_M'} = props;

@@ -7,8 +7,12 @@ import {
   TableBody,
   TableCell,
   TableRow,
+  Switch,
+  FormControlLabel,
 } from '@mui/material';
 import { PieChart } from 'react-minimal-pie-chart';
+import { useDispatch, useSelector } from 'react-redux';
+import { notificationActions } from '../../store/notification-slice';
 
 const MyInfo = ({ userInfo }) => {
   const { matchCount, likeCount, dislikeCount, email, created } = userInfo;
@@ -16,6 +20,29 @@ const MyInfo = ({ userInfo }) => {
   // 받은 평가 중 좋아요 비율
   const totalRated = likeCount + dislikeCount;
   const likeRate = (100 * (likeCount / totalRated)).toFixed(1);
+
+  // 알림 허용 여부
+  const isNotificationPermissioned = useSelector(
+    (state) => state.notification.isNotificationPermissioned
+  );
+  const dispatch = useDispatch();
+
+  //알림 요청 받기
+  const handleRequestPermission = () => {
+    if (isNotificationPermissioned === false) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          alert('알림 요청이 허용되었습니다.');
+          dispatch(notificationActions.SET_NOTIFICATION_PERMISSIONED());
+        } else {
+          alert('알림 요청이 거절되었습니다,');
+        }
+      });
+    } else {
+      // 웹상에서 deny 시키는 방법은 없는거같음
+      dispatch(notificationActions.SET_NOTIFICATION_DENIED());
+    }
+  };
 
   return (
     <Box
@@ -49,9 +76,13 @@ const MyInfo = ({ userInfo }) => {
           }}
         >
           <Box sx={{ flexBasis: 96 }}>
-            {likeCount + dislikeCount === 0 ? '받은 평가 없음' : (
+            {likeCount + dislikeCount === 0 ? (
+              '받은 평가 없음'
+            ) : (
               <PieChart
-                data={[{ value: `${likeRate}`, color: '#5383e8', name: 'likeRate' }]}
+                data={[
+                  { value: `${likeRate}`, color: '#5383e8', name: 'likeRate' },
+                ]}
                 reveal={parseInt(likeRate)} // 퍼센트 치수
                 lineWidth={30} // 두께
                 startAngle={270}
@@ -177,6 +208,25 @@ const MyInfo = ({ userInfo }) => {
           >
             {created.slice(0, 10) || '가입 일자'}
           </Typography>
+        </Box>
+        <Box>
+          <Typography variant='h6' sx={{ color: 'black', fontWeight: '600' }}>
+            알림
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: ' center',
+            }}
+          >
+            <FormControlLabel
+              control={<Switch />}
+              label='알림 허용'
+              checked={isNotificationPermissioned}
+              onChange={handleRequestPermission}
+            />
+          </Box>
         </Box>
       </Box>
     </Box>

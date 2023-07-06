@@ -1,5 +1,6 @@
 import { useState, useEffect, Fragment } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import styled from '@emotion/styled';
 import { Button, Container, Typography } from '@mui/material';
@@ -8,7 +9,19 @@ import { api } from '../../../api/api';
 
 import BoardsFilter from './BoardsFilter';
 import Card from './Card';
-import ChatToggleBtn from '../../../chat/ChatToggleBtn';
+import ShortcutButton from '../../../shortcut/ShortcutButton';
+
+// 테스트
+import {
+  getDatabase,
+  ref,
+  child,
+  onChildAdded,
+  off,
+  onChildChanged,
+} from 'firebase/database';
+import { messagesActions } from '../../../store/message-slice';
+import { notificationActions } from '../../../store/notification-slice';
 
 const BoardsWrapper = styled('div')({
   width: '100%',
@@ -18,6 +31,7 @@ const BoardsWrapper = styled('div')({
   flexWrap: 'wrap',
   pl: 1,
   pt: 1,
+  // position: 'fixed',
 });
 
 const Body = () => {
@@ -69,9 +83,12 @@ const Body = () => {
           setIsLoading(false);
         })
         .catch((error) => {
-          console.log(error);
           setIsLoading(false);
-          if (error.status === 404) {
+          console.log(error);
+          if (
+            error.response.status === 404 &&
+            error.response.data.message === '게시글이 존재하지 않습니다.'
+          ) {
             setBoards([]);
           }
         });
@@ -113,18 +130,59 @@ const Body = () => {
     refreshBoards,
   };
 
+  // 테스트
+  const dispatch = useDispatch();
+
+  // 파이어베이스 messagesRef
+  const messagesRef = ref(getDatabase(), 'messages');
+  // 리덕스에 저장되어있는 chatRoom의 Id 리스트
+  const { joinedChatRoomsId } = useSelector((state) => state.chatRoom);
+
+  const { currentChatRoom } = useSelector((state) => state.chatRoom);
+
+  const getCurrentChatRoom = () => {
+    return currentChatRoom;
+  };
+
+  // 메세지 각 채팅방의 메세지 리스너 추가
+  const addFirebaseListener = () => {
+    joinedChatRoomsId.forEach((chatRoomId) => {
+      onChildAdded(child(messagesRef, chatRoomId), (datasnapshot) => {
+        const data = {
+          chatRoomId,
+          message: datasnapshot.val(),
+          currentChatRoom: getCurrentChatRoom(),
+        };
+        dispatch(messagesActions.SET_MESSAGES(data));
+
+        dispatch(notificationActions.SET_NOTIFICATIONS(data));
+      });
+    });
+  };
+
+  useEffect(() => {
+    addFirebaseListener();
+  }, []);
+
   return (
     <Fragment>
       <BoardsFilter filterProps={filterProps} />
       <Container maxWidth='xl' sx={{ mt: 2 }}>
         <BoardsWrapper>
+          {!isLoading && boards.length === 0 && (
+            <Typography>게시글이 존재하지 않습니다.</Typography>
+          )}
           {!isLoading &&
             boards.map((item, _index) => {
               return (
                 <Link
+                  key={item.id}
                   to={`${item.id}`}
                   state={{ background: location }}
-                  style={{ textDecoration: 'none' }}
+                  style={{
+                    textDecoration: 'none',
+                    background: 'fixed',
+                  }}
                 >
                   <Card key={item.id} item={item} />
                 </Link>
@@ -133,10 +191,12 @@ const Body = () => {
           {isLoading && <Typography>Loading...</Typography>}
         </BoardsWrapper>
       </Container>
-      <Button sx={{ mb: 4, color: '#3d3939' }} onClick={moreBoards}>
-        더 불러오기
-      </Button>
-      <ChatToggleBtn />
+      {boards.length > 0 && (
+        <Button sx={{ mb: 4, color: '#3d3939' }} onClick={moreBoards}>
+          더 불러오기
+        </Button>
+      )}
+      <ShortcutButton />
     </Fragment>
   );
 };
