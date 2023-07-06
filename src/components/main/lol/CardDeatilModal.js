@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { api } from '../../../api/api';
@@ -24,6 +24,7 @@ import DeletePartyButton from './DeletePartyButton';
 // styled component
 import styled from '@emotion/styled';
 import EditPartyButton from './EditPartyButton';
+import { chatRoomActions } from '../../../store/chatRoom-slice';
 
 const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'fixed',
@@ -54,7 +55,7 @@ const CardDeatilModal = () => {
   const { id: boardId } = params;
 
   const { isLogin } = useSelector((state) => state.user);
-  const { joinedChatRooms } = useSelector((state) => state.chatRoom);
+  const { joinedChatRoomsId } = useSelector((state) => state.chatRoom);
   const nickname = useSelector((state) => state.user.games[game]);
 
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
@@ -68,6 +69,7 @@ const CardDeatilModal = () => {
       .get(`/api/${game}/boards/${boardId}`)
       .then((res) => {
         setBoardData(res.data);
+        dispatch(chatRoomActions.SET_CURRENT_CHATROOM(res.data.chatRoomId));
       })
       .catch((err) => {
         // 게시글 상세조회 실패
@@ -78,11 +80,17 @@ const CardDeatilModal = () => {
         navigate('/lol');
       });
   };
+  const dispatch = useDispatch();
+
   //컴포넌트 렌더링 시 게시글 상세 조회 호출
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     fetchBoardDetail();
-    return () => (document.body.style.overflow = 'unset');
+    dispatch(chatRoomActions.SET_CURRENT_CHATROOM(boardData.chatRoomId));
+    return () => {
+      document.body.style.overflow = 'unset';
+      dispatch(chatRoomActions.REMOVE_CURRENT_CHATROOM());
+    };
   }, []);
 
   // 방에 대한 인원 수 정보
@@ -123,7 +131,7 @@ const CardDeatilModal = () => {
               <Typography component='h1' sx={{ fontSize: 22, fontWeight: 700 }}>
                 {boardData?.name}님의 파티
               </Typography>
-              {/* {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && ( */}
+
               <IconButton size='small' onClick={() => navigate(`/${game}`)}>
                 <Close />
               </IconButton>
@@ -273,7 +281,7 @@ const CardDeatilModal = () => {
                   )}
                 </Box>
                 {isLogin &&
-                  (joinedChatRooms.includes(boardData.chatRoomId) ? (
+                  (joinedChatRoomsId.includes(boardData.chatRoomId) ? (
                     oauth2Id === boardData.oauth2Id ? (
                       <Stack direction='row' spacing={2} mt={1}>
                         <DeletePartyButton
@@ -303,7 +311,7 @@ const CardDeatilModal = () => {
                     />
                   ))}
               </Box>
-              {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
+              {isLogin && joinedChatRoomsId.includes(boardData.chatRoomId) && (
                 <Box sx={{ ml: 2 }}>
                   <ChatRoom
                     chatRoomId={boardData.chatRoomId}

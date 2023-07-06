@@ -3,7 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { api } from '../../../api/api';
-import { getDatabase, ref, push, update, child, get } from 'firebase/database';
+import {
+  getDatabase,
+  ref,
+  push,
+  update,
+  child,
+  get,
+  set,
+  serverTimestamp,
+} from 'firebase/database';
 
 import {
   Button,
@@ -44,6 +53,10 @@ const CreateCardModal = () => {
   //토큰
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
+  const notiToken = useSelector((state) => state.notification.notiToken);
+  const isNotificationPermissioned = useSelector(
+    (state) => state.notification.isNotificationPermissioned
+  );
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -252,16 +265,25 @@ const CreateCardModal = () => {
             createdBy: userInput.name,
             maxMember: totalUser,
             memberList: [
-              { nickname: userInput.name.trim(), oauth2Id: user.oauth2Id },
+              {
+                nickname: userInput.name,
+                oauth2Id: user.oauth2Id,
+                notiToken: isNotificationPermissioned ? notiToken : '',
+              },
             ],
             timestamp: new Date().toString(),
             content: userInput.content,
           };
           //Ref에 접근해서 데이터 update
-          await update(child(chatroomRef, key), newChatroom)
+          await update(child(chatroomRef, key), newChatroom);
+          const lastReadRef = ref(getDatabase(), 'lastRead');
+          await set(
+            child(lastReadRef, `${user.oauth2Id}/${key}`),
+            serverTimestamp()
+          )
             // redux에 채팅방 id 저장
             .then((_response) => {
-              dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
+              dispatch(chatRoomActions.ADD_JOINED_CHATROOMS_ID(key));
               closeModal();
             })
             .catch((error) => console.log(error));

@@ -22,7 +22,6 @@ import {
   Link,
   SwipeableDrawer,
 } from '@mui/material';
-
 import LoginIcon from '@mui/icons-material/Login';
 import Logout from '@mui/icons-material/Logout';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -33,9 +32,15 @@ import { useNavigate } from 'react-router-dom';
 import { userActions } from '../../store/user-slice';
 import { tokenActions } from '../../store/token-slice';
 import { GameList } from './GameList.d';
+import { notificationActions } from '../../store/notification-slice';
+import { chatRoomActions } from '../../store/chatRoom-slice';
+
+import Notification from '../../notification/Notification';
 
 const MainHeader = ({ game }) => {
-  const { isLogin, profile_imageUrl, nickname, representative } = useSelector((state) => state.user);
+  const { isLogin, profile_imageUrl, nickname, representative } = useSelector(
+    (state) => state.user
+  );
   const { accessToken } = useSelector((state) => state.token);
   const refreshToken = localStorage.getItem('matchGG_refreshToken');
 
@@ -75,6 +80,8 @@ const MainHeader = ({ game }) => {
       .then((response) => {
         dispatch(userActions.DELETE_USER());
         dispatch(tokenActions.DELETE_TOKEN());
+        dispatch(notificationActions.DELETE_NOTITOKEN());
+        dispatch(chatRoomActions.REMOVE_ALL_JOINED_CHATROOMS_ID());
         navigate('/login');
       })
       .catch((error) => {
@@ -98,8 +105,23 @@ const MainHeader = ({ game }) => {
   const CurrentGame = GameList.find((elem) => elem.id === game)?.fullName_Kor;
 
   const linkToLogin = () => {
-    navigate('/login')
-  }
+    navigate('/login');
+  };
+
+  // notification
+  const [notiAnchorEl, setNotiAnchorEl] = useState(null);
+  const notiOpen = Boolean(notiAnchorEl);
+  const handleNotiClick = (e) => {
+    setNotiAnchorEl(e.currentTarget);
+  };
+  const handleNotiClose = () => {
+    setNotiAnchorEl(null);
+  };
+
+  const { isNotificationPermissioned } = useSelector(
+    (state) => state.notification
+  );
+  // console.log(isNotificationPermissioned);
 
   return (
     <AppBar
@@ -116,7 +138,13 @@ const MainHeader = ({ game }) => {
         <Toolbar disableGutters>
           <Button
             onClick={handleDrawerOpen}
-            sx={{ display: { xs: 'flex', md: 'none' }, p: 0, minWidth: 0, minHeight: 0, mr: 2 }}
+            sx={{
+              display: { xs: 'flex', md: 'none' },
+              p: 0,
+              minWidth: 0,
+              minHeight: 0,
+              mr: 2,
+            }}
           >
             <MenuIcon
               sx={{
@@ -278,7 +306,8 @@ const MainHeader = ({ game }) => {
               >
                 {GameList.map((aGame, index) => {
                   return (
-                    <MenuItem key={index}
+                    <MenuItem
+                      key={index}
                       onClick={() => {
                         navigate(`/${aGame.id}`);
                       }}
@@ -314,7 +343,13 @@ const MainHeader = ({ game }) => {
           </Box>
           {isLogin && (
             <>
-              <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                }}
+              >
                 <Tooltip title='Profile Settings'>
                   <IconButton
                     onClick={handleClick}
@@ -337,7 +372,8 @@ const MainHeader = ({ game }) => {
                     <Box
                       component='img'
                       src={
-                        profile_imageUrl || 'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg'
+                        profile_imageUrl ||
+                        'https://d18ghgbbpc0qi2.cloudfront.net/lol/champions/garen.jpg'
                       }
                       sx={{
                         width: { xs: 32, sm: 40 },
@@ -411,18 +447,26 @@ const MainHeader = ({ game }) => {
           )}
           {!isLogin && (
             <IconButton onClick={linkToLogin}>
-              <LoginIcon sx={{mr: 1, color: 'white'}}/>
+              <LoginIcon sx={{ mr: 1, color: 'white' }} />
               <Typography
-                      sx={{
-                        display: { xs: 'none', sm: 'flex' },
-                        color: 'white',
-                        fontSize: { xs: 14, sm: 16 },
-                        fontWeight: '500',
-                      }}
-                    >
-                      로그인 / 회원가입
-                    </Typography>
+                sx={{
+                  display: { xs: 'none', sm: 'flex' },
+                  color: 'white',
+                  fontSize: { xs: 14, sm: 16 },
+                  fontWeight: '500',
+                }}
+              >
+                로그인 / 회원가입
+              </Typography>
             </IconButton>
+          )}
+          {isLogin && (
+            <Notification
+              handleNotiClick={handleNotiClick}
+              notiAnchorEl={notiAnchorEl}
+              notiOpen={notiOpen}
+              handleNotiClose={handleNotiClose}
+            />
           )}
         </Toolbar>
       </Container>

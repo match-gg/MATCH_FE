@@ -5,6 +5,8 @@ import jwt_decode from 'jwt-decode';
 
 import { tokenActions } from '../store/token-slice';
 import { userActions } from '../store/user-slice';
+import { chatRoomActions } from '../store/chatRoom-slice';
+
 import { api } from '../api/api';
 
 import { CircularProgress, Box, Typography } from '@mui/material';
@@ -91,8 +93,26 @@ const KakaoLoginRedirect = () => {
       // 앱에 사용자 게임 정보 저장.
       dispatch(userActions.SET_GAMES(games));
 
+      api
+        .get('/api/chat/rooms', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Refresh-Token': refreshToken,
+          },
+        })
+        .then((response) => {
+          response.data.chatRoomList.forEach((chatroom) => {
+            dispatch(
+              chatRoomActions.ADD_JOINED_CHATROOMS_ID(chatroom.chatRoomId)
+            );
+          });
+        })
+        .then(() => {
+          navigate(`/${representative || 'lol'}`);
+        });
+
       // 사용자가 설정한 대표 게임으로 navigate
-      navigate(`/${representative || 'lol'}`);
+      // navigate(`/${representative || 'lol'}`);
     };
 
     kakaoLogin();
