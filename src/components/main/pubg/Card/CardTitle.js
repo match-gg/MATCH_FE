@@ -65,7 +65,7 @@ const CardTitle = (props) => {
                   fontWeight: 700,
                   pl: 0.5
                 }}>
-                #{tierList.find(elem => elem.value === tier).label} 구함
+                #{tierList.find(elem => elem.value === tier).label}
               </Typography>
             </Box>
             <Typography
