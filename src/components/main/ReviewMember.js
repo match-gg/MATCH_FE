@@ -10,34 +10,49 @@ import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import ReportIcon from '@mui/icons-material/Report';
 
 const ReviewMember = props => {
-  // 버튼 클릭을 관리하는 상태
-  const [likeBtnState, setLikeBtnState] = useState(false);
-  const [dislikeBtnState, setDislikeBtnState] = useState(false);
-  const [reportBtnState, setReportBtnState] = useState(false);
+  const {name, onChangeReview} = props;
+
+  // 버튼이 클릭 된 상태인지 true, false로 관리
+  const [likeClicked, setLikeClicked] = useState(false)
+  const [dislikeClicked, setDislikeClicked] = useState(false)
+  const [reportClicked, setReportClicked] = useState(false)
 
   // 좋아요 버튼을 클릭하면 동작하는 함수
   const likeBtnHandler = () => {
-    setLikeBtnState(prev => !prev);
-    setDislikeBtnState(false);
-    setReportBtnState(false);
+    setLikeClicked(prev => !prev)
+    setDislikeClicked(false)
+    setReportClicked(false)
+    if (likeClicked === false) {
+      onChangeReview(name, 'like')
+    } else {
+      onChangeReview(name, 'none')
+    }
   }
 
   // 싫어요 버튼을 클릭하면 동작하는 함수
   const dislikeBtnHandler = () => {
-    setDislikeBtnState(prev => !prev);
-    setLikeBtnState(false);
-    setReportBtnState(false);
+    setDislikeClicked(prev => !prev)
+    setLikeClicked(false)
+    setReportClicked(false)
+    if (dislikeClicked === false) {
+      onChangeReview(name, 'dislike')
+    } else {
+      onChangeReview(name, 'none')
+    }
   };
 
   // 신고하기 버튼을 클릭하면 동작하는 함수
   const reportBtnHandler = () => {
-    setReportBtnState(prev => !prev);
-    setLikeBtnState(false);
-    setDislikeBtnState(false);
+    setReportClicked(prev => !prev)
+    setLikeClicked(false)
+    setDislikeClicked(false)
+    if (reportClicked === false) {
+      onChangeReview(name, 'report')
+    } else {
+      onChangeReview(name, 'none')
+    }
   }
 
-  // props로 닉네임을 받아와서 저장
-  const {name} = props;
   
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', pt: 1 }}>
@@ -55,7 +70,7 @@ const ReviewMember = props => {
             pr: 2
           }}>
           <IconButton size='medium' onClick={likeBtnHandler}>
-            {likeBtnState === true ? (
+            {likeClicked === true ? (
               <ThumbUpIcon color='primary' sx={{ width: 24, height: 24 }} />
             ) : (
               <ThumbUpOffAltIcon sx={{ width: 24, height: 24 }} />
@@ -71,7 +86,7 @@ const ReviewMember = props => {
             pr: 2
           }}>
           <IconButton size='medium' onClick={dislikeBtnHandler}>
-            {dislikeBtnState === true ? (
+            {dislikeClicked === true ? (
               <ThumbDownIcon color='warning' sx={{ width: 24, height: 24 }} />
             ) : (
               <ThumbDownOffAltIcon sx={{ width: 24, height: 24 }} />
@@ -86,7 +101,7 @@ const ReviewMember = props => {
             alignItems: 'center'
           }}>
           <IconButton size='medium' onClick={reportBtnHandler}>
-            {reportBtnState === true ? (
+            {reportClicked === true ? (
               <ReportIcon color='error' sx={{ width: 24, height: 24 }} />
             ) : (
               <ReportGmailerrorredIcon sx={{ width: 24, height: 24 }} />

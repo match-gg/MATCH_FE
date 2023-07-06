@@ -3,12 +3,12 @@ import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { api } from '../../api/api';
-
-import { typeInfo } from './lol/CardDeatilModal.d';
-
 // mui
-import { Box, Typography, IconButton } from '@mui/material';
+import { Box, Typography, IconButton, Button } from '@mui/material';
 import { Close } from '@mui/icons-material';
+
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import SendIcon from '@mui/icons-material/Send';
 
 // styled component
 import styled from '@emotion/styled';
@@ -44,8 +44,23 @@ const ReviewModal = () => {
 
   const nickname = useSelector((state) => state.user.games[game]);
 
-  // 리뷰 모달의 데이터
+  // 리뷰 할 사람들의 데이터
   const [boardData, setBoardData] = useState({});
+
+  // 멤버와 각 멤버의 평가를 담을 객체
+  const reviewState = {};
+  
+  // 멤버 리스트를 객체로 만드는 동작
+  if (boardData.memberList) {
+    boardData?.memberList.forEach(item => {
+      reviewState[item] = 'none';
+    });
+  }
+
+  // 리뷰 객체를 바꾸는 함수
+  const reviewHandler = (name, review) => {
+    reviewState[name] = review;
+  }
 
   // 게시글 상세보기 api로 멤버 리스트 불러오기
   const fetchBoardDetail = async () => {
@@ -91,8 +106,7 @@ const ReviewModal = () => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              justifyContent: 'center',
-              pb: '34px'
+              justifyContent: 'center'
             }}>
             <Typography component='h1' sx={{ fontSize: 16, fontWeight: 700, pb: 0.5 }}>
               이번 게임은 어떠셨나요?
@@ -105,11 +119,36 @@ const ReviewModal = () => {
               boardData.memberList &&
               boardData.memberList.map((elem, idx) => {
                 if (elem !== nickname) {
-                  return <ReviewMember key={elem} name={elem} />;
+                  return <ReviewMember key={elem} name={elem} onChangeReview={reviewHandler} />;
                 } else {
                   return null;
                 }
               })}
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              mt: 1
+            }}>
+            <Button
+              startIcon={<SkipNextIcon />}
+              variant='contained'
+              size='small'
+              sx={{
+                bgcolor: '#808080',
+                mr: 1,
+                ':hover': {
+                  bgcolor: '#a0a0a0'
+                }
+              }}>
+              건너뛰기
+            </Button>
+            <Button startIcon={<SendIcon />} variant='contained' size='small'>
+              제출하기
+            </Button>
           </Box>
         </Box>
       </ModalContent>
