@@ -144,7 +144,7 @@ const CardDeatilModal = (props) => {
                           fontSize: 12,
                           fontWeight: 700
                         }}>
-                        #{platformList.find(elem => elem.value === boardData.platform)?.label || '플랫폼'}
+                        #{platformList.find(elem => elem.id === boardData.platform)?.label || '플랫폼'}
                       </Typography>
                       <Typography
                         sx={{
@@ -152,7 +152,7 @@ const CardDeatilModal = (props) => {
                           fontWeight: 700,
                           pl: 1
                         }}>
-                        #{typeList.find(elem => elem.value === boardData.type)?.label || '큐타입'}
+                        #{typeList.find(elem => elem.id === boardData.type)?.label || '큐타입'}
                       </Typography>
                       <Typography
                         sx={{
@@ -160,7 +160,7 @@ const CardDeatilModal = (props) => {
                           fontWeight: 700,
                           pl: 1
                         }}>
-                        #{tierList.find(elem => elem.value === boardData.tier)?.label || '티어'} 구함
+                        #{tierList.find(elem => elem.id === boardData.tier)?.label || '티어'} 구함
                       </Typography>
                       <Typography
                         sx={{

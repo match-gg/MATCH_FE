@@ -100,7 +100,7 @@ const CardAuthor = (props) => {
           </Typography>
         </FlexCol>
         <FlexCol sx={{ width: 101 }}>
-          <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>경기 당 데미지</Typography>
+          <Typography sx={{ color: 'grey', fontSize: 12, fontWeight: 700 }}>평균 데미지</Typography>
           <Typography
             sx={{
               fontSize: 16,
