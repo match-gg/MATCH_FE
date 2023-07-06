@@ -107,10 +107,10 @@ const BoardsFilter = ({ filterProps }) => {
         sm
         sx={{
           p: 0,
+          padding: 0,
           display: { xs: 'none', sm: 'flex' },
           alignItems: 'center',
           justifyContent: 'flex-end',
-          gap: 1,
         }}
       >
         {isLogin && <CreateCardButton />}
