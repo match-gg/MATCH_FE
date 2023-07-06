@@ -122,17 +122,6 @@ const Body = () => {
               );
             })}
           {isLoading && <Typography>Loading...</Typography>}
-          {/* {boards.map((item, _index) => {
-            return (
-              <Link
-              to={`${item.id}`}
-              state={{ background: location }}
-              style={{ textDecoration: 'none' }}
-              >
-                <Card key={item.id} item={item} />
-              </Link>
-            )
-          })} */}
         </BoardsWrapper>
       </Container>
       <Button sx={{ mb: 4, color: '#3d3939' }} onClick={moreBoards}>
