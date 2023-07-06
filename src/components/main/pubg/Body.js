@@ -8,7 +8,6 @@ import { api } from '../../../api/api';
 
 import BoardsFilter from './BoardsFilter';
 import Card from './Card/Card';
-import ChatToggleBtn from '../../../chat/ChatToggleBtn';
 
 const BoardsWrapper = styled('div')({
   width: '100%',
@@ -27,9 +26,9 @@ const Body = () => {
   const [pageNumber, setPageNumber] = useState(1); // 불러 올 페이지 번호
 
   // platform, type, tier state
-  const [platform, setPlatform] = useState('ALL');  // 플랫폼
-  const [type, setType] = useState('ALL');  // 큐 타입
-  const [tier, setTier] = useState('ALL');  // 티어
+  const [platform, setPlatform] = useState('ALL'); // 플랫폼
+  const [type, setType] = useState('ALL'); // 큐 타입
+  const [tier, setTier] = useState('ALL'); // 티어
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -53,7 +52,13 @@ const Body = () => {
 
       await api
         .get('/api/pubg/boards', {
-          params: { size: 12, page: 0, platform: platform, type: type, tier: tier },
+          params: {
+            size: 12,
+            page: 0,
+            platform: platform,
+            type: type,
+            tier: tier,
+          },
         })
         .then((response) => {
           setBoards(response.data.content);
@@ -95,14 +100,14 @@ const Body = () => {
 
   const refreshBoards = async () => {};
 
-  const filterProps={
+  const filterProps = {
     platform,
     type,
     tier,
     platformHandler,
     typeHandler,
-    tierHandler
-  }
+    tierHandler,
+  };
 
   return (
     <Fragment>
@@ -127,7 +132,6 @@ const Body = () => {
       <Button sx={{ mb: 4, color: '#3d3939' }} onClick={moreBoards}>
         더 불러오기
       </Button>
-      <ChatToggleBtn />
     </Fragment>
   );
 };
