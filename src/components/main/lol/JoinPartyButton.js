@@ -67,6 +67,11 @@ const JoinPartyButton = (props) => {
         await update(ref(getDatabase(), `chatRooms/${chatRoomId}`), {
           memberList: joinedMemberList,
         }).then(async () => {
+          const lastReadRef = ref(getDatabase(), 'lastRead');
+          await set(
+            child(lastReadRef, `${oauth2Id}/${chatRoomId}`),
+            serverTimestamp()
+          );
           await set(push(child(messagesRef, chatRoomId)), {
             type: 'system',
             timestamp: serverTimestamp(),
@@ -77,7 +82,7 @@ const JoinPartyButton = (props) => {
             content: `${nickname} 님이 참가하였습니다.`,
           });
 
-          dispatch(chatRoomActions.ADD_JOINED_CHATROOM(chatRoomId));
+          dispatch(chatRoomActions.ADD_JOINED_CHATROOMS_ID(chatRoomId));
         });
       })
       .catch((error) => console.log(error));
@@ -91,7 +96,7 @@ const JoinPartyButton = (props) => {
     // 1. 밴 당한 사용자인지 확인
     if (await isBanned(chatRoomId, oauth2Id, chatRoomRef)) {
       alert('참여할 수 없는 사용자입니다. (사유:강제퇴장)');
-      dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
+      dispatch(chatRoomActions.LEAVE_JOINED_CHATROOMS_ID(chatRoomId));
       return;
     }
 

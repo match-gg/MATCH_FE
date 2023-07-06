@@ -13,7 +13,7 @@ const JoinedPartyList = (props) => {
   const { open, handleOpen } = props;
 
   //리덕스에 저장되어있는 내가 가입한 채팅방 Id 리스트
-  const { joinedChatRooms } = useSelector((state) => state.chatRoom);
+  const { joinedChatRoomsId } = useSelector((state) => state.chatRoom);
 
   //로딩중 관리 state
   const [loading, setLoading] = useState(true);
@@ -111,7 +111,7 @@ const JoinedPartyList = (props) => {
               chatRooms
                 .filter(
                   (chatroom) =>
-                    joinedChatRooms.includes(chatroom.key) &&
+                    joinedChatRoomsId.includes(chatroom.key) &&
                     chatroom.isDeleted === false
                 )
                 .map((filteredChatRoom, _idx) => {

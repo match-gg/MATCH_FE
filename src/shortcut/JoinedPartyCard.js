@@ -23,8 +23,7 @@ const JoinedPartyCard = (props) => {
   const location = useLocation();
 
   return (
-    // badgeContent는 각 파티별로 뿌려줘야함
-    <Badge badgeContent={99} color='warning' sx={{ margin: '16px' }}>
+    <Box sx={{ marginBottom: '12px' }}>
       {/* 테두리 */}
       <Box
         sx={{
@@ -129,7 +128,7 @@ const JoinedPartyCard = (props) => {
           </Box>
         </Stack>
       </Box>
-    </Badge>
+    </Box>
   );
 };
 

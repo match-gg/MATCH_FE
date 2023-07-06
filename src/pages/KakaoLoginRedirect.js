@@ -102,12 +102,17 @@ const KakaoLoginRedirect = () => {
         })
         .then((response) => {
           response.data.chatRoomList.forEach((chatroom) => {
-            dispatch(chatRoomActions.ADD_JOINED_CHATROOM(chatroom.chatRoomId));
+            dispatch(
+              chatRoomActions.ADD_JOINED_CHATROOMS_ID(chatroom.chatRoomId)
+            );
           });
+        })
+        .then(() => {
+          navigate(`/${representative || 'lol'}`);
         });
 
       // 사용자가 설정한 대표 게임으로 navigate
-      navigate(`/${representative || 'lol'}`);
+      // navigate(`/${representative || 'lol'}`);
     };
 
     kakaoLogin();

@@ -81,7 +81,7 @@ const MainHeader = ({ game }) => {
         dispatch(userActions.DELETE_USER());
         dispatch(tokenActions.DELETE_TOKEN());
         dispatch(notificationActions.DELETE_NOTITOKEN());
-        dispatch(chatRoomActions.REMOVE_ALL_JOINED_CHATROOM());
+        dispatch(chatRoomActions.REMOVE_ALL_JOINED_CHATROOMS_ID());
         navigate('/login');
       })
       .catch((error) => {
@@ -117,6 +117,11 @@ const MainHeader = ({ game }) => {
   const handleNotiClose = () => {
     setNotiAnchorEl(null);
   };
+
+  const { isNotificationPermissioned } = useSelector(
+    (state) => state.notification
+  );
+  // console.log(isNotificationPermissioned);
 
   return (
     <AppBar
@@ -430,7 +435,6 @@ const MainHeader = ({ game }) => {
                     handleClose();
                     // request to /logout endpoint
                     logoutHandler();
-                    // dispatch(notificationActions.REMOVE_ALL_MESSAGES);
                   }}
                 >
                   <ListItemIcon>

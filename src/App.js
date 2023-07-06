@@ -14,19 +14,23 @@ import LeagueofLegends from './pages/LeagueofLegends';
 import Valorant from './pages/Valorant';
 import Overwatch from './pages/Overwatch';
 
-//  notification
+//  firebase
 import app from './firebase';
 import { getMessaging, getToken } from 'firebase/messaging';
+import { getDatabase, ref, child, onChildAdded, off } from 'firebase/database';
+
+// notification
 import { notificationActions } from './store/notification-slice';
+import { messagesActions } from './store/message-slice';
 
 export default function App() {
+  const dispatch = useDispatch();
+
   // 로그인 여부
   const isLogin = useSelector((state) => state.user.isLogin);
 
   //리덕스의 notiToken
   const notiToken = useSelector((state) => state.notification.notiToken);
-
-  const dispatch = useDispatch();
 
   // 토큰 발급
   const messaging = getMessaging(app);

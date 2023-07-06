@@ -3,9 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isNotificationPermissioned: false,
   notiToken: '',
-  inChatRoom: false,
-  messagesForNoti: {},
-  lastIndex: {},
+  notifications: {},
+  isBadgeShow: false,
 };
 
 const notificationSlice = createSlice({
@@ -28,33 +27,39 @@ const notificationSlice = createSlice({
     DELETE_NOTITOKEN: (state, action) => {
       state.notiToken = '';
     },
-    SET_IN_CHAT_ROOM_TRUE: (state, action) => {
-      state.inChatRoom = true;
-    },
-    SET_IN_CHAT_ROOM_FALSE: (state, action) => {
-      state.inChatRoom = false;
-    },
-    ADD_MESSAGE: (state, action) => {
-      if (state.messagesForNoti[action.payload.chatRoomId]) {
-        state.messagesForNoti[action.payload.chatRoomId] = [
-          ...new Set([
-            ...state.messagesForNoti[action.payload.chatRoomId],
-            action.payload.message,
-          ]),
+    SET_NOTIFICATIONS: (state, action) => {
+      const {
+        chatRoomId,
+        message: notification,
+        currentChatRoom,
+      } = action.payload;
+
+      // currentChatRoom에는 noti가 저장 안되도록
+      // if (chatRoomId === currentChatRoom) {
+      //   console.log('같음');
+      //   return;
+      // }
+
+      if (state.notifications[chatRoomId]) {
+        state.notifications[chatRoomId] = [
+          notification,
+          ...state.notifications[chatRoomId],
         ];
       } else {
-        state.messagesForNoti[action.payload.chatRoomId] = [
-          action.payload.message,
-        ];
+        state.notifications[chatRoomId] = [notification];
       }
-      state.lastIndex[action.payload.chatRoomId] = 0;
     },
-    REMOVE_MESSAGES: (state, action) => {
-      state.messagesForNoti[action.payload.chatRoomId] = [];
-      // state.lastIndex[action.payload.chatRoomId] = action.payload.lastIndex;
+    REMOVE_NOTIFICATIONS: (state, action) => {
+      state.notifications[action.payload] = [];
     },
-    REMOVE_ALL_MESSAGES: (state, action) => {
-      state.messagesForNoti = {};
+    REMOVE_ALL_NOTIFICATIONS: (state, action) => {
+      state.notifications = {};
+    },
+    SET_BADGE_SHOW_TRUE: (state, action) => {
+      state.isBadgeShow = true;
+    },
+    SET_BADGE_SHOW_FALSE: (state, action) => {
+      state.isBadgeShow = false;
     },
   },
 });

@@ -12,6 +12,7 @@ const SystemMessage = (props) => {
         justifyContent: 'center',
         width: '100%',
         color: 'gray',
+        margin: '4px',
       }}
     >
       <Typography sx={{ fontSize: 'small' }}>{messageInfo.content}</Typography>

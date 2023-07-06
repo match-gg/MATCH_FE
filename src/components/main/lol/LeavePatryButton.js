@@ -53,7 +53,7 @@ const LeavePartyButton = (props) => {
             },
             content: `${nickname} 님이 퇴장하였습니다.`,
           });
-          dispatch(chatRoomActions.LEAVE_JOINED_CHATROOM(chatRoomId));
+          dispatch(chatRoomActions.LEAVE_JOINED_CHATROOMS_ID(chatRoomId));
         });
       })
       .catch((error) => console.log(error));

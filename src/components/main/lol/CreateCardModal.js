@@ -3,7 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { api } from '../../../api/api';
-import { getDatabase, ref, push, update, child, get } from 'firebase/database';
+import {
+  getDatabase,
+  ref,
+  push,
+  update,
+  child,
+  get,
+  set,
+  serverTimestamp,
+} from 'firebase/database';
 
 import {
   Button,
@@ -266,10 +275,15 @@ const CreateCardModal = () => {
             content: userInput.content,
           };
           //Ref에 접근해서 데이터 update
-          await update(child(chatroomRef, key), newChatroom)
+          await update(child(chatroomRef, key), newChatroom);
+          const lastReadRef = ref(getDatabase(), 'lastRead');
+          await set(
+            child(lastReadRef, `${user.oauth2Id}/${key}`),
+            serverTimestamp()
+          )
             // redux에 채팅방 id 저장
             .then((_response) => {
-              dispatch(chatRoomActions.ADD_JOINED_CHATROOM(key));
+              dispatch(chatRoomActions.ADD_JOINED_CHATROOMS_ID(key));
               closeModal();
             })
             .catch((error) => console.log(error));
