@@ -19,7 +19,7 @@ import Recruitment from './Recruitment';
 import styled from '@emotion/styled';
 // import JoinPartyButton from './JoinPartyButton';
 // import LeavePatryButton from './LeavePatryButton';
-// import ChatInCardDetailModal from '../../../../chat/ChatInCardDetailModal';
+import ChatRoom from '../../../../chat/ChatRoom';
 // import DeletePartyButton from './DeletePartyButton';
 
 const ModalContainer = styled(Box)(({ theme }) => ({
@@ -50,7 +50,7 @@ const CardDeatilModal = (props) => {
   const { id: boardId } = params;
 
   const { isLogin } = useSelector((state) => state.user);
-  const { joinedChatRooms } = useSelector((state) => state.chatRoom);
+  const { joinedChatRoomsId } = useSelector((state) => state.chatRoom);
 
   const oauth2Id = useSelector((state) => state.user.oauth2Id);
 
@@ -115,11 +115,12 @@ const CardDeatilModal = (props) => {
               <Typography component='h1' sx={{ fontSize: 22, fontWeight: 700 }}>
                 {boardData?.name}님의 파티
               </Typography>
-              {!isLogin && !joinedChatRooms.includes(boardData.chatRoomId) && (
-                <IconButton size='small' onClick={() => navigate(`/${game}`)}>
-                  <Close />
-                </IconButton>
-              )}
+              {!isLogin &&
+                !joinedChatRoomsId.includes(boardData.chatRoomId) && (
+                  <IconButton size='small' onClick={() => navigate(`/${game}`)}>
+                    <Close />
+                  </IconButton>
+                )}
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -268,11 +269,11 @@ const CardDeatilModal = (props) => {
                     />
                   ))} */}
               </Box>
-              {/* {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
+              {isLogin && joinedChatRoomsId.includes(boardData.chatRoomId) && (
                 <Box sx={{ ml: 2 }}>
-                  <ChatInCardDetailModal chatRoomId={boardData.chatRoomId} game={game} />
+                  <ChatRoom chatRoomId={boardData.chatRoomId} game={game} />
                 </Box>
-              )} */}
+              )}
             </Box>
           </Box>
         </Box>
