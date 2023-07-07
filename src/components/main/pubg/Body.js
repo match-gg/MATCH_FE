@@ -132,6 +132,7 @@ const Body = () => {
       <Button sx={{ mb: 4, color: '#3d3939' }} onClick={moreBoards}>
         더 불러오기
       </Button>
+      {/* <ChatToggleBtn /> */}
     </Fragment>
   );
 };

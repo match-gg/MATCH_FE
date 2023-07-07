@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import NotiAccordion from './NotiAccordion';
+import { notificationActions } from '../store/notification-slice';
 
 // mui
 import { Tooltip, Badge, Menu, Box, MenuItem, Typography } from '@mui/material';
@@ -9,43 +12,37 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {
   getDatabase,
   ref,
-  get,
-  serverTimestamp,
   set,
   child,
   onChildChanged,
 } from 'firebase/database';
 
-import NotiAccordion from './NotiAccordion';
-import { notificationActions } from '../store/notification-slice';
-
 const Notification = (props) => {
-  const { notiAnchorEl, notiOpen, handleNotiClick, handleNotiClose } = props;
   const dispatch = useDispatch();
 
-  // 가입되어있는 채팅방 Id 리스트
+  // 컴포넌트 UI 관련
+  const { notiAnchorEl, notiOpen, handleNotiClick, handleNotiClose } = props;
+
   const { joinedChatRoomsId } = useSelector((state) => state.chatRoom);
-
   const { oauth2Id } = useSelector((state) => state.user);
+  const { messages } = useSelector((state) => state.messages);
+  const { isBadgeShow, lastReadTimestamp, timestamps } = useSelector(
+    (state) => state.notification
+  );
 
-  const [lastReadState, setLastReadState] = useState();
-  const { notifications } = useSelector((state) => state.notification);
-
-  const { isBadgeShow } = useSelector((state) => state.notification);
+  // 파이어베이스의 lastRead 래퍼런스
+  const lastReadRef = ref(getDatabase(), `lastRead/${oauth2Id}`);
 
   useEffect(() => {
     const handleBadge = async () => {
-      if (!notifications) return;
-      // notifications 필터링
-      const filteredNotis = Object.values(notifications).filter(
-        (noti) => noti.length > 0
-      );
-      // 리덕스의 noti의 timestamp중 가장 큰 값
+      // 각 채팅방의 메세지들 중 마지막 메세지의 timestamp중 가장 큰 값 계산
       const reduxMaxTimestamp = Math.max(
-        ...filteredNotis.map((notis) => notis[0]['timestamp'])
+        ...Object.values(messages).map(
+          (message) => message[message.length - 1]['timestamp']
+        )
       );
 
-      if (lastReadState < reduxMaxTimestamp) {
+      if (lastReadTimestamp < reduxMaxTimestamp) {
         // 노티가 있다는 거니까
         dispatch(notificationActions.SET_BADGE_SHOW_TRUE());
       } else {
@@ -53,33 +50,37 @@ const Notification = (props) => {
       }
     };
     handleBadge();
-  }, [notifications, lastReadState]);
+  }, [messages, lastReadTimestamp]);
 
+  // 모든 채팅방에 lastRead 업데이트
   const updateAllLastRead = () => {
     const lastReadRef = ref(getDatabase(), 'lastRead');
     joinedChatRoomsId.forEach(async (chatRoomId) => {
       await set(
         child(lastReadRef, `${oauth2Id}/${chatRoomId}`),
-        serverTimestamp()
+        Date.now()
       ).catch((error) => console.log(error));
     });
+    // 메뉴 닫기
     handleNotiClose();
   };
 
-  const removeAllNotis = () => {
-    dispatch(notificationActions.REMOVE_ALL_NOTIFICATIONS());
-  };
-
   useEffect(() => {
-    const lastReadRef = ref(getDatabase(), `lastRead/${oauth2Id}`);
-    // onChildChanged 리스너 함수
+    // chatRoom의 마지막 접근시간을 받는 리스너 함수
     const addLastReadListener = async () => {
       onChildChanged(lastReadRef, (datasnapshot) => {
-        console.log(datasnapshot.ref.key);
-        console.log(datasnapshot.val());
-        setLastReadState(datasnapshot.val());
+        dispatch(
+          notificationActions.SET_LAST_READ_TIMESTAMP(datasnapshot.val())
+        );
+        dispatch(
+          notificationActions.SET_TIMESTAMPS({
+            chatRoomId: datasnapshot.key,
+            timestamp: datasnapshot.val(),
+          })
+        );
       });
     };
+
     addLastReadListener();
   }, []);
 
@@ -148,13 +149,18 @@ const Notification = (props) => {
           }}
         >
           {joinedChatRoomsId.map((chatRoomId) => {
-            return <NotiAccordion key={chatRoomId} chatRoomId={chatRoomId} />;
+            return (
+              <NotiAccordion
+                key={chatRoomId}
+                chatRoomId={chatRoomId}
+                timestamp={timestamps[chatRoomId]}
+              />
+            );
           })}
         </Box>
         <MenuItem
           onClick={() => {
             updateAllLastRead();
-            removeAllNotis();
           }}
           sx={{
             borderTop: '1px solid gray',

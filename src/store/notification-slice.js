@@ -3,8 +3,10 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isNotificationPermissioned: false,
   notiToken: '',
-  notifications: {},
+  // notifications: {},
   isBadgeShow: false,
+  lastReadTimestamp: 9999999999999,
+  timestamps: {},
 };
 
 const notificationSlice = createSlice({
@@ -27,39 +29,22 @@ const notificationSlice = createSlice({
     DELETE_NOTITOKEN: (state, action) => {
       state.notiToken = '';
     },
-    SET_NOTIFICATIONS: (state, action) => {
-      const {
-        chatRoomId,
-        message: notification,
-        currentChatRoom,
-      } = action.payload;
-
-      // currentChatRoom에는 noti가 저장 안되도록
-      // if (chatRoomId === currentChatRoom) {
-      //   console.log('같음');
-      //   return;
-      // }
-
-      if (state.notifications[chatRoomId]) {
-        state.notifications[chatRoomId] = [
-          notification,
-          ...state.notifications[chatRoomId],
-        ];
-      } else {
-        state.notifications[chatRoomId] = [notification];
-      }
-    },
-    REMOVE_NOTIFICATIONS: (state, action) => {
-      state.notifications[action.payload] = [];
-    },
-    REMOVE_ALL_NOTIFICATIONS: (state, action) => {
-      state.notifications = {};
-    },
+    // 알림 아이콘 출력
     SET_BADGE_SHOW_TRUE: (state, action) => {
       state.isBadgeShow = true;
     },
+    // 알림 아이콘 제거
     SET_BADGE_SHOW_FALSE: (state, action) => {
       state.isBadgeShow = false;
+    },
+    // 최근 chatRoom의 마지막 활동 timestamp
+    SET_LAST_READ_TIMESTAMP: (state, action) => {
+      state.lastReadTimestamp = action.payload;
+    },
+    // 각 채팅방 별 마지막 활동 timestamp
+    SET_TIMESTAMPS: (state, action) => {
+      const { chatRoomId, timestamp } = action.payload;
+      state.timestamps[chatRoomId] = timestamp;
     },
   },
 });

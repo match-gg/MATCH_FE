@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import NotiAccordionDetail from './NotiAccordionDetail';
 
 // firebase
-import {
-  child,
-  get,
-  getDatabase,
-  ref,
-  serverTimestamp,
-  set,
-} from 'firebase/database';
+import { child, get, getDatabase, ref, set } from 'firebase/database';
+
 // mui
 import {
   Accordion,
@@ -20,37 +17,24 @@ import {
   MenuItem,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import NotiAccordionDetail from './NotiAccordionDetail';
-import { useDispatch, useSelector } from 'react-redux';
 import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
-import { notificationActions } from '../store/notification-slice';
 
 const NotiAccordion = (props) => {
-  // 해당 Accordion에서 다룰 chatRoom의 Id
-  const { chatRoomId } = props;
-
-  const dispatch = useDispatch();
+  // 해당 Accordion에서 다룰 chatRoom의 Id, 해당 채팅방에 마지막에 접근한 timestamp
+  const { chatRoomId, timestamp } = props;
 
   const { oauth2Id } = useSelector((state) => state.user);
-
-  const { notifications } = useSelector((state) => state.notification);
-
-  // 컴포넌트에서 사용할 notification
-  const [notis, setNotis] = useState(
-    notifications[chatRoomId] ? notifications[chatRoomId] : null
+  const currentChatRoomMessages = useSelector(
+    (state) => state.messages.messages[chatRoomId]
   );
-  // 마지막 읽은 위치의 timestamp
-  const [lastReadTimeStamp, setLastReadTimeStamp] = useState(0);
 
   // 파이어베이스에서 채팅방 정보 가져오는 로딩
   const [isLoading, setIsLoading] = useState(true);
-
   // 파이어베이스에서 가져온 chatRoomInfo의 state
   const [chatRoomInfo, setChatRoomInfo] = useState();
 
   // firebase
   const chatRoomsRef = ref(getDatabase(), 'chatRooms');
-  const lastReadRef = ref(getDatabase(), `lastRead/${oauth2Id}/${chatRoomId}`);
 
   // 채팅방 정보 가져오기
   const getChatRoomInfo = async () => {
@@ -58,18 +42,7 @@ const NotiAccordion = (props) => {
       .then((datasnapshot) => {
         setChatRoomInfo(datasnapshot.val());
       })
-      .catch((error) => console.log(error));
-    // 타임스탬프 가져오기
-    await get(lastReadRef)
-      .then((datasnapshot) => setLastReadTimeStamp(datasnapshot.val()))
       .then(() => setIsLoading(false))
-      .catch((error) => console.log(error));
-  };
-
-  // 타임스탬프 새로 가져오기
-  const refreshTimeStamp = async () => {
-    await get(lastReadRef)
-      .then((data) => setLastReadTimeStamp(data.val()))
       .catch((error) => console.log(error));
   };
 
@@ -82,14 +55,8 @@ const NotiAccordion = (props) => {
     const lastReadRef = ref(getDatabase(), 'lastRead');
     await set(
       child(lastReadRef, `${oauth2Id}/${chatRoomId}`),
-      serverTimestamp()
-    )
-      .then(() => refreshTimeStamp())
-      .catch((error) => console.log(error));
-  };
-
-  const removeNotis = () => {
-    dispatch(notificationActions.REMOVE_NOTIFICATIONS(chatRoomId));
+      Date.now()
+    ).catch((error) => console.log(error));
   };
 
   return (
@@ -112,9 +79,10 @@ const NotiAccordion = (props) => {
                   }}
                 >{`[${chatRoomInfo.createdBy}] 님의 파티`}</Typography>
                 {/* 아이콘 */}
-                {notis?.length > 0 &&
+                {currentChatRoomMessages?.length > 0 &&
                   isLoading === false &&
-                  notis[0].timestamp > lastReadTimeStamp && (
+                  currentChatRoomMessages[currentChatRoomMessages.length - 1]
+                    .timestamp > timestamp && (
                     <NotificationsActiveRoundedIcon
                       sx={{ color: 'orange', marginLeft: '4px' }}
                     />
@@ -125,13 +93,13 @@ const NotiAccordion = (props) => {
           </AccordionSummary>
           {/* 메세지들 */}
           <AccordionDetails>
-            {notis &&
-              [...notis].reverse().map((noti, idx) => {
-                if (noti.timestamp < lastReadTimeStamp) return null;
+            {currentChatRoomMessages &&
+              [...currentChatRoomMessages].reverse().map((message, idx) => {
+                if (message.timestamp < timestamp) return null;
                 return (
                   <NotiAccordionDetail
                     key={idx}
-                    message={noti}
+                    message={message}
                     boardId={chatRoomInfo.roomId}
                   />
                 );
@@ -139,7 +107,6 @@ const NotiAccordion = (props) => {
             <MenuItem
               onClick={() => {
                 updateLastRead();
-                removeNotis();
               }}
               sx={{
                 border: '1px solid lightgray',

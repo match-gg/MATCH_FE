@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialChatroomState = {
   currentChatRoom: null,
   joinedChatRoomsId: [],
-  // joinedChatRoomsInfo: [],
 };
 
 const chatRoomSlice = createSlice({
@@ -27,20 +26,6 @@ const chatRoomSlice = createSlice({
     REMOVE_ALL_JOINED_CHATROOMS_ID: (state, _action) => {
       state.joinedChatRoomsId = [];
     },
-    // SET_JOINED_CHATROOMS_INFO: (state, action) => {
-    //   state.joinedChatRoomsInfo = action.payload;
-    // },
-    // ADD_JOINED_CHATROOMS_INFO: (state, action) => {
-    //   state.joinedChatRoomsInfo = [
-    //     action.payload,
-    //     ...state.joinedChatRoomsInfo,
-    //   ];
-    // },
-    // REMOVE_JOINED_CHATROOMS_INFO: (state, action) => {
-    //   state.joinedChatRoomsInfo = state.joinedChatRoomsInfo.filter(
-    //     (chatRoom) => chatRoom.key !== action.payload
-    //   );
-    // },
   },
 });
 

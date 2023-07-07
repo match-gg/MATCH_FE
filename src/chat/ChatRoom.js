@@ -14,16 +14,8 @@ import {
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
-import {
-  ref,
-  getDatabase,
-  child,
-  serverTimestamp,
-  get,
-  set,
-  push,
-} from 'firebase/database';
-import ChatMessageInDetail from './ChatMessage';
+import { ref, getDatabase, child, get, set, push } from 'firebase/database';
+import ChatMessage from './ChatMessage';
 import { chatRoomActions } from '../store/chatRoom-slice';
 import SystemMessage from './SystemMessage';
 
@@ -65,15 +57,15 @@ const ChatRoom = (props) => {
     };
     return message;
   };
-  //파이어베이스 Ref
 
+  //파이어베이스 Ref
   const chatRoomRef = ref(getDatabase(), 'chatRooms');
   const messagesRef = ref(getDatabase(), 'messages');
 
   //메세지 전송 함수
   const postMessage = async () => {
     setMessageSending(true);
-
+    // 메세지가 없으면 return
     if (!content) {
       setTimeout(() => {
         inputRef.current.querySelector('input').focus();
@@ -98,7 +90,7 @@ const ChatRoom = (props) => {
       //oauth2Id를 통해 파티에 가입되어 있는지 확인
       if (oauth2IdList.includes(oauth2Id)) {
         // 해당 파티에 가입되어있는 정상적인 사용자
-        await updateLastRead(timestamp);
+        // await updateLastRead(timestamp);
         await set(
           push(child(messagesRef, chatRoomId)),
           createMessage(timestamp)
@@ -130,12 +122,8 @@ const ChatRoom = (props) => {
   };
   // 자동으로 채팅창의 하당으로 스크롤 되도록 Ref
   const scrollRef = useRef();
-  useEffect(() => {
-    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
 
-    updateLastRead(Date.now());
-  }, [currentChatRoomMessages]);
-
+  // 파이어베이스의 lastRead 업데이트
   const updateLastRead = async (timestamp) => {
     const lastReadRef = ref(getDatabase(), 'lastRead');
     await set(child(lastReadRef, `${oauth2Id}/${chatRoomId}`), timestamp).catch(
@@ -143,12 +131,10 @@ const ChatRoom = (props) => {
     );
   };
 
-  const [thisMessages, setThisMessages] = useState([]);
-
   useEffect(() => {
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     updateLastRead(Date.now());
-    setThisMessages(currentChatRoomMessages);
-  }, [thisMessages]);
+  }, [currentChatRoomMessages]);
 
   return (
     <Box
@@ -200,7 +186,7 @@ const ChatRoom = (props) => {
                   : false;
               if (message.type === 'chat') {
                 return (
-                  <ChatMessageInDetail
+                  <ChatMessage
                     key={idx}
                     messageInfo={message}
                     msgBySameSender={msgBySameSender}

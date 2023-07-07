@@ -10,6 +10,7 @@ const messagesSlice = createSlice({
   reducers: {
     SET_MESSAGES: (state, action) => {
       const { chatRoomId, message } = action.payload;
+      // 각 채팅방의 메세지 저장
       if (state.messages[chatRoomId]) {
         state.messages[chatRoomId] = [...state.messages[chatRoomId], message];
       } else {
