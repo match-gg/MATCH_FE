@@ -93,6 +93,7 @@ const KakaoLoginRedirect = () => {
       // 앱에 사용자 게임 정보 저장.
       dispatch(userActions.SET_GAMES(games));
 
+      // 토큰을 통해 사용자가 가입되어있는 채팅방 정보 가져오기
       api
         .get('/api/chat/rooms', {
           headers: {
@@ -101,6 +102,7 @@ const KakaoLoginRedirect = () => {
           },
         })
         .then((response) => {
+          // 리덕스에 chatRoomId 저장
           response.data.chatRoomList.forEach((chatroom) => {
             dispatch(
               chatRoomActions.ADD_JOINED_CHATROOMS_ID(chatroom.chatRoomId)
@@ -108,11 +110,9 @@ const KakaoLoginRedirect = () => {
           });
         })
         .then(() => {
+          // 사용자가 설정한 대표 게임으로 navigate
           navigate(`/${representative || 'lol'}`);
         });
-
-      // 사용자가 설정한 대표 게임으로 navigate
-      // navigate(`/${representative || 'lol'}`);
     };
 
     kakaoLogin();
