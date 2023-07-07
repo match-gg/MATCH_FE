@@ -1,9 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // mui
 import { MenuItem, Typography } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { Link } from 'react-router-dom';
 
 const UserNoti = (props) => {
   const { nickname, content } = props;

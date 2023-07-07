@@ -19,7 +19,7 @@ import Recruitment from './Recruitment';
 import styled from '@emotion/styled';
 // import JoinPartyButton from './JoinPartyButton';
 // import LeavePatryButton from './LeavePatryButton';
-import ChatInCardDetailModal from '../../../../chat/ChatInCardDetailModal';
+// import ChatInCardDetailModal from '../../../../chat/ChatInCardDetailModal';
 // import DeletePartyButton from './DeletePartyButton';
 
 const ModalContainer = styled(Box)(({ theme }) => ({
@@ -86,13 +86,14 @@ const CardDeatilModal = (props) => {
     <ModalContainer onClick={() => navigate(`/${game}`)}>
       {/* ModalContainer와 CloseModalBtn 클릭시 뒤로가기(창 닫기)
         ModalContent 클릭 시 뒤로가기(창 닫기) 하지않음. */}
-      <ModalContent onClick={e => e.stopPropagation()}>
+      <ModalContent onClick={(e) => e.stopPropagation()}>
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'row',
-            alignItems: 'flex-start'
-          }}>
+            alignItems: 'flex-start',
+          }}
+        >
           <Box
             sx={{
               display: 'flex',
@@ -100,15 +101,17 @@ const CardDeatilModal = (props) => {
               justifyContent: 'center',
               bgcolor: 'white',
               p: 2,
-              borderRadius: 1
-            }}>
+              borderRadius: 1,
+            }}
+          >
             <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                pb: 1
-              }}>
+                pb: 1,
+              }}
+            >
               <Typography component='h1' sx={{ fontSize: 22, fontWeight: 700 }}>
                 {boardData?.name}님의 파티
               </Typography>
@@ -126,48 +129,64 @@ const CardDeatilModal = (props) => {
                       display: 'flex',
                       flexDirection: 'column',
                       width: 340,
-                      pr: '60px'
-                    }}>
+                      pr: '60px',
+                    }}
+                  >
                     <Typography
                       sx={{
                         color: 'grey',
                         fontSize: 14,
                         fontWeight: 600,
-                        pb: 1
-                      }}>
+                        pb: 1,
+                      }}
+                    >
                       모집 내용
                     </Typography>
-                    <Typography sx={{ fontSize: 14, fontWeight: 600 }}>{boardData?.content}</Typography>
+                    <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+                      {boardData?.content}
+                    </Typography>
                     <Box sx={{ display: 'flex', pt: 1 }}>
                       <Typography
                         sx={{
                           fontSize: 12,
-                          fontWeight: 700
-                        }}>
-                        #{platformList.find(elem => elem.id === boardData.platform)?.label || '플랫폼'}
+                          fontWeight: 700,
+                        }}
+                      >
+                        #
+                        {platformList.find(
+                          (elem) => elem.id === boardData.platform
+                        )?.label || '플랫폼'}
                       </Typography>
                       <Typography
                         sx={{
                           fontSize: 12,
                           fontWeight: 700,
-                          pl: 1
-                        }}>
-                        #{typeList.find(elem => elem.id === boardData.type)?.label || '큐타입'}
+                          pl: 1,
+                        }}
+                      >
+                        #
+                        {typeList.find((elem) => elem.id === boardData.type)
+                          ?.label || '큐타입'}
                       </Typography>
                       <Typography
                         sx={{
                           fontSize: 12,
                           fontWeight: 700,
-                          pl: 1
-                        }}>
-                        #{tierList.find(elem => elem.id === boardData.tier)?.label || '티어'} 구함
+                          pl: 1,
+                        }}
+                      >
+                        #
+                        {tierList.find((elem) => elem.id === boardData.tier)
+                          ?.label || '티어'}{' '}
+                        구함
                       </Typography>
                       <Typography
                         sx={{
                           fontSize: 12,
                           fontWeight: 700,
-                          pl: 2
-                        }}>
+                          pl: 2,
+                        }}
+                      >
                         {boardData?.mic ? '#음성채팅희망' : ''}
                       </Typography>
                     </Box>
@@ -178,15 +197,21 @@ const CardDeatilModal = (props) => {
                         color: 'grey',
                         fontSize: 14,
                         fontWeight: 600,
-                        pb: 1
-                      }}>
+                        pb: 1,
+                      }}
+                    >
                       마감일시
                     </Typography>
-                    <RemainingTime created={boardData?.created} expire={boardData?.expire} />
+                    <RemainingTime
+                      created={boardData?.created}
+                      expire={boardData?.expire}
+                    />
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', py: 1 }}>
-                  <Typography sx={{ color: 'grey', fontSize: 14, fontWeight: 600 }}>
+                  <Typography
+                    sx={{ color: 'grey', fontSize: 14, fontWeight: 600 }}
+                  >
                     참여자 목록 ( {currentMember} / {totalMember} )
                   </Typography>
                 </Box>
@@ -198,9 +223,11 @@ const CardDeatilModal = (props) => {
                     minWidth: 520,
                     minHeight: 440,
                     maxHeight: 440,
-                    overflow: 'auto'
-                  }}>
-                  {boardData && boardData.memberList &&
+                    overflow: 'auto',
+                  }}
+                >
+                  {boardData &&
+                    boardData.memberList &&
                     boardData.memberList.map((elem, idx) => {
                       return (
                         <PartyMember
@@ -241,11 +268,11 @@ const CardDeatilModal = (props) => {
                     />
                   ))} */}
               </Box>
-              {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
+              {/* {isLogin && joinedChatRooms.includes(boardData.chatRoomId) && (
                 <Box sx={{ ml: 2 }}>
                   <ChatInCardDetailModal chatRoomId={boardData.chatRoomId} game={game} />
                 </Box>
-              )}
+              )} */}
             </Box>
           </Box>
         </Box>

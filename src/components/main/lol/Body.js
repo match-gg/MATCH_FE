@@ -138,12 +138,6 @@ const Body = () => {
   // 리덕스에 저장되어있는 chatRoom의 Id 리스트
   const { joinedChatRoomsId } = useSelector((state) => state.chatRoom);
 
-  const { currentChatRoom } = useSelector((state) => state.chatRoom);
-
-  const getCurrentChatRoom = () => {
-    return currentChatRoom;
-  };
-
   // 메세지 각 채팅방의 메세지 리스너 추가
   const addFirebaseListener = () => {
     joinedChatRoomsId.forEach((chatRoomId) => {
@@ -151,11 +145,9 @@ const Body = () => {
         const data = {
           chatRoomId,
           message: datasnapshot.val(),
-          currentChatRoom: getCurrentChatRoom(),
         };
+        // 각 채팅방의 메세지를 리덕스에 저장
         dispatch(messagesActions.SET_MESSAGES(data));
-
-        dispatch(notificationActions.SET_NOTIFICATIONS(data));
       });
     });
   };
