@@ -15,13 +15,13 @@ const ReviewMember = props => {
   // 버튼이 클릭 된 상태인지 true, false로 관리
   const [likeClicked, setLikeClicked] = useState(false)
   const [dislikeClicked, setDislikeClicked] = useState(false)
-  const [reportClicked, setReportClicked] = useState(false)
+  // const [reportClicked, setReportClicked] = useState(false)
 
   // 좋아요 버튼을 클릭하면 동작하는 함수
   const likeBtnHandler = () => {
     setLikeClicked(prev => !prev)
     setDislikeClicked(false)
-    setReportClicked(false)
+    // setReportClicked(false)
     if (likeClicked === false) {
       onChangeReview(name, 'like')
     } else {
@@ -33,7 +33,7 @@ const ReviewMember = props => {
   const dislikeBtnHandler = () => {
     setDislikeClicked(prev => !prev)
     setLikeClicked(false)
-    setReportClicked(false)
+    // setReportClicked(false)
     if (dislikeClicked === false) {
       onChangeReview(name, 'dislike')
     } else {
@@ -42,16 +42,16 @@ const ReviewMember = props => {
   };
 
   // 신고하기 버튼을 클릭하면 동작하는 함수
-  const reportBtnHandler = () => {
-    setReportClicked(prev => !prev)
-    setLikeClicked(false)
-    setDislikeClicked(false)
-    if (reportClicked === false) {
-      onChangeReview(name, 'report')
-    } else {
-      onChangeReview(name, 'none')
-    }
-  }
+  // const reportBtnHandler = () => {
+  //   setReportClicked(prev => !prev)
+  //   setLikeClicked(false)
+  //   setDislikeClicked(false)
+  //   if (reportClicked === false) {
+  //     onChangeReview(name, 'report')
+  //   } else {
+  //     onChangeReview(name, 'none')
+  //   }
+  // }
 
   
   return (
@@ -100,12 +100,14 @@ const ReviewMember = props => {
             flexDirection: 'column',
             alignItems: 'center'
           }}>
-          <IconButton size='medium' onClick={reportBtnHandler}>
-            {reportClicked === true ? (
+            {/* 신고하기 버튼 동작은 나중에 추가할 것 */}
+          <IconButton size='medium'>
+            <ReportGmailerrorredIcon sx={{ width: 24, height: 24 }} />
+            {/* {reportClicked === true ? (
               <ReportIcon color='error' sx={{ width: 24, height: 24 }} />
             ) : (
               <ReportGmailerrorredIcon sx={{ width: 24, height: 24 }} />
-            )}
+            )} */}
           </IconButton>
           <Typography sx={{ fontSize: 10, fontWeight: 600 }}>신고하기</Typography>
         </Box>

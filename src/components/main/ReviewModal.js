@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../../api/api';
 // mui
 import { Box, Typography, IconButton, Button } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { AssuredWorkloadSharp, Close } from '@mui/icons-material';
 
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SendIcon from '@mui/icons-material/Send';
@@ -33,6 +33,10 @@ const ModalContent = styled(Box)(({ theme }) => ({
 }));
 
 const ReviewModal = () => {
+  //토큰
+  const { accessToken } = useSelector((state) => state.token);
+  const refreshToken = localStorage.getItem('matchGG_refreshToken');
+
   //현재 게임 정보
   const location = useLocation();
   const game = location.pathname.split('/')[1].toLowerCase();
@@ -47,19 +51,22 @@ const ReviewModal = () => {
   // 리뷰 할 사람들의 데이터
   const [boardData, setBoardData] = useState({});
 
+  // 리뷰를 다 제출했는지 여부
+  const [postEnd, setPostEnd] = useState(false);
+
   // 멤버와 각 멤버의 평가를 담을 객체
-  const reviewState = {};
+  const reviewList = {};
   
   // 멤버 리스트를 객체로 만드는 동작
   if (boardData.memberList) {
     boardData?.memberList.forEach(item => {
-      reviewState[item] = 'none';
+      reviewList[item] = 'none';
     });
   }
 
   // 리뷰 객체를 바꾸는 함수
   const reviewHandler = (name, review) => {
-    reviewState[name] = review;
+    reviewList[name] = review;
   }
 
   // 게시글 상세보기 api로 멤버 리스트 불러오기
@@ -78,6 +85,40 @@ const ReviewModal = () => {
         navigate(0);
       });
   };
+
+  // 리뷰 제출하기 버튼을 누른 경우
+  const submitReview = async () => {
+    for (const name in reviewList) {
+      if (reviewList[name] === 'none') continue;
+      await api.post(
+        `api/user/${reviewList[name]}`,
+        {
+          game: game.toUpperCase(),
+          nickname: name
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Refresh-Token': refreshToken
+          }
+        })
+        .catch((error) => {
+          alert(
+            '리뷰 작성 중 문제가 발생하였습니다.\n잠시 후 다시 시도해주세요.'
+          );
+          console.log(error);
+        })
+        .then(async (response) => {
+          console.log('성공');
+        });
+    }
+    setPostEnd(true)
+  }
+
+  // 리뷰가 다 제출되면 동작
+  useEffect(() => {
+    if (postEnd) navigate(`/${game}`);
+  }, [postEnd]);
 
   // 컴포넌트 렌더링 시 게시글 상세 조회를 호출해 memberList 받아옴
   useEffect(() => {
@@ -128,25 +169,12 @@ const ReviewModal = () => {
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
               alignItems: 'center',
               backgroundColor: 'white',
               mt: 1
             }}>
-            <Button
-              startIcon={<SkipNextIcon />}
-              variant='contained'
-              size='small'
-              sx={{
-                bgcolor: '#808080',
-                mr: 1,
-                ':hover': {
-                  bgcolor: '#a0a0a0'
-                }
-              }}>
-              건너뛰기
-            </Button>
-            <Button startIcon={<SendIcon />} variant='contained' size='small'>
+            <Button startIcon={<SendIcon />} variant='contained' size='small' onClick={submitReview}>
               제출하기
             </Button>
           </Box>
